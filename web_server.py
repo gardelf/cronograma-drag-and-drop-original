@@ -1286,28 +1286,9 @@ def copy_event_to_personal_calendar(calendar_client, source_event):
 def regenerate_cronograma():
     """Regenerate the cronograma by running the generator script"""
     try:
-        # Import and use V7 module with ChatGPT
-        from cronograma_generator_v7_module import generate_cronogram_v7
+        print("🔄 Using V7.5 generator (Python blocks)...")
         
-        print("🤖 Using V7 generator with ChatGPT...")
-        html_content = generate_cronogram_v7()
-        
-        # Find the latest generated file
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        import glob
-        pattern = os.path.join(base_dir, 'cronograma_v7_*.html')
-        cronogramas = glob.glob(pattern)
-        if cronogramas:
-            latest = max(cronogramas, key=os.path.getmtime)
-            return latest
-        
-        return None
-        
-    except Exception as e:
-        print(f"❌ Error with V7: {e}")
-        print("🔄 Falling back to V7.5...")
-        
-        # Fallback to V7.5 if V7 fails
+        # Use V7.5 directly (Python blocks method)
         base_dir = os.path.dirname(os.path.abspath(__file__))
         env = os.environ.copy()
         result = subprocess.run(
