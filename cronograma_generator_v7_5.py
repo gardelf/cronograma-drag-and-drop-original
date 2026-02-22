@@ -1704,7 +1704,7 @@ full_html = f'''<!DOCTYPE html>
     <thead>
       <tr><th>✓</th><th>Hora</th><th>Actividad</th><th>P</th><th>Duración</th><th>Etiquetas</th></tr>
     </thead>
-    <tbody>
+    <tbody id="cronograma-tbody">
       {html_rows}
     </tbody>
   </table>
@@ -2062,6 +2062,45 @@ document.addEventListener('DOMContentLoaded', function() {{
     }});
 }});
 </script>
+
+<!-- Sortable.js for drag & drop -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+// Initialize drag & drop for cronograma table
+document.addEventListener('DOMContentLoaded', function() {{
+    const tbody = document.getElementById('cronograma-tbody');
+    if (tbody) {{
+        new Sortable(tbody, {{
+            animation: 150,
+            handle: 'tr',
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            onEnd: function(evt) {{
+                console.log('Tarea movida de posición ' + evt.oldIndex + ' a ' + evt.newIndex);
+                // TODO: Enviar nuevo orden al servidor para persistir
+            }}
+        }});
+        console.log('✅ Drag & drop inicializado en el cronograma');
+    }}
+}});
+</script>
+
+<style>
+.sortable-ghost {{
+    opacity: 0.4;
+    background: #f0f0f0;
+}}
+.sortable-drag {{
+    opacity: 0.8;
+    cursor: move;
+}}
+#cronograma-tbody tr {{
+    cursor: move;
+}}
+#cronograma-tbody tr:hover {{
+    background-color: #f9fafb;
+}}
+</style>
 
 </body>
 </html>'''
