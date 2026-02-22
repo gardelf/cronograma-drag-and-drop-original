@@ -1745,14 +1745,14 @@ full_html = f'''<!DOCTYPE html>
   }}
   
   .calendar-time-column {{
-    padding: 16px 12px;
+    padding: 8px 6px;
     text-align: center;
     border-right: 1px solid rgba(255,255,255,0.2);
-    font-size: 14px;
+    font-size: 11px;
   }}
   
   .calendar-day-column {{
-    padding: 12px 8px;
+    padding: 6px 4px;
     text-align: center;
     border-right: 1px solid rgba(255,255,255,0.2);
   }}
@@ -1770,14 +1770,14 @@ full_html = f'''<!DOCTYPE html>
   }}
   
   .day-name {{
-    font-size: 12px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }}
   
   .day-date {{
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 700;
   }}
   
@@ -1785,16 +1785,15 @@ full_html = f'''<!DOCTYPE html>
     display: inline-block;
     background: #fbbf24;
     color: #78350f;
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-top: 4px;
+    font-size: 8px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-top: 2px;
     font-weight: 600;
   }}
   
   .calendar-grid-body {{
-    max-height: 250px;
-    overflow-y: auto;
+    /* Sin scroll - todas las horas visibles */
   }}
   
   .calendar-grid-row {{
@@ -1808,18 +1807,23 @@ full_html = f'''<!DOCTYPE html>
   }}
   
   .calendar-time-cell {{
-    padding: 6px;
+    padding: 2px;
     text-align: center;
-    font-size: 12px;
+    font-size: 10px;
     color: #6b7280;
     background: #f9fafb;
     border-right: 1px solid #e5e7eb;
     font-weight: 500;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }}
   
   .calendar-hour-cell {{
-    padding: 4px;
-    min-height: 30px;
+    padding: 2px;
+    height: 18px;
+    min-height: 18px;
     border-right: 1px solid #e5e7eb;
     position: relative;
     background: white;
@@ -1836,14 +1840,15 @@ full_html = f'''<!DOCTYPE html>
   .calendar-event-block {{
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 6px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin: 2px 0;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 9px;
+    margin: 1px 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    line-height: 1.2;
   }}
   
   .event-block-title {{

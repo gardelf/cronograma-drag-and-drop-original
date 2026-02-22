@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cronograma V7.5 - Morning Alternation Rule (Fixed)</title>
+<style>
+  /* Dashboard Modular Profesional - Fintech Moderna */
+  body { 
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; 
+    background: #f5f7fa; 
+    color: #1f2937; 
+    margin: 0; 
+    padding: 24px; 
+  }
+  
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1f2937;
+  }
+  
+  .subtext {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .metric {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+  }
+  
+  .progress-bar-bg {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background: #6366f1;
+    border-radius: 8px;
+  }
+  /* Tabla dentro de card */
+  table { 
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%; 
+    background: white; 
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  thead { 
+    background: #6366f1; 
+    color: white; 
+  }
+  th { 
+    border: none;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 12px 16px; 
+    vertical-align: middle; 
+    text-align: left; 
+    font-size: 14px;
+    font-weight: 600;
+  }
+  thead tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+  }
+  thead tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+  }
+  tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+  }
+  tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+  }
+  td { 
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    padding: 12px 16px; 
+    vertical-align: middle; 
+    text-align: left; 
+    overflow: hidden; 
+    line-height: 1.5; 
+  }
+  tr { background: transparent; }
+  tr:nth-child(even) { background: transparent; }
+  tr:hover { background: transparent; }
+  a { color: #374151; text-decoration: none; }
+  a:hover { text-decoration: underline; color: #1f2937; }
+  
+  /* --- Label Chips (Moderno) --- */
+  .label { 
+    display: inline-block;
+    background: #e5e7eb; 
+    color: #374151; 
+    padding: 4px 10px; 
+    border-radius: 12px; 
+    font-size: 11px; 
+    margin: 2px 4px 2px 0;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  
+  /* --- Proportional Row Heights (strict) --- */
+  .h-5 { height: 28px; max-height: 28px; background-color: transparent !important; }
+  .h-5 td { padding: 3px 8px; font-size: 16px; line-height: 1.2; background-color: transparent !important; }
+  .h-5:hover { background-color: transparent !important; }
+  .h-5:hover td { background-color: transparent !important; }
+  
+  .h-10 { height: 36px; max-height: 36px; background-color: transparent !important; }
+  .h-10 td { padding: 4px 10px; font-size: 16px; line-height: 1.3; background-color: transparent !important; }
+  .h-10:hover { background-color: transparent !important; }
+  .h-10:hover td { background-color: transparent !important; }
+  
+  .h-15 { height: 44px; max-height: 44px; background-color: transparent !important; }
+  .h-15 td { padding: 5px 10px; font-size: 17px; line-height: 1.3; background-color: transparent !important; }
+  
+  .h-20 { height: 52px; max-height: 52px; background-color: transparent !important; }
+  .h-20 td { padding: 6px 12px; font-size: 17px; line-height: 1.4; background-color: transparent !important; }
+  
+  .h-30 { height: 68px; max-height: 68px; background-color: transparent !important; }
+  .h-30 td { padding: 8px 12px; font-size: 18px; line-height: 1.4; background-color: transparent !important; }
+  
+  /* Highlight rows with check/checks label */
+  tr.has-check-label { background-color: #fffdf5 !important; }
+  tr.has-check-label td { background-color: #fffdf5 !important; }
+  
+  .h-60 { height: 100px; max-height: 100px; background-color: transparent !important; }
+  .h-60 td { padding: 10px 14px; font-size: 18px; line-height: 1.5; background-color: transparent !important; }
+  
+  /* --- Column-specific styles --- */
+  .time-col { white-space: nowrap; width: 140px; font-size: 16px; text-align: center; background-color: transparent !important; }
+  .time-badge {
+    display: inline-block;
+    background: transparent;
+    color: #6b7280;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-weight: 600;
+    box-shadow: none;
+  }
+  .time-start { font-size: 14px; font-weight: 600; }
+  .time-separator { font-size: 14px; margin: 0 3px; opacity: 0.8; }
+  .time-end { font-size: 12px; opacity: 0.9; }
+  .activity-col { max-width: 600px; background-color: transparent !important; color: #374151; }
+  .priority-col { width: 45px; text-align: center; padding: 4px !important; background-color: transparent !important; }
+  .duration-col { width: 100px; text-align: center; background-color: transparent !important; }
+  .duration-badge {
+    display: inline-block;
+    background: transparent;
+    color: #6b7280;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: none;
+  }
+  .labels-col { 
+    max-width: 300px; 
+    padding: 6px 10px !important;
+    vertical-align: middle;
+    background-color: white !important;
+  }
+  
+  /* --- Text Truncation with Tooltip --- */
+  .truncate { 
+    max-width: 400px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .truncate:hover::after {
+    content: attr(data-full-text);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: #2d3748;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    white-space: normal;
+    max-width: 400px;
+    width: max-content;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    font-size: 13px;
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+  
+  /* --- Type Colors (Background) --- */
+  .type-Física { background-color: transparent !important; } .type-Intelectual { background-color: transparent !important; } .type-Administrativa { background-color: transparent !important; } .type-Fija { background-color: transparent !important; } .type-General { background-color: transparent !important; }
+
+  /* --- Priority Colors (Border) --- */
+  .priority-p1 { border-left: 5px solid #e53e3e; } .priority-p2 { border-left: 5px solid #dd6b20; } .priority-p3 { border-left: 5px solid #3182ce; } .priority-p4 { border-left: 2px solid #a0aec0; } .priority-p- { border-left: 2px solid #a0aec0; }
+
+  /* --- Priority Cell (Background) --- */
+  .priority-cell { 
+    text-align: center; 
+    padding: 6px 4px !important;
+    background-color: white !important;
+  }
+  
+  /* --- Priority Chips (Badge Style) --- */
+  .priority-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .priority-badge.p1 { background-color: #ef4444; color: white; }
+  .priority-badge.p2 { background-color: #f59e0b; color: white; }
+  .priority-badge.p3 { background-color: #6366f1; color: white; }
+  .priority-badge.p4 { background-color: #e5e7eb; color: #6b7280; }
+  
+  /* --- Labels Container --- */
+  .labels-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    line-height: 1.6;
+  }
+  
+  /* --- Legend Styles --- */
+  .legend {
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .legend h2 {
+    margin: 0 0 15px 0;
+    color: #2d3748;
+    font-size: 21px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+  }
+  
+  .legend-section {
+    margin-bottom: 20px;
+  }
+  
+  .legend-section h3 {
+    margin: 0 0 10px 0;
+    color: #4a5568;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    padding: 6px;
+  }
+  
+  .legend-emoji {
+    font-size: 22px;
+    width: 32px;
+    text-align: center;
+  }
+  
+  .legend-color-box {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #cbd5e0;
+  }
+
+  /* Tareas completadas */
+  .completed-task {
+    opacity: 0.6;
+    background-color: #f3f4f6 !important;
+  }
+  
+  .completed-task .activity-col a {
+    text-decoration: line-through;
+    color: #6b7280 !important;
+  }
+  
+  .completed-task .priority-badge {
+    opacity: 0.5;
+  }
+  
+  .completed-task .label {
+    opacity: 0.5;
+  }
+  
+  .completed-task input[type="checkbox"]:checked {
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+<div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+  <h1 style="margin: 0; font-size: 24px; font-weight: 700;">✅ Cronograma V7.5 - Regla de Alternancia Matinal (Corregida)</h1>
+  <p style="margin: 12px 0 16px 0; opacity: 0.95; font-size: 14px;">
+    <strong>Fecha:</strong> 22/02/2026 (Generado: 11:13:27)<br>
+    <strong>Estrategia:</strong> No permite dos tareas físicas seguidas en la mañana. Debe ser 1 intelectual + 1 física, o 2 intelectuales + 1 física.
+  </p>
+  <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+    <button onclick="regenerarCronograma()" style="
+      background: white;
+      color: #667eea;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      🔄 Regenerar Cronograma
+    </button>
+    <a href="/cronograma/manana" style="
+      background: white;
+      color: #667eea;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      👁️ Ver Cronograma de Mañana
+    </a>
+  </div>
+</div>
+
+<!-- IDEALISTA STATISTICS SECTION -->
+
+
+<!-- FIREFLY III STATISTICS SECTION -->
+
+<div class="card" id="firefly-stats-section">
+    <div class="section-title" style="cursor: pointer;" onclick="toggleFireflySection()">
+        💰 Firefly III - Finanzas <span id="firefly-toggle-icon">▼</span>
+    </div>
+    <p class="subtext" style="margin-bottom: 16px;">Última actualización: 2026-02-22 11:13:27</p>
+    
+    <div id="firefly-content" style="display: block;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+            <!-- Mes Actual -->
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <div class="subtext" style="margin-bottom: 8px;">📅 February 2026</div>
+                <div style="text-align: center;">
+                    <div class="metric" style="color: #ef4444;">0.00</div>
+                    <div class="subtext" style="margin-top: 4px;">📉 Total Gastos</div>
+                    <div class="subtext" style="font-size: 12px; margin-top: 4px;">EUR</div>
+                </div>
+            </div>
+            
+            <!-- Mes Anterior -->
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <div class="subtext" style="margin-bottom: 8px;">📅 January</div>
+                <div style="text-align: center;">
+                    <div class="metric" style="color: #ef4444;">0.00</div>
+                    <div class="subtext" style="margin-top: 4px;">📉 Total Gastos</div>
+                    <div class="subtext" style="font-size: 12px; margin-top: 4px;">EUR</div>
+                </div>
+            </div>
+            
+            <!-- Últimos 7 Días -->
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <div class="subtext" style="margin-bottom: 8px; cursor: pointer;" onclick="toggleWeeklyDetail()">
+                    📅 Últimos 7 Días <span id="weekly-toggle-icon">▼</span>
+                </div>
+                <div style="text-align: center;">
+                    <div class="metric" style="color: #ef4444;">0.00</div>
+                    <div class="subtext" style="margin-top: 4px;">📉 Gastos</div>
+                    <div class="subtext" style="font-size: 12px; margin-top: 4px;">EUR</div>
+                </div>
+            </div>
+            
+            <!-- Gastos Extraordinarios Mes Siguiente -->
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <div class="subtext" style="margin-bottom: 8px; cursor: pointer;" onclick="toggleExtraordinaryDetail()">
+                    💎 Extraordinarios March <span id="extraordinary-toggle-icon">▼</span>
+                </div>
+                <div style="text-align: center;">
+                    <div class="metric" style="color: #f59e0b;">0.00</div>
+                    <div class="subtext" style="margin-top: 4px;">💰 Total Extraordinario</div>
+                    <div class="subtext" style="font-size: 12px; margin-top: 4px;">EUR</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detalle de Gastos Semanales (Desplegable) -->
+        <div id="weekly-detail" style="display: none; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 15px;">
+            <h3 style="margin: 0 0 15px 0; color: #065f46; font-size: 18px;">📋 Detalle de Gastos (Últimos 7 Días)</h3>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <div style="padding: 20px; text-align: center; color: #6b7280;">No hay gastos en los últimos 7 días</div>
+            </div>
+        </div>
+        
+        <!-- Detalle de Gastos Extraordinarios (Desplegable) -->
+        <div id="extraordinary-detail" style="display: none; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 15px;">
+            <h3 style="margin: 0 0 15px 0; color: #f59e0b; font-size: 18px;">💎 Gastos Extraordinarios para March</h3>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <div style="padding: 20px; text-align: center; color: #6b7280;">No hay gastos extraordinarios registrados para el próximo mes</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFireflySection() {
+    var content = document.getElementById('firefly-content');
+    var icon = document.getElementById('firefly-toggle-icon');
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.textContent = '▼';
+    } else {
+        content.style.display = 'none';
+        icon.textContent = '▶';
+    }
+}
+
+function toggleWeeklyDetail() {
+    var detail = document.getElementById('weekly-detail');
+    var icon = document.getElementById('weekly-toggle-icon');
+    if (detail.style.display === 'none') {
+        detail.style.display = 'block';
+        icon.textContent = '▲';
+    } else {
+        detail.style.display = 'none';
+        icon.textContent = '▼';
+    }
+}
+
+function toggleExtraordinaryDetail() {
+    var detail = document.getElementById('extraordinary-detail');
+    var icon = document.getElementById('extraordinary-toggle-icon');
+    if (detail.style.display === 'none') {
+        detail.style.display = 'block';
+        icon.textContent = '▲';
+    } else {
+        detail.style.display = 'none';
+        icon.textContent = '▼';
+    }
+}
+</script>
+
+
+<!-- NEW EVENTS SECTION -->
+
+<div class="card" style="background: #f8fafc; border-left: 4px solid #94a3b8;">
+  <div class="section-title" style="color: #475569;">
+    🆕 Eventos Nuevos en Calendario Compartido
+  </div>
+  <p class="subtext" style="margin-bottom: 16px; color: #64748b;">
+    ⚠️ Estos eventos están en <strong>"Casa Juana Doña"</strong> pero NO en tu calendario personal.<br>
+    ⚠️ Decide si te afectan y cópialos si es necesario. El cronograma se regenerará automáticamente.
+  </p>
+  <div style="display: grid; gap: 15px;">
+
+    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-left: 4px solid #94a3b8;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">📅 RECORDATORIO CITA Dermatologa </h3>
+          <p style="margin: 0; color: #6b7280; font-size: 15px;">
+            🕐 <strong>02/03/2026 10:45 - 11:45</strong>
+          </p>
+          <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px;">
+            Detectado: 2026-02-22
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="copyAndRegenerate('1383841F-3339-4320-9595-4649E5FE48E5', 'RECORDATORIO CITA Dermatologa ')" 
+                  style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#059669'" 
+                  onmouseout="this.style.background='#10b981'">
+            📋 Copiar y regenerar cronograma
+          </button>
+          <button onclick="ignoreEvent('1383841F-3339-4320-9595-4649E5FE48E5')" 
+                  style="background: #6b7280; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#4b5563'" 
+                  onmouseout="this.style.background='#6b7280'">
+            ❌ Ignorar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-left: 4px solid #94a3b8;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">📅 Oscar psicólogo</h3>
+          <p style="margin: 0; color: #6b7280; font-size: 15px;">
+            🕐 <strong>05/03/2026 16:30 - 17:30</strong>
+          </p>
+          <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px;">
+            Detectado: 2026-02-22
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="copyAndRegenerate('4952B55A-8494-4C55-877B-9A2FE0D5F1D4', 'Oscar psicólogo')" 
+                  style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#059669'" 
+                  onmouseout="this.style.background='#10b981'">
+            📋 Copiar y regenerar cronograma
+          </button>
+          <button onclick="ignoreEvent('4952B55A-8494-4C55-877B-9A2FE0D5F1D4')" 
+                  style="background: #6b7280; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#4b5563'" 
+                  onmouseout="this.style.background='#6b7280'">
+            ❌ Ignorar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-left: 4px solid #94a3b8;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">📅 Ginecólogo 10:00</h3>
+          <p style="margin: 0; color: #6b7280; font-size: 15px;">
+            🕐 <strong>10/03/2026 10:55 - 11:55</strong>
+          </p>
+          <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px;">
+            Detectado: 2026-02-22
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="copyAndRegenerate('B995BB3F-0E3D-486E-BDF5-E7D4336B5385', 'Ginecólogo 10:00')" 
+                  style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#059669'" 
+                  onmouseout="this.style.background='#10b981'">
+            📋 Copiar y regenerar cronograma
+          </button>
+          <button onclick="ignoreEvent('B995BB3F-0E3D-486E-BDF5-E7D4336B5385')" 
+                  style="background: #6b7280; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#4b5563'" 
+                  onmouseout="this.style.background='#6b7280'">
+            ❌ Ignorar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-left: 4px solid #94a3b8;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">📅 Formación Master</h3>
+          <p style="margin: 0; color: #6b7280; font-size: 15px;">
+            🕐 <strong>14/03/2026 09:00 - 15:00</strong>
+          </p>
+          <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px;">
+            Detectado: 2026-02-22
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="copyAndRegenerate('B33EDD6F-DDF6-4332-AC9C-093F0BCE1606', 'Formación Master')" 
+                  style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#059669'" 
+                  onmouseout="this.style.background='#10b981'">
+            📋 Copiar y regenerar cronograma
+          </button>
+          <button onclick="ignoreEvent('B33EDD6F-DDF6-4332-AC9C-093F0BCE1606')" 
+                  style="background: #6b7280; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#4b5563'" 
+                  onmouseout="this.style.background='#6b7280'">
+            ❌ Ignorar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-left: 4px solid #94a3b8;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">📅 Mamo y eco </h3>
+          <p style="margin: 0; color: #6b7280; font-size: 15px;">
+            🕐 <strong>19/03/2026 16:10 - 17:10</strong>
+          </p>
+          <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px;">
+            Detectado: 2026-02-22
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="copyAndRegenerate('E5B0C9A3-AFD5-4422-9E00-55869F38BABD', 'Mamo y eco ')" 
+                  style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#059669'" 
+                  onmouseout="this.style.background='#10b981'">
+            📋 Copiar y regenerar cronograma
+          </button>
+          <button onclick="ignoreEvent('E5B0C9A3-AFD5-4422-9E00-55869F38BABD')" 
+                  style="background: #6b7280; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#4b5563'" 
+                  onmouseout="this.style.background='#6b7280'">
+            ❌ Ignorar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-left: 4px solid #94a3b8;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1;">
+          <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">📅 Mamografía HM Hospitales - Confirmación de cita</h3>
+          <p style="margin: 0; color: #6b7280; font-size: 15px;">
+            🕐 <strong>19/03/2026 16:45 - 17:45</strong>
+          </p>
+          <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px;">
+            Detectado: 2026-02-22
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="copyAndRegenerate('E2ECFFC3-18A6-4328-A637-D4AA92BC9169', 'Mamografía HM Hospitales - Confirmación de cita')" 
+                  style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#059669'" 
+                  onmouseout="this.style.background='#10b981'">
+            📋 Copiar y regenerar cronograma
+          </button>
+          <button onclick="ignoreEvent('E2ECFFC3-18A6-4328-A637-D4AA92BC9169')" 
+                  style="background: #6b7280; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.2s;" 
+                  onmouseover="this.style.background='#4b5563'" 
+                  onmouseout="this.style.background='#6b7280'">
+            ❌ Ignorar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function copyAndRegenerate(uid, summary) {
+    const button = event.target;
+    button.disabled = true;
+    button.textContent = '⏳ Copiando...';
+    
+    showLoadingOverlay('Copiando evento a tu calendario personal...');
+    
+    try {
+        const response = await fetch('/copy-and-regenerate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ uid: uid })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.reload) {
+            showSuccessMessage(`✅ Evento "${summary}" copiado correctamente`);
+            setTimeout(() => { window.location.reload(); }, 2000);
+        } else {
+            throw new Error(result.error || 'Error desconocido');
+        }
+    } catch (error) {
+        hideLoadingOverlay();
+        button.disabled = false;
+        button.textContent = '❌ Error - Reintentar';
+        alert(`❌ Error: ${error.message}`);
+    }
+}
+
+async function ignoreEvent(uid) {
+    if (!confirm('¿Estás seguro de que quieres ignorar este evento?')) return;
+    
+    try {
+        const response = await fetch('/ignore-event', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ uid: uid })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            showLoadingOverlay('Evento ignorado. Regenerando cronograma...');
+            
+            // Regenerate cronograma
+            const regenResponse = await fetch('/generate-cronograma');
+            const regenResult = await regenResponse.json();
+            
+            if (regenResult.success) {
+                window.location.reload();
+            } else {
+                alert('⚠️ Evento ignorado pero no se pudo regenerar el cronograma');
+                window.location.reload();
+            }
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        alert(`❌ Error: ${error.message}`);
+    }
+}
+
+function showLoadingOverlay(message) {
+    const overlay = document.createElement('div');
+    overlay.id = 'loading-overlay';
+    overlay.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+            <div style="background: white; padding: 40px; border-radius: 10px; text-align: center; max-width: 400px;">
+                <div style="border: 4px solid #f3f4f6; border-top: 4px solid #3b82f6; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                <h2 style="margin: 0 0 10px 0; color: #1f2937;">${message}</h2>
+                <p style="margin: 0; color: #6b7280;">Regenerando cronograma...</p>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
+}
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.remove();
+}
+
+function showSuccessMessage(message) {
+    hideLoadingOverlay();
+    const successDiv = document.createElement('div');
+    successDiv.style.cssText = `position: fixed; top: 20px; right: 20px; background: #10b981; color: white; padding: 20px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 10000; font-size: 16px; font-weight: 600;`;
+    successDiv.textContent = message;
+    document.body.appendChild(successDiv);
+}
+</script>
+
+
+<div class="card">
+  <div class="section-title">Cronograma del Día</div>
+  <table>
+    <thead>
+      <tr><th>✓</th><th>Hora</th><th>Actividad</th><th>P</th><th>Duración</th><th>Etiquetas</th></tr>
+    </thead>
+    <tbody id="cronograma-tbody">
+              <tr class="priority-p4 h-20  ">
+          <td class="checkbox-col"></td>
+          <td class="time-col" style="background-color: #fffaf5;"><span class="time-badge"><span class="time-start">07:00</span><span class="time-separator">-</span><span class="time-end">07:20</span></span></td>
+          <td class="activity-col">🍽️ Desayunar</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #fffaf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4 h-5  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7P6QFf77x97mw" data-content="Gracias a Dios" data-start-time="07:20" data-end-time="07:25" data-priority="P4" data-labels="[&quot;5 minutos&quot;, &quot;h\u00e1bitos&quot;, &quot;rutina administrativa matinal&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">07:20</span><span class="time-separator">-</span><span class="time-end">07:25</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7P6QFf77x97mw" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🙏 Gracias a Dios</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQx7mm4xM4mJRmW" data-content="Control de gastos" data-start-time="07:25" data-end-time="07:30" data-priority="P4" data-labels="[&quot;5 minutos&quot;, &quot;h\u00e1bitos&quot;, &quot;rutina administrativa matinal&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">07:25</span><span class="time-separator">-</span><span class="time-end">07:30</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQx7mm4xM4mJRmW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💳 Control de gastos</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7V3Q8FWXf9Q6m" data-content="Prevision Gastos extras" data-start-time="07:30" data-end-time="07:35" data-priority="P4" data-labels="[&quot;5 minutos&quot;, &quot;h\u00e1bitos&quot;, &quot;rutina administrativa matinal&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">07:30</span><span class="time-separator">-</span><span class="time-end">07:35</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7V3Q8FWXf9Q6m" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💳 Prevision Gastos extras</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ93v5fFFPv5fP4" data-content="3 Todoist listados accesos directos" data-start-time="07:35" data-end-time="07:45" data-priority="P4" data-labels="[&quot;10 minutos&quot;, &quot;h\u00e1bitos&quot;, &quot;rutina administrativa matinal&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">07:35</span><span class="time-separator">-</span><span class="time-end">07:45</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ93v5fFFPv5fP4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 3 Todoist listados accesos directos</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7PH7P84cvVw6F" data-content="Calendario Iphone" data-start-time="07:45" data-end-time="07:55" data-priority="P4" data-labels="[&quot;10 minutos&quot;, &quot;h\u00e1bitos&quot;, &quot;rutina administrativa matinal&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">07:45</span><span class="time-separator">-</span><span class="time-end">07:55</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7PH7P84cvVw6F" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Calendario Iphone</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></div></td>
+        </tr>
+        <tr class="priority-p1 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fw88rh9p9m6gv8W" data-content="respuesta OCU" data-start-time="07:55" data-end-time="08:00" data-priority="P1" data-labels="[&quot;Check&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">07:55</span><span class="time-separator">-</span><span class="time-end">08:00</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fw88rh9p9m6gv8W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 respuesta OCU</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p1">P1</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">Check</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fppgC76F7RxmvpW" data-content="Dani Arquitecto cercedilla" data-start-time="08:00" data-end-time="08:05" data-priority="P3" data-labels="[&quot;check&quot;, &quot;obligaci\u00f3n&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:00</span><span class="time-separator">-</span><span class="time-end">08:05</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fppgC76F7RxmvpW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Dani Arquitecto cercedilla</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">check</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fmMCgcGRhQQPjC4" data-content="Pedro Zerolo arquitecto fachada" data-start-time="08:05" data-end-time="08:10" data-priority="P3" data-labels="[&quot;10minutos&quot;, &quot;check&quot;, &quot;obligaci\u00f3n&quot;, &quot;por lama\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:05</span><span class="time-separator">-</span><span class="time-end">08:10</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fmMCgcGRhQQPjC4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Pedro Zerolo arquitecto fachada</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10minutos</span><span class="label">check</span><span class="label">obligación</span><span class="label">por lamañana</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fpHCCVFH2F9m6xW" data-content="Quedar con Alvaro Gutierrez" data-start-time="08:10" data-end-time="08:15" data-priority="P4" data-labels="[&quot;Check&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:10</span><span class="time-separator">-</span><span class="time-end">08:15</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fpHCCVFH2F9m6xW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Quedar con Alvaro Gutierrez</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">Check</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQHHjXp45qjmGvW" data-content="Cuando darme de baja Caixa privada Altan?¿" data-start-time="08:15" data-end-time="08:20" data-priority="P4" data-labels="[&quot;5 minutos&quot;, &quot;checks&quot;, &quot;intelectual&quot;, &quot;por la ma\u00f1ana&quot;, &quot;rutina administrativa matinal&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:15</span><span class="time-separator">-</span><span class="time-end">08:20</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQHHjXp45qjmGvW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🧠 Cuando darme de baja Caixa privada Altan?¿</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">5 minutos</span><span class="label">checks</span><span class="label">intelectual</span><span class="label">por la mañana</span><span class="label">rutina administrativa matinal</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fV9Mv86fV3XF78W" data-content="Revisar hipoteca correos de Jorge La Caixa" data-start-time="08:20" data-end-time="08:25" data-priority="P4" data-labels="[&quot;Check&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:20</span><span class="time-separator">-</span><span class="time-end">08:25</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fV9Mv86fV3XF78W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📧 Revisar hipoteca correos de Jorge La Caixa</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">Check</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  has-check-label">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fW88hwqXrh6h2p4" data-content="Home assistant Alejandro" data-start-time="08:25" data-end-time="08:30" data-priority="P4" data-labels="[&quot;checks&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:25</span><span class="time-separator">-</span><span class="time-end">08:30</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fW88hwqXrh6h2p4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Home assistant Alejandro</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">checks</span></div></td>
+        </tr>
+        <tr class="priority-p1 h-15  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fxRrJp36C478f7W" data-content="Altan rentabilidad?" data-start-time="08:30" data-end-time="08:45" data-priority="P1" data-labels="[&quot;15 minutos&quot;, &quot;intelectual&quot;, &quot;obligaci\u00f3n&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:30</span><span class="time-separator">-</span><span class="time-end">08:45</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fxRrJp36C478f7W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🧠 Altan rentabilidad?</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p1">P1</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">15 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQxfQwHjR4ffqcW" data-content="progresión Bateria" data-start-time="08:45" data-end-time="09:05" data-priority="P2" data-labels="[&quot;fisico&quot;, &quot;h\u00e1bitos&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">08:45</span><span class="time-separator">-</span><span class="time-end">09:05</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQxfQwHjR4ffqcW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🥁 progresión Bateria</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-30  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7WM5wFRrjMw5m" data-content="Fichas avance Pedro Zerolo" data-start-time="09:05" data-end-time="09:35" data-priority="P2" data-labels="[&quot;30 minutos&quot;, &quot;intelectual&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">09:05</span><span class="time-separator">-</span><span class="time-end">09:35</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7WM5wFRrjMw5m" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🧠 Fichas avance Pedro Zerolo</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">30 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQx6gwrGWWR4gpf" data-content="Beber agua 1 litro" data-start-time="09:35" data-end-time="09:40" data-priority="P4" data-labels="[&quot;5 minutos&quot;, &quot;fisico&quot;, &quot;h\u00e1bitos&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f0f7ff;"><span class="time-badge"><span class="time-start">09:35</span><span class="time-separator">-</span><span class="time-end">09:40</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQx6gwrGWWR4gpf" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💧 Beber agua 1 litro</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f0f7ff;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">5 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-15  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7PVVG9pX2vqQw" data-content="Leer Padre Rico Padre Pobre" data-start-time="09:40" data-end-time="09:55" data-priority="P4" data-labels="[&quot;15 minutos&quot;, &quot;h\u00e1bitos&quot;, &quot;intelectual&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">09:40</span><span class="time-separator">-</span><span class="time-end">09:55</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7PVVG9pX2vqQw" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📚 Leer Padre Rico Padre Pobre</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">15 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">hábitos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fPjxgG4jc74RfGW" data-content="Espalda" data-start-time="09:55" data-end-time="10:05" data-priority="P4" data-labels="[&quot;10 minutos&quot;, &quot;fisico&quot;, &quot;h\u00e1bitos&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">09:55</span><span class="time-separator">-</span><span class="time-end">10:05</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fPjxgG4jc74RfGW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💪 Espalda</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fPjxjRMWXMP2QcW" data-content="Hombros 2" data-start-time="10:05" data-end-time="10:15" data-priority="P4" data-labels="[&quot;10 minutos&quot;, &quot;fisico&quot;, &quot;h\u00e1bitos&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">10:05</span><span class="time-separator">-</span><span class="time-end">10:15</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fPjxjRMWXMP2QcW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💪 Hombros 2</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-15  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fPjxhvC2xPH4RmW" data-content="Hombros 1 + pecho" data-start-time="10:15" data-end-time="10:30" data-priority="P4" data-labels="[&quot;15 minutos&quot;, &quot;fisico&quot;, &quot;h\u00e1bitos&quot;, &quot;por la ma\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">10:15</span><span class="time-separator">-</span><span class="time-end">10:30</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fPjxhvC2xPH4RmW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💪 Hombros 1 + pecho</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">15 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></div></td>
+        </tr>
+        <tr class="priority-p1 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fpHF75rCJ6hjQQ4" data-content="gastos APP ordenador Cristina" data-start-time="10:30" data-end-time="10:50" data-priority="P1" data-labels="[&quot;30minutos&quot;, &quot;motivaci\u00f3n&quot;, &quot;por latarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">10:30</span><span class="time-separator">-</span><span class="time-end">10:50</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fpHF75rCJ6hjQQ4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💳 gastos APP ordenador Cristina</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p1">P1</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30minutos</span><span class="label">motivación</span><span class="label">por latarde</span></div></td>
+        </tr>
+        <tr class="priority-p1 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fqGFMh8C7x7Q7F4" data-content="Revisar gastos habituales ordinarios" data-start-time="10:50" data-end-time="11:10" data-priority="P1" data-labels="[&quot;30minutos&quot;, &quot;administrativo&quot;, &quot;obligaci\u00f3n&quot;, &quot;por latarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">10:50</span><span class="time-separator">-</span><span class="time-end">11:10</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fqGFMh8C7x7Q7F4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💳 Revisar gastos habituales ordinarios</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p1">P1</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por latarde</span></div></td>
+        </tr>
+        <tr class="priority-p1 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fw8W85qCrmg2Fj4" data-content="Erasmus plataforma" data-start-time="11:10" data-end-time="11:30" data-priority="P1" data-labels="[]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">11:10</span><span class="time-separator">-</span><span class="time-end">11:30</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fw8W85qCrmg2Fj4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Erasmus plataforma</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p1">P1</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p2 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7W59QhJ2FGrrF" data-content="Hipotecas gastos reclamacion Victor" data-start-time="11:30" data-end-time="11:40" data-priority="P2" data-labels="[&quot;10 minutos&quot;, &quot;administrativo&quot;, &quot;obligaci\u00f3n&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">11:30</span><span class="time-separator">-</span><span class="time-end">11:40</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7W59QhJ2FGrrF" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💳 Hipotecas gastos reclamacion Victor</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQx6xWrM5HcjMPG" data-content="Buscar obra de teatro del mes" data-start-time="11:40" data-end-time="11:50" data-priority="P2" data-labels="[&quot;10 minutos&quot;, &quot;administrativo&quot;, &quot;motivaci\u00f3n&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">11:40</span><span class="time-separator">-</span><span class="time-end">11:50</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQx6xWrM5HcjMPG" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📋 Buscar obra de teatro del mes</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fw8HF488mvMQ45W" data-content="Viajes subvencionados Comunidad de Madrid revisar" data-start-time="11:50" data-end-time="12:10" data-priority="P2" data-labels="[]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">11:50</span><span class="time-separator">-</span><span class="time-end">12:10</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fw8HF488mvMQ45W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">✅ Viajes subvencionados Comunidad de Madrid revisar</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p2 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fw8WR7Gww7c42jW" data-content="University Living plataforma" data-start-time="12:10" data-end-time="12:30" data-priority="P2" data-labels="[]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">12:10</span><span class="time-separator">-</span><span class="time-end">12:30</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fw8WR7Gww7c42jW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 University Living plataforma</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p3 h-15  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cR24Pv6c54RWcQW" data-content="Ver vídeo sobre la libertad" data-start-time="12:30" data-end-time="12:45" data-priority="P3" data-labels="[&quot;15 minutos&quot;, &quot;motivaci\u00f3n&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">12:30</span><span class="time-separator">-</span><span class="time-end">12:45</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cR24Pv6c54RWcQW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Ver vídeo sobre la libertad</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">15 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fj23PW62W8r6cP4" data-content="un poco limpiar drive basura Google" data-start-time="12:45" data-end-time="13:05" data-priority="P3" data-labels="[&quot;10&quot;, &quot;administrativo&quot;, &quot;obligaci\u00f3n&quot;, &quot;por lama\u00f1ana&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">12:45</span><span class="time-separator">-</span><span class="time-end">13:05</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fj23PW62W8r6cP4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📋 un poco limpiar drive basura Google</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por lamañana</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fhGmgfQrrvXQC8W" data-content="Disparador de bolas pádel" data-start-time="13:05" data-end-time="13:25" data-priority="P3" data-labels="[&quot;30minutos&quot;, &quot;administrativo&quot;, &quot;motivaci\u00f3n&quot;, &quot;por latarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">13:05</span><span class="time-separator">-</span><span class="time-end">13:25</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fhGmgfQrrvXQC8W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📋 Disparador de bolas pádel</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">por latarde</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fj2FRqXFqWChHVW" data-content="Home Assistant orden dashboard" data-start-time="13:25" data-end-time="13:45" data-priority="P3" data-labels="[&quot;administrativo&quot;, &quot;obligaci\u00f3n&quot;, &quot;por latarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">13:25</span><span class="time-separator">-</span><span class="time-end">13:45</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fj2FRqXFqWChHVW" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📋 Home Assistant orden dashboard</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por latarde</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-15  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQxfGfMMx6Mp7p4" data-content="Leer sal de tu mente entra en tu vida" data-start-time="13:45" data-end-time="14:00" data-priority="P4" data-labels="[&quot;15 minutos&quot;, &quot;intelectual&quot;, &quot;motivaci\u00f3n&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8fcf5;"><span class="time-badge"><span class="time-start">13:45</span><span class="time-separator">-</span><span class="time-end">14:00</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQxfGfMMx6Mp7p4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📚 Leer sal de tu mente entra en tu vida</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #f8fcf5;"><span class="duration-badge">15 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">intelectual</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-60  ">
+          <td class="checkbox-col"></td>
+          <td class="time-col" style="background-color: #fffef0;"><span class="time-badge"><span class="time-start">14:00</span><span class="time-separator">-</span><span class="time-end">15:00</span></span></td>
+          <td class="activity-col">🍽️ Comer</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #fffef0;"><span class="duration-badge">60 min</span></td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p2 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fhpF323RPffW7V4" data-content="[RECIBOS GEOTERMIA - juana doña ESTHER LÓPEZ](https://mail.google.com/mail?extsrc=sync&client=docs&plid=ACUX6DOxQ9qF-eAevnD3uigtgEQQ3SVkdsfpoKk)" data-start-time="15:00" data-end-time="15:20" data-priority="P2" data-labels="[&quot;20 minutos&quot;, &quot;administrativo&quot;, &quot;obligaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">15:00</span><span class="time-separator">-</span><span class="time-end">15:20</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fhpF323RPffW7V4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📋 <span class="truncate" data-full-text="[RECIBOS GEOTERMIA - juana doña ESTHER LÓPEZ](https://mail.google.com/mail?extsrc=sync&client=docs&plid=ACUX6DOxQ9qF-eAevnD3uigtgEQQ3SVkdsfpoKk)">[RECIBOS GEOTERMIA - juana doña ESTHER LÓPEZ](h...</span></a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">20 minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-30  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fwfvC7qwvF2W4ff" data-content="Enviar bateria alemania airbag" data-start-time="15:20" data-end-time="15:50" data-priority="P2" data-labels="[&quot;30 minutos&quot;, &quot;administrativo&quot;, &quot;obligaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">15:20</span><span class="time-separator">-</span><span class="time-end">15:50</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fwfvC7qwvF2W4ff" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🥁 Enviar bateria alemania airbag</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">30 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-30  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7Wwr5fQ64hhWm" data-content="Panel Web Cristina" data-start-time="15:50" data-end-time="16:20" data-priority="P2" data-labels="[&quot;30 minutos&quot;, &quot;intelectual&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">15:50</span><span class="time-separator">-</span><span class="time-end">16:20</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7Wwr5fQ64hhWm" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🧠 Panel Web Cristina</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">30 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p2 h-60  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7X9qCjWH3gFxm" data-content="Ir al teatro solo" data-start-time="16:20" data-end-time="18:20" data-priority="P2" data-labels="[&quot;2 horas&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">16:20</span><span class="time-separator">-</span><span class="time-end">18:20</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7X9qCjWH3gFxm" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Ir al teatro solo</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">120 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">2 horas</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-10  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQxVpqfQpGW6W2W" data-content="Proyecto comprar piso en Rivas para vivir" data-start-time="18:20" data-end-time="18:30" data-priority="P3" data-labels="[&quot;10 minutos&quot;, &quot;administrativo&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">18:20</span><span class="time-separator">-</span><span class="time-end">18:30</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQxVpqfQpGW6W2W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📋 Proyecto comprar piso en Rivas para vivir</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">10 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-15  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQxV9xmxG3FjWP4" data-content="Comprar Victor Frank libro" data-start-time="18:30" data-end-time="18:45" data-priority="P3" data-labels="[&quot;15 minutos&quot;, &quot;administrativo&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">18:30</span><span class="time-separator">-</span><span class="time-end">18:45</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQxV9xmxG3FjWP4" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📚 Comprar Victor Frank libro</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">15 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fRG3QRWmvw9JQ74" data-content="Desarrollar tapón con tubito para agua botella trekking" data-start-time="18:45" data-end-time="19:05" data-priority="P3" data-labels="[&quot;30minutos&quot;, &quot;administrativo&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">18:45</span><span class="time-separator">-</span><span class="time-end">19:05</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fRG3QRWmvw9JQ74" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💧 <span class="truncate" data-full-text="Desarrollar tapón con tubito para agua botella trekking">Desarrollar tapón con tubito para agua botella ...</span></a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-30  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fQ7X2Q9QQc8XW9m" data-content="Motor busqueda con IA Teatro" data-start-time="19:05" data-end-time="19:35" data-priority="P3" data-labels="[&quot;30 minutos&quot;, &quot;intelectual&quot;, &quot;motivaci\u00f3n&quot;, &quot;por la tarde&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">19:05</span><span class="time-separator">-</span><span class="time-end">19:35</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7X2Q9QQc8XW9m" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">🧠 Motor busqueda con IA Teatro</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">30 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3 h-20  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6fvMHwq82PVphG9W" data-content="Vender Air Bag Ski fuera Pista" data-start-time="19:35" data-end-time="19:55" data-priority="P3" data-labels="[&quot;obligaci\u00f3n&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">19:35</span><span class="time-separator">-</span><span class="time-end">19:55</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fvMHwq82PVphG9W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">📝 Vender Air Bag Ski fuera Pista</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">20 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p4 h-5  ">
+          <td class="checkbox-col"></td>
+          <td class="time-col" style="background-color: #fef8fa;"><span class="time-badge"><span class="time-start">19:55</span><span class="time-separator">-</span><span class="time-end">20:00</span></span></td>
+          <td class="activity-col">⏸️ Tiempo libre</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col" style="background-color: #fef8fa;"><span class="duration-badge">5 min</span></td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p1 h-60  ">
+          <td class="checkbox-col"><input type="checkbox" class="task-checkbox" data-task-id="6cQxGRvQcgJWp95W" data-content="Entrenamiento de fuerza" data-start-time="20:00" data-end-time="21:00" data-priority="P1" data-labels="[&quot;1 hora&quot;, &quot;fisico&quot;, &quot;h\u00e1bitos&quot;, &quot;por la noche&quot;]" title="Marcar como completada"></td>
+          <td class="time-col" style="background-color: #f8f7fc;"><span class="time-badge"><span class="time-start">20:00</span><span class="time-separator">-</span><span class="time-end">21:00</span></span></td>
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQxGRvQcgJWp95W" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">💪 Entrenamiento de fuerza</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p1">P1</span></td>
+          <td class="duration-col" style="background-color: #f8f7fc;"><span class="duration-badge">60 min</span></td>
+          <td class="labels-col"><div class="labels-container"><span class="label">1 hora</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la noche</span></div></td>
+        </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- TASKS WITH DATE SECTION -->
+
+<div class="card" style="background: #f0f9ff; border-left: 4px solid #3b82f6;">
+  <div class="section-title" style="color: #1e40af;">📅 Tareas con Fecha (4)</div>
+  <p class="subtext" style="margin-bottom: 16px; color: #1e3a8a;">Tareas no recurrentes con fecha futura (ordenadas cronológicamente):</p>
+  <table>
+    <thead>
+      <tr><th>Actividad</th><th>P</th><th>Fecha</th><th>Etiquetas</th></tr>
+    </thead>
+    <tbody>
+        <tr class="p4">
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cqPGqVP8gR4gFH4" target="_blank" style="color: #64748b; text-decoration: none; font-weight: 500;">Pagar impuestos Cercedilla</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">Baja</span></td>
+          <td style="text-align: center; font-size: 14px; color: #64748b;">25/02/2026</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">20 minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="p3">
+          <td class="activity-col"><a href="https://todoist.com/app/task/6f4gjmR6Grm7rGV4" target="_blank" style="color: #64748b; text-decoration: none; font-weight: 500;">Liquidar impuesto de tasa de basuras plaza de Pedro zerolo en Madrid</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">Media</span></td>
+          <td style="text-align: center; font-size: 14px; color: #64748b;">09/03/2026</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">15 minutos</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="p2">
+          <td class="activity-col"><a href="https://todoist.com/app/task/6cQxVQ8P5j4mHpg4" target="_blank" style="color: #64748b; text-decoration: none; font-weight: 500;">Próximo viaje bicicleta Irati con Cris</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">Alta</span></td>
+          <td style="text-align: center; font-size: 14px; color: #64748b;">06/04/2026</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">10 minutos</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="p4">
+          <td class="activity-col"><a href="https://todoist.com/app/task/6fQ7Wjx7r9xPvj5F" target="_blank" style="color: #64748b; text-decoration: none; font-weight: 500;">Videos foco cerrado Cris Estudio</a></td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">Baja</span></td>
+          <td style="text-align: center; font-size: 14px; color: #64748b;">14/04/2026</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">2 horas</span><span class="label">fisico</span><span class="label">motivación</span><span class="label">por la mañana</span></div></td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- UNASSIGNED TASKS SECTION -->
+
+<div class="card" style="background: #fffbeb; border-left: 4px solid #f59e0b;">
+  <div class="section-title" style="color: #92400e;">⚠️ Tareas Sin Asignar (41)</div>
+  <p class="subtext" style="margin-bottom: 16px; color: #78350f;">Estas tareas de Todoist no entraron en el cronograma de hoy:</p>
+  <table>
+    <thead>
+      <tr><th>Actividad</th><th>P</th><th>Duración</th><th>Etiquetas</th></tr>
+    </thead>
+    <tbody>
+        <tr class="priority-p2">
+          <td class="activity-col">🧠 Construir Lego Seriusly Play significado de compartir</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p2">P2</span></td>
+          <td class="duration-col">120 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">2 horas</span><span class="label">intelectual</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">🧠 Convenio especial Seguridad Social cuota autónomos</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">🧠 Motor busqueda IA M Clasica conciertos</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">🥁 Bateria suplementaria Power Bank 12 v 5 Amp</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">obligación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">🥁 Proyecto guía para conocer mejor la música clásica que pueda ver para conciertos interesantes</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">📋 [Ir a ARCHIVO NOTARIAL DE PROTOCOLOS: Copia disponible para recogida. Ref. 131822](https://mail.google.com/mail?extsrc=sync&client=docs&plid=ACUX6DPk-zP4k1o7Z06pTLPYylch-nIp2BHCpzM)</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">120 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">2 horas</span><span class="label">administrativo</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">📝 Curso de impresión 3D para Aviones YouTube</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">motivación</span><span class="label">por latarde</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">🧠 Crear S.L. corporación gastar antes pagar impuesto</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por latarde</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">📝 Publicidad farolas piso Pedro Zerolo cerca de Instituto De Empresa Universidad</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">120 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">2 horas</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p3">
+          <td class="activity-col">📝 Marcelo última factura Pedro Zerolo de Luz</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p3">P3</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Diseño 3D soporte ala avión</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Partido pádel el Estudiante</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">120 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">2 horas</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">🧠 Repasar curso de primeros auxilios</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">💪 Candado bici eléctrica Road Bike</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">fisico</span><span class="label">obligación</span></div></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">🧠 Proyecto RC Avion con IA</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">🧠 carro para dirección despega Aviones R-C</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span></div></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">✅ Vazquez de Mella revisar LED Amerigo</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">30 min</td>
+          <td class="labels-col"><div class="labels-container"><span class="label">30 minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por la tarde</span></div></td>
+        </tr>
+        <tr style="border-top: 3px solid #ffc107;">
+          <td colspan="4" style="padding: 0; height: 3px; background: #ffc107;"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">💳 contacto constructores presupuesto</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📞 SteelframingSG Sin contacto</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📞 Pablo Corral Constructor</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 SteelframingGreen</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Lagarab Gabriel</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 [Steelframing.es](https://Steelframing.es). Miriam</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Javier Rengel</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Raomar Enrique</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Reformas baratas. Miguel</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Levantamiento turco</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Dominadas</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Sentadillas</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 reservar hoteles</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Bucal: hilo dental</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Visual: vista cuidarme</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Auditivo: cascos batería</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Limpieza cutis #</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Cascos para conciertos</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Ruedas reformer pilates</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 enganches muelles reformer</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Aire acondicionado remoto</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 [RE: Proyecto casa Steel Framing](https://mail.google.com/mail?extsrc=sync&client=docs&plid=ACUX6DOM_ViyzrwXtBCs-zvY5j86Hk31hJnKgNo)</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Jazmin casa limpiar</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="activity-col">📝 Verificación cuenta Home Exchange</td>
+          <td class="priority-cell priority-col"><span class="priority-badge p4">P4</span></td>
+          <td class="duration-col">20 min</td>
+          <td class="labels-col"></td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- WEEKLY CALENDAR SECTION -->
+<div style="margin-top: 40px; padding: 20px; background: white; border-left: 5px solid #667eea; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h2 style="margin: 0 0 20px 0; color: #5a67d8; font-size: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">📅 Calendario Semanal</h2>
+  <div id="weekly-calendar" style="overflow-x: auto;">
+    <div style="text-align: center; padding: 40px; color: #a0aec0;">
+      <p style="margin: 0; font-size: 16px;">Cargando calendario...</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Horizontal Weekly Calendar Styles */
+  .calendar-week-grid {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  
+  .calendar-grid-header {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+  }
+  
+  .calendar-time-column {
+    padding: 16px 12px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    font-size: 14px;
+  }
+  
+  .calendar-day-column {
+    padding: 12px 8px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  
+  .calendar-day-column:last-child {
+    border-right: none;
+  }
+  
+  .calendar-day-column.today-column {
+    background: rgba(255,255,255,0.2);
+  }
+  
+  .calendar-day-column.weekend-column {
+    background: rgba(56, 249, 215, 0.15);
+  }
+  
+  .day-name {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  
+  .day-date {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  .today-badge-small {
+    display: inline-block;
+    background: #fbbf24;
+    color: #78350f;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  
+  .calendar-grid-body {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  
+  .calendar-grid-row {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .calendar-grid-row:last-child {
+    border-bottom: none;
+  }
+  
+  .calendar-time-cell {
+    padding: 12px;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    background: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    font-weight: 500;
+  }
+  
+  .calendar-hour-cell {
+    padding: 4px;
+    min-height: 60px;
+    border-right: 1px solid #e5e7eb;
+    position: relative;
+    background: white;
+  }
+  
+  .calendar-hour-cell:last-child {
+    border-right: none;
+  }
+  
+  .calendar-hour-cell.weekend-cell {
+    background: #f9fafb;
+  }
+  
+  .calendar-event-block {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin: 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  
+  .event-block-title {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  
+  .event-block-time {
+    font-size: 10px;
+    opacity: 0.9;
+  }
+
+</style>
+
+<script>
+// Regenerar cronograma
+async function regenerarCronograma() {
+  const button = event.target;
+  const originalText = button.innerHTML;
+  button.innerHTML = '⏳ Regenerando...';
+  button.disabled = true;
+  
+  try {
+    const response = await fetch('/regenerate', {
+      method: 'POST'
+    });
+    const data = await response.json();
+    
+    if (data.success) {
+      button.innerHTML = '✅ ¡Listo!';
+      setTimeout(() => {
+        window.location.reload(true); // Force reload without cache
+      }, 500);
+    } else {
+      button.innerHTML = '❌ Error';
+      alert('Error al regenerar: ' + (data.error || 'Desconocido'));
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }, 2000);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    button.innerHTML = '❌ Error';
+    alert('Error al regenerar el cronograma');
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.disabled = false;
+    }, 2000);
+  }
+}
+
+// Fetch and display weekly calendar
+async function loadWeeklyCalendar() {
+  try {
+    const response = await fetch('/week-calendar');
+    const data = await response.json();
+    
+    if (!data.success) {
+      console.error('Error loading calendar:', data);
+      return;
+    }
+    
+    const calendarContainer = document.getElementById('weekly-calendar');
+    
+    // Get today's date and next 6 days
+    const today = new Date();
+    const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    // Create horizontal weekly calendar with hourly grid
+    let html = '<div class="calendar-week-grid">';
+    
+    // Header row with days
+    html += '<div class="calendar-grid-header">';
+    html += '<div class="calendar-time-column">Hora</div>';
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      const dayName = daysOfWeek[date.getDay()];
+      const dayNumber = date.getDate();
+      const monthName = monthNames[date.getMonth()];
+      const isToday = i === 0;
+      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+      
+      html += `<div class="calendar-day-column ${isToday ? 'today-column' : ''} ${isWeekend ? 'weekend-column' : ''}">`;
+      html += `<div class="day-name">${dayName}</div>`;
+      html += `<div class="day-date">${dayNumber} ${monthName}</div>`;
+      if (isToday) html += '<div class="today-badge-small">Hoy</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+    
+    // Grid body with hours (7-21)
+    html += '<div class="calendar-grid-body">';
+    
+    for (let hour = 7; hour <= 21; hour++) {
+      html += '<div class="calendar-grid-row">';
+      html += `<div class="calendar-time-cell">${hour}:00</div>`;
+      
+      // For each day
+      for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + dayIndex);
+        const dateKey = date.toISOString().split('T')[0];
+        const events = data.events[dateKey] || [];
+        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+        
+        // Find events that overlap with this hour
+        const hourEvents = events.filter(event => {
+          if (event.all_day) return false;
+          const [startHour] = event.start.split(':').map(Number);
+          const [endHour] = event.end.split(':').map(Number);
+          return startHour <= hour && endHour > hour;
+        });
+        
+        html += `<div class="calendar-hour-cell ${isWeekend ? 'weekend-cell' : ''}">`;
+        
+        if (hourEvents.length > 0) {
+          hourEvents.forEach(event => {
+            const [startHour, startMin] = event.start.split(':').map(Number);
+            const [endHour, endMin] = event.end.split(':').map(Number);
+            
+            // Only show event title in the first hour
+            if (startHour === hour) {
+              const duration = calculateDuration(event.start, event.end);
+              html += `<div class="calendar-event-block">`;
+              html += `<div class="event-block-title">${event.summary}</div>`;
+              html += `<div class="event-block-time">${event.start}-${event.end}</div>`;
+              html += '</div>';
+            }
+          });
+        }
+        
+        html += '</div>';
+      }
+      
+      html += '</div>';
+    }
+    
+    html += '</div>';
+    html += '</div>';
+    
+    // Helper function to calculate duration
+    function calculateDuration(start, end) {
+      const [startHour, startMinute] = start.split(':').map(Number);
+      const [endHour, endMinute] = end.split(':').map(Number);
+      const duration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+      if (duration >= 60) {
+        const hours = Math.floor(duration / 60);
+        const minutes = duration % 60;
+        return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+      }
+      return `${duration}m`;
+    }
+    
+    calendarContainer.innerHTML = html;
+    
+  } catch (error) {
+    console.error('Error loading weekly calendar:', error);
+    document.getElementById('weekly-calendar').innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #e53e3e;">
+        <p style="margin: 0; font-size: 16px;">❌ Error al cargar el calendario</p>
+      </div>
+    `;
+  }
+}
+
+
+// Load calendar when page loads
+window.addEventListener('DOMContentLoaded', loadWeeklyCalendar);
+
+// Handle task completion checkboxes
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.task-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', async function() {
+            if (this.checked) {
+                const taskId = this.getAttribute('data-task-id');
+                const content = this.getAttribute('data-content');
+                const startTime = this.getAttribute('data-start-time');
+                const endTime = this.getAttribute('data-end-time');
+                const priority = this.getAttribute('data-priority');
+                const labelsStr = this.getAttribute('data-labels');
+                const labels = labelsStr ? JSON.parse(labelsStr) : [];
+                
+                const row = this.closest('tr');
+                
+                // FASE 1: Mark row as completed visually IMMEDIATELY
+                row.style.transition = 'all 0.3s ease';
+                row.style.backgroundColor = '#f3f4f6';
+                row.style.opacity = '0.6';
+                
+                // Keep checkbox checked and disabled
+                this.checked = true;
+                this.disabled = true;
+                
+                try {
+                    const response = await fetch('/complete-task', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            task_id: taskId,
+                            content: content,
+                            start_time: startTime,
+                            end_time: endTime,
+                            priority: priority,
+                            labels: labels
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Task completed and saved locally
+                        console.log('✅ Tarea completada y guardada localmente');
+                        // NO reload - keep the visual mark
+                    } else {
+                        alert('❌ Error al completar la tarea: ' + (data.error || 'Error desconocido'));
+                        // Revert visual changes on error
+                        row.style.backgroundColor = '';
+                        row.style.opacity = '';
+                        this.checked = false;
+                        this.disabled = false;
+                    }
+                } catch (error) {
+                    alert('❌ Error de conexión: ' + error.message);
+                    // Revert visual changes on error
+                    row.style.backgroundColor = '';
+                    row.style.opacity = '';
+                    row.style.textDecoration = '';
+                    this.checked = false;
+                    this.disabled = false;
+                }
+            }
+        });
+    });
+});
+</script>
+
+<!-- Sortable.js for drag & drop -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+// Función para recalcular los tiempos después de reordenar
+function recalcularTiempos() {
+    const tbody = document.getElementById('cronograma-tbody');
+    if (!tbody) return;
+    
+    const rows = tbody.querySelectorAll('tr');
+    let currentTime = new Date();
+    currentTime.setHours(7, 0, 0, 0); // Empezar a las 07:00
+    
+    rows.forEach(function(row) {
+        const timeCell = row.cells[1]; // Segunda columna es la hora
+        const durationCell = row.cells[4]; // Quinta columna es la duración
+        
+        if (!timeCell || !durationCell) return;
+        
+        // Extraer duración en minutos
+        const durationText = durationCell.textContent.trim();
+        let minutes = 0;
+        
+        if (durationText.includes('hora')) {
+            const hours = parseInt(durationText.match(/\d+/));
+            minutes = hours * 60;
+        } else if (durationText.includes('min')) {
+            minutes = parseInt(durationText.match(/\d+/));
+        }
+        
+        // Calcular hora de inicio y fin
+        const startHour = currentTime.getHours();
+        const startMin = currentTime.getMinutes();
+        
+        currentTime.setMinutes(currentTime.getMinutes() + minutes);
+        
+        const endHour = currentTime.getHours();
+        const endMin = currentTime.getMinutes();
+        
+        // Formatear y actualizar la celda de hora
+        const startTime = String(startHour).padStart(2, '0') + ':' + String(startMin).padStart(2, '0');
+        const endTime = String(endHour).padStart(2, '0') + ':' + String(endMin).padStart(2, '0');
+        timeCell.textContent = startTime + '-' + endTime;
+    });
+    
+    console.log('✅ Tiempos recalculados correctamente');
+}
+
+// Initialize drag & drop for cronograma table
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('cronograma-tbody');
+    if (tbody) {
+        new Sortable(tbody, {
+            animation: 150,
+            handle: 'tr',
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            onEnd: function(evt) {
+                console.log('Tarea movida de posición ' + evt.oldIndex + ' a ' + evt.newIndex);
+                recalcularTiempos();
+            }
+        });
+        console.log('✅ Drag & drop inicializado en el cronograma');
+    }
+});
+</script>
+
+<style>
+.sortable-ghost {
+    opacity: 0.4;
+    background: #f0f0f0;
+}
+.sortable-drag {
+    opacity: 0.8;
+    cursor: move;
+}
+#cronograma-tbody tr {
+    cursor: move;
+}
+#cronograma-tbody tr:hover {
+    background-color: #f9fafb;
+}
+</style>
+
+</body>
+</html>
