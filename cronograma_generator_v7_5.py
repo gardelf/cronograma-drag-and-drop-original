@@ -1727,153 +1727,135 @@ full_html = f'''<!DOCTYPE html>
 </div>
 
 <style>
-  /* Professional Calendar Cards Design */
-  .calendar-cards-container {{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 20px;
-    padding: 10px 0;
-  }}
-  
-  .calendar-day-card {{
+  /* Horizontal Weekly Calendar Styles */
+  .calendar-week-grid {{
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid #e5e7eb;
+    margin: 20px 0;
   }}
   
-  .calendar-day-card:hover {{
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    transform: translateY(-2px);
-  }}
-  
-  .calendar-day-card.today-card {{
-    border: 2px solid #667eea;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
-  }}
-  
-  .calendar-day-header {{
+  .calendar-grid-header {{
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-  }}
-  
-  .calendar-day-header.weekend-header {{
-    background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
-  }}
-  
-  .calendar-day-name {{
-    font-size: 18px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }}
-  
-  .calendar-day-date {{
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0.95;
-  }}
-  
-  .today-badge {{
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(255,255,255,0.25);
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 11px;
     font-weight: 600;
+  }}
+  
+  .calendar-time-column {{
+    padding: 16px 12px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    font-size: 14px;
+  }}
+  
+  .calendar-day-column {{
+    padding: 12px 8px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.2);
+  }}
+  
+  .calendar-day-column:last-child {{
+    border-right: none;
+  }}
+  
+  .calendar-day-column.today-column {{
+    background: rgba(255,255,255,0.2);
+  }}
+  
+  .calendar-day-column.weekend-column {{
+    background: rgba(56, 249, 215, 0.15);
+  }}
+  
+  .day-name {{
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-  }}
-  
-  .calendar-events-list {{
-    padding: 16px;
-  }}
-  
-  .no-events-day-message {{
-    text-align: center;
-    padding: 20px;
-    color: #9ca3af;
-    font-size: 14px;
-    font-style: italic;
-  }}
-  
-  .calendar-event-item {{
-    display: flex;
-    align-items: flex-start;
-    padding: 12px;
-    margin-bottom: 12px;
-    background: #f9fafb;
-    border-radius: 8px;
-    border-left: 4px solid #667eea;
-    transition: all 0.2s ease;
-  }}
-  
-  .calendar-event-item:last-child {{
-    margin-bottom: 0;
-  }}
-  
-  .calendar-event-item:hover {{
-    background: #f3f4f6;
-    transform: translateX(4px);
-  }}
-  
-  .event-icon {{
-    font-size: 24px;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }}
-  
-  .event-details {{
-    flex: 1;
-  }}
-  
-  .event-title {{
-    font-size: 15px;
-    font-weight: 600;
-    color: #1f2937;
     margin-bottom: 4px;
   }}
   
-  .event-time {{
-    font-size: 13px;
-    color: #6b7280;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-  }}
-  
-  .event-description {{
-    font-size: 13px;
-    color: #9ca3af;
-    margin-top: 6px;
-    line-height: 1.4;
-  }}
-  
-  .no-events-message {{
-    text-align: center;
-    padding: 40px 20px;
-    color: #9ca3af;
-  }}
-  
-  .no-events-message p {{
-    margin: 0;
+  .day-date {{
     font-size: 16px;
+    font-weight: 700;
   }}
   
-  @media (max-width: 768px) {{
-    .calendar-cards-container {{
-      grid-template-columns: 1fr;
-    }}
+  .today-badge-small {{
+    display: inline-block;
+    background: #fbbf24;
+    color: #78350f;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 4px;
+    font-weight: 600;
   }}
+  
+  .calendar-grid-body {{
+    max-height: 600px;
+    overflow-y: auto;
+  }}
+  
+  .calendar-grid-row {{
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    border-bottom: 1px solid #e5e7eb;
+  }}
+  
+  .calendar-grid-row:last-child {{
+    border-bottom: none;
+  }}
+  
+  .calendar-time-cell {{
+    padding: 12px;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    background: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    font-weight: 500;
+  }}
+  
+  .calendar-hour-cell {{
+    padding: 4px;
+    min-height: 60px;
+    border-right: 1px solid #e5e7eb;
+    position: relative;
+    background: white;
+  }}
+  
+  .calendar-hour-cell:last-child {{
+    border-right: none;
+  }}
+  
+  .calendar-hour-cell.weekend-cell {{
+    background: #f9fafb;
+  }}
+  
+  .calendar-event-block {{
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin: 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }}
+  
+  .event-block-title {{
+    font-weight: 600;
+    margin-bottom: 2px;
+  }}
+  
+  .event-block-time {{
+    font-size: 10px;
+    opacity: 0.9;
+  }}
+
 </style>
 
 <script>
@@ -1932,79 +1914,78 @@ async function loadWeeklyCalendar() {{
     const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     
-    // Create professional card-based calendar
-    let html = '<div class="calendar-cards-container">';
+    // Create horizontal weekly calendar with hourly grid
+    let html = '<div class="calendar-week-grid">';
     
-    // Get events for the next 7 days
-    const dates = [];
+    // Header row with days
+    html += '<div class="calendar-grid-header">';
+    html += '<div class="calendar-time-column">Hora</div>';
+    
     for (let i = 0; i < 7; i++) {{
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-      dates.push(date);
-    }}
-    
-    // Group events by day and create cards
-    for (let dayIndex = 0; dayIndex < 7; dayIndex++) {{
-      const date = dates[dayIndex];
-      const dateKey = date.toISOString().split('T')[0];
       const dayName = daysOfWeek[date.getDay()];
       const dayNumber = date.getDate();
       const monthName = monthNames[date.getMonth()];
-      const isToday = dayIndex === 0;
+      const isToday = i === 0;
       const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-      const events = data.events[dateKey] || [];
       
-      // Day header card
-      html += `<div class="calendar-day-card ${{isToday ? 'today-card' : ''}}">`;
-      html += `<div class="calendar-day-header ${{isWeekend ? 'weekend-header' : ''}}">`;  
-      html += `<div class="calendar-day-name">${{dayName}}</div>`;
-      html += `<div class="calendar-day-date">${{dayNumber}} ${{monthName}}</div>`;
-      if (isToday) html += '<div class="today-badge">Hoy</div>';
+      html += `<div class="calendar-day-column ${{isToday ? 'today-column' : ''}} ${{isWeekend ? 'weekend-column' : ''}}">`;
+      html += `<div class="day-name">${{dayName}}</div>`;
+      html += `<div class="day-date">${{dayNumber}} ${{monthName}}</div>`;
+      if (isToday) html += '<div class="today-badge-small">Hoy</div>';
       html += '</div>';
+    }}
+    html += '</div>';
+    
+    // Grid body with hours (7-21)
+    html += '<div class="calendar-grid-body">';
+    
+    for (let hour = 7; hour <= 21; hour++) {{
+      html += '<div class="calendar-grid-row">';
+      html += `<div class="calendar-time-cell">${{hour}}:00</div>`;
       
-      // Events list
-      html += '<div class="calendar-events-list">';
-      
-      // If no events, show message
-      if (events.length === 0) {{
-        html += '<div class="no-events-day-message">Sin eventos programados</div>';
-      }} else {{
-      
-      const eventColors = ['#667eea', '#f5576c', '#00d4ff', '#38f9d7', '#ffa502', '#ff6348', '#5f27cd', '#00b894'];
-      events.forEach((event, index) => {{
-        const color = eventColors[index % eventColors.length];
-        const icon = event.all_day ? '📅' : '🕐';
+      // For each day
+      for (let dayIndex = 0; dayIndex < 7; dayIndex++) {{
+        const date = new Date(today);
+        date.setDate(today.getDate() + dayIndex);
+        const dateKey = date.toISOString().split('T')[0];
+        const events = data.events[dateKey] || [];
+        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
         
-        html += `<div class="calendar-event-item" style="border-left-color: ${{color}};">`;
-        html += `<div class="event-icon">${{icon}}</div>`;
-        html += '<div class="event-details">';
-        html += `<div class="event-title">${{event.summary}}</div>`;
+        // Find events that overlap with this hour
+        const hourEvents = events.filter(event => {{
+          if (event.all_day) return false;
+          const [startHour] = event.start.split(':').map(Number);
+          const [endHour] = event.end.split(':').map(Number);
+          return startHour <= hour && endHour > hour;
+        }});
         
-        if (event.all_day) {{
-          html += '<div class="event-time">Todo el día</div>';
-        }} else {{
-          const duration = calculateDuration(event.start, event.end);
-          html += `<div class="event-time">${{event.start}} - ${{event.end}} (${{duration}})</div>`;
+        html += `<div class="calendar-hour-cell ${{isWeekend ? 'weekend-cell' : ''}}">`;
+        
+        if (hourEvents.length > 0) {{
+          hourEvents.forEach(event => {{
+            const [startHour, startMin] = event.start.split(':').map(Number);
+            const [endHour, endMin] = event.end.split(':').map(Number);
+            
+            // Only show event title in the first hour
+            if (startHour === hour) {{
+              const duration = calculateDuration(event.start, event.end);
+              html += `<div class="calendar-event-block">`;
+              html += `<div class="event-block-title">${{event.summary}}</div>`;
+              html += `<div class="event-block-time">${{event.start}}-${{event.end}}</div>`;
+              html += '</div>';
+            }}
+          }});
         }}
         
-        if (event.description) {{
-          html += `<div class="event-description">${{event.description}}</div>`;
-        }}
-        
-        html += '</div></div>';
-      }});
+        html += '</div>';
       }}
       
-      html += '</div></div>';
-    }}
-    
-    // If no events in the next 7 days
-    if (html === '<div class="calendar-cards-container">') {{
-      html += '<div class="no-events-message">';
-      html += '<p>📅 No hay eventos programados en los próximos 7 días</p>';
       html += '</div>';
     }}
     
+    html += '</div>';
     html += '</div>';
     
     // Helper function to calculate duration
@@ -2031,6 +2012,7 @@ async function loadWeeklyCalendar() {{
     `;
   }}
 }}
+
 
 // Load calendar when page loads
 window.addEventListener('DOMContentLoaded', loadWeeklyCalendar);
