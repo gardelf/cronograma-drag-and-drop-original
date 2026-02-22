@@ -2066,6 +2066,50 @@ document.addEventListener('DOMContentLoaded', function() {{
 <!-- Sortable.js for drag & drop -->
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
+// Función para recalcular los tiempos después de reordenar
+function recalcularTiempos() {{
+    const tbody = document.getElementById('cronograma-tbody');
+    if (!tbody) return;
+    
+    const rows = tbody.querySelectorAll('tr');
+    let currentTime = new Date();
+    currentTime.setHours(7, 0, 0, 0); // Empezar a las 07:00
+    
+    rows.forEach(function(row) {{
+        const timeCell = row.cells[1]; // Segunda columna es la hora
+        const durationCell = row.cells[4]; // Quinta columna es la duración
+        
+        if (!timeCell || !durationCell) return;
+        
+        // Extraer duración en minutos
+        const durationText = durationCell.textContent.trim();
+        let minutes = 0;
+        
+        if (durationText.includes('hora')) {{
+            const hours = parseInt(durationText.match(/\d+/));
+            minutes = hours * 60;
+        }} else if (durationText.includes('min')) {{
+            minutes = parseInt(durationText.match(/\d+/));
+        }}
+        
+        // Calcular hora de inicio y fin
+        const startHour = currentTime.getHours();
+        const startMin = currentTime.getMinutes();
+        
+        currentTime.setMinutes(currentTime.getMinutes() + minutes);
+        
+        const endHour = currentTime.getHours();
+        const endMin = currentTime.getMinutes();
+        
+        // Formatear y actualizar la celda de hora
+        const startTime = String(startHour).padStart(2, '0') + ':' + String(startMin).padStart(2, '0');
+        const endTime = String(endHour).padStart(2, '0') + ':' + String(endMin).padStart(2, '0');
+        timeCell.textContent = startTime + '-' + endTime;
+    }});
+    
+    console.log('✅ Tiempos recalculados correctamente');
+}}
+
 // Initialize drag & drop for cronograma table
 document.addEventListener('DOMContentLoaded', function() {{
     const tbody = document.getElementById('cronograma-tbody');
@@ -2077,7 +2121,7 @@ document.addEventListener('DOMContentLoaded', function() {{
             dragClass: 'sortable-drag',
             onEnd: function(evt) {{
                 console.log('Tarea movida de posición ' + evt.oldIndex + ' a ' + evt.newIndex);
-                // TODO: Enviar nuevo orden al servidor para persistir
+                recalcularTiempos();
             }}
         }});
         console.log('✅ Drag & drop inicializado en el cronograma');
