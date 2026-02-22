@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cronograma V7.4 - Final Python Strategy</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background: #f0f2f5; color: #333; }
+  table { border-collapse: collapse; width: 100%; max-width: 1000px; margin: 20px auto; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  thead { background: #4a5568; color: white; }
+  th, td { border: 1px solid #e2e8f0; padding: 10px 14px; vertical-align: middle; text-align: left; }
+  tr:nth-child(even) { background: #f7fafc; }
+  a { color: #2b6cb0; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .label { background: #edf2f7; color: #4a5568; padding: 3px 8px; border-radius: 12px; font-size: 12px; margin-right: 5px; }
+  
+  /* --- Type Colors (Background) --- */
+  .type-Física { background-color: #d1e7dd; } .type-Intelectual { background-color: #cff4fc; } .type-Administrativa { background-color: #fff3cd; } .type-Fija { background-color: #d9ead3; } .type-General { background-color: #e2e8f0; }
+
+  /* --- Priority Colors (Border) --- */
+  .priority-p1 { border-left: 5px solid #e53e3e; } .priority-p2 { border-left: 5px solid #dd6b20; } .priority-p3 { border-left: 5px solid #3182ce; } .priority-p4 { border-left: 2px solid #a0aec0; } .priority-p- { border-left: 2px solid #a0aec0; }
+
+  /* --- Priority Cell (Background) --- */
+  .priority-cell { text-align: center; font-weight: bold; color: white; }
+  .priority-cell.priority-p1 { background-color: #e53e3e; } .priority-cell.priority-p2 { background-color: #dd6b20; } .priority-cell.priority-p3 { background-color: #3182ce; } .priority-cell.priority-p4 { background-color: #a0aec0; }
+
+</style>
+</head>
+<body>
+<div style="background-color: #e6fffa; padding: 15px; margin-bottom: 20px; border-left: 5px solid #38b2ac;">
+<h1 style="margin: 0; color: #2c7a7b;">✅ Cronograma V7.4 - Estrategia Final con Python</h1>
+<p style="margin: 10px 0 0 0; color: #555;">
+<strong>Fecha:</strong> 02/12/2025 15:00:32<br>
+<strong>Estrategia:</strong> Lógica de asignación multi-paso para garantizar que todas las tareas se agenden correctamente.
+</p>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Hora</th><th>Actividad</th><th>Tipo</th><th>Prioridad</th><th>Etiquetas</th><th>Duración</th></tr>
+  </thead>
+  <tbody>
+            <tr class="priority-p4">
+          <td class="h-20">07:00-07:20</td>
+          <td><a href="" target="_blank">Desayunar</a></td>
+          <td class="type-Fija">Fija</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">07:20-07:25</td>
+          <td><a href="https://app.todoist.com/app/task/9371308360" target="_blank">Control de gastos</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">obligación</span><span class="label">rutina administrativa matinal</span></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">07:25-07:30</td>
+          <td><a href="https://app.todoist.com/app/task/7214038911" target="_blank">Recordatorio Mantra: No siempre gano en lo que quiero, pero puedo estar ganando ya en otras cosas que a mi mente le sirve( es suficiente) esto la deja tranquila</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">07:30-07:35</td>
+          <td><a href="https://app.todoist.com/app/task/9789990615" target="_blank">Gracias a Dios</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">07:35-07:40</td>
+          <td><a href="https://app.todoist.com/app/task/9790038050" target="_blank">Visitas Idealista Plazas de Garage</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">obligación</span><span class="label">rutina administrativa matinal</span></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">07:40-07:45</td>
+          <td><a href="https://app.todoist.com/app/task/9790042344" target="_blank">Prevision Gastos extras</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">5 minutos</span><span class="label">hábitos</span><span class="label">obligación</span><span class="label">rutina administrativa matinal</span></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">07:45-07:55</td>
+          <td><a href="https://app.todoist.com/app/task/9789994462" target="_blank">Calendario Iphone</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">hábitos</span><span class="label">rutina administrativa matinal</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">07:55-08:05</td>
+          <td><a href="https://app.todoist.com/app/task/9791091813" target="_blank">3 Todoist listados accesos directos</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">hábitos</span><span class="label">obligación</span><span class="label">rutina administrativa matinal</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">08:05-08:25</td>
+          <td><a href="https://app.todoist.com/app/task/9789987348" target="_blank">Gmail correos</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">20 minutos</span><span class="label">hábitos</span><span class="label">obligación</span><span class="label">rutina administrativa matinal</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-15">08:25-08:40</td>
+          <td><a href="https://app.todoist.com/app/task/9790026621" target="_blank">Mail Ayuntamiento plusvalia plaza garage pte</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">15 minutos</span><span class="label">Cheks</span></td>
+          <td>15 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">08:40-09:00</td>
+          <td><a href="https://app.todoist.com/app/task/9790029158" target="_blank">Mail 2 Hip. escritura Jorge Caixa</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">Cheks</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">09:00-09:20</td>
+          <td><a href="https://app.todoist.com/app/task/9790030961" target="_blank">Piedad Padel partidos en Pozos El estudiante</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">Cheks</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">09:20-09:40</td>
+          <td><a href="https://app.todoist.com/app/task/9583332572" target="_blank">contrato Todor</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">Cheks</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">09:40-09:45</td>
+          <td><a href="https://app.todoist.com/app/task/9371293046" target="_blank">Beber agua 1 litro</a></td>
+          <td class="type-Física">Física</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">5 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">09:45-09:55</td>
+          <td><a href="https://app.todoist.com/app/task/9783486080" target="_blank">Espalda</a></td>
+          <td class="type-Física">Física</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">09:55-10:05</td>
+          <td><a href="https://app.todoist.com/app/task/9783487071" target="_blank">Hombros 2</a></td>
+          <td class="type-Física">Física</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-15">10:05-10:20</td>
+          <td><a href="https://app.todoist.com/app/task/9783486804" target="_blank">Hombros 1 + pecho</a></td>
+          <td class="type-Física">Física</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">15 minutos</span><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></td>
+          <td>15 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-15">10:20-10:35</td>
+          <td><a href="https://app.todoist.com/app/task/9789998667" target="_blank">Leer Padre Rico Padre Pobre</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">15 minutos</span><span class="label">hábitos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la mañana</span></td>
+          <td>15 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">10:35-10:55</td>
+          <td><a href="https://app.todoist.com/app/task/9371590113" target="_blank">progresión Bateria</a></td>
+          <td class="type-Física">Física</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">fisico</span><span class="label">hábitos</span><span class="label">por la mañana</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">10:55-11:25</td>
+          <td><a href="https://app.todoist.com/app/task/9790006844" target="_blank">Tradear:replay Tesla</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">hábitos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por la mañana</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">11:25-11:55</td>
+          <td><a href="https://app.todoist.com/app/task/9790021883" target="_blank">Tradear : replay Ndivia</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">hábitos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por la mañana</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">11:55-12:25</td>
+          <td><a href="https://app.todoist.com/app/task/9790023229" target="_blank">Tradear: sesion analisis</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">hábitos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por la mañana</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">12:25-12:55</td>
+          <td><a href="https://app.todoist.com/app/task/9790065540" target="_blank">Empezar a Fondear Noctarial</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">obligación</span><span class="label">por la mañana</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">12:55-13:25</td>
+          <td><a href="https://app.todoist.com/app/task/9790068965" target="_blank">Fondos a Interbroker</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por la mañana</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">13:25-13:55</td>
+          <td><a href="https://app.todoist.com/app/task/9601378500" target="_blank">fondos para Training View</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">obligación</span><span class="label">por la mañana</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">13:55-14:00</td>
+          <td><a href="" target="_blank">Tiempo libre</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-60">14:00-15:00</td>
+          <td><a href="" target="_blank">Comer</a></td>
+          <td class="type-Fija">Fija</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td></td>
+          <td>60 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">15:00-15:10</td>
+          <td><a href="https://app.todoist.com/app/task/9371535152" target="_blank">Próximo viaje bicicleta Irati con Cris</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">motivación</span><span class="label">por la tarde</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">15:10-15:20</td>
+          <td><a href="https://app.todoist.com/app/task/9371540120" target="_blank">Proyecto comprar piso en Rivas para vivir</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">por la tarde</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-15">15:20-15:35</td>
+          <td><a href="https://app.todoist.com/app/task/9371520567" target="_blank">Comprar Victor Frank libro</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">15 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">por la tarde</span></td>
+          <td>15 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">15:35-15:55</td>
+          <td><a href="https://app.todoist.com/app/task/9752396421" target="_blank">Amortizar gastos tarjeta de cuenta corriente 1 de diciembre</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">20 minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por la tarde</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">15:55-16:15</td>
+          <td><a href="https://app.todoist.com/app/task/9790057864" target="_blank">Pagar Plusvalia Ayto Madrid plaza Garage</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">20 minutos</span><span class="label">administrativo</span><span class="label">obligación</span><span class="label">por la tarde</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">16:15-16:45</td>
+          <td><a href="https://app.todoist.com/app/task/9790067003" target="_blank">Vazquez Mella Estrategia</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">obligación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">16:45-17:15</td>
+          <td><a href="https://app.todoist.com/app/task/9790069777" target="_blank">Home Assistan Alejandro</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">17:15-17:45</td>
+          <td><a href="https://app.todoist.com/app/task/9790072459" target="_blank">Nuevas Gafas de ski</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">obligación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">17:45-18:15</td>
+          <td><a href="https://app.todoist.com/app/task/9790076776" target="_blank">Nueva Web Cristina Seo</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">obligación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">18:15-18:45</td>
+          <td><a href="https://app.todoist.com/app/task/9790077568" target="_blank">Motor busqueda con IA Teatro</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">18:45-19:15</td>
+          <td><a href="https://app.todoist.com/app/task/9790078656" target="_blank">Motor busqueda IA M Clasica conciertos</a></td>
+          <td class="type-Intelectual">Intelectual</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">intelectual</span><span class="label">motivación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-30">19:15-19:45</td>
+          <td><a href="https://app.todoist.com/app/task/9790086243" target="_blank">Bateria suplementaria Power Bank 12 v 5 Amp</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">30 minutos</span><span class="label">administrativo</span><span class="label">motivación</span><span class="label">obligación</span><span class="label">por la tarde</span></td>
+          <td>30 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">19:45-19:55</td>
+          <td><a href="https://app.todoist.com/app/task/9371297200" target="_blank">Buscar obra de teatro del mes</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">motivación</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-5">19:55-20:00</td>
+          <td><a href="" target="_blank">Tiempo libre</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td></td>
+          <td>5 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-20">20:00-20:20</td>
+          <td><a href="https://app.todoist.com/app/task/9790064084" target="_blank">equipaje Japon</a></td>
+          <td class="type-Física">Física</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">20 minutos</span><span class="label">fisico</span><span class="label">obligación</span><span class="label">por la noche</span></td>
+          <td>20 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">20:20-20:30</td>
+          <td><a href="https://app.todoist.com/app/task/7446727046" target="_blank">Ha llegado Pashimina de Cris centro de retiro de silencio ????</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">obligación</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">20:30-20:40</td>
+          <td><a href="https://app.todoist.com/app/task/9790033152" target="_blank">Solicitar Copia Escritura Colegio Notarial</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">obligación</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">20:40-20:50</td>
+          <td><a href="https://app.todoist.com/app/task/9790061128" target="_blank">Hipotecas gastos reclamacion Victor</a></td>
+          <td class="type-Administrativa">Administrativa</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td><span class="label">10 minutos</span><span class="label">administrativo</span><span class="label">obligación</span></td>
+          <td>10 min</td>
+        </tr>
+        <tr class="priority-p4">
+          <td class="h-10">20:50-21:00</td>
+          <td><a href="" target="_blank">Tiempo libre</a></td>
+          <td class="type-General">General</td>
+          <td class="priority-cell priority-p4">P4</td>
+          <td></td>
+          <td>10 min</td>
+        </tr>
+
+  </tbody>
+</table>
+
+</body>
+</html>

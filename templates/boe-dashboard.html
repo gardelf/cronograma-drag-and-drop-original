@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOE Subastas - Rivas Vaciamadrid</title>
+  <style>
+    .boe-dashboard {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    
+    .boe-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .boe-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .boe-btn {
+      padding: 10px 20px;
+      background: white;
+      color: #667eea;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .boe-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .boe-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .boe-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .boe-stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      border-top: 3px solid #667eea;
+    }
+    
+    .boe-stat-number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #667eea;
+      margin: 10px 0;
+    }
+    
+    .boe-stat-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+    }
+    
+    .boe-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .boe-card h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+      font-size: 18px;
+    }
+    
+    .boe-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    
+    .boe-table thead {
+      background: #667eea;
+      color: white;
+    }
+    
+    .boe-table th {
+      padding: 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .boe-table td {
+      padding: 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .boe-table tbody tr:hover {
+      background: #f9f9f9;
+    }
+    
+    .boe-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .boe-badge-success {
+      background: #e8f5e9;
+      color: #4caf50;
+    }
+    
+    .boe-badge-error {
+      background: #ffebee;
+      color: #f44336;
+    }
+    
+    .boe-loading {
+      text-align: center;
+      padding: 30px;
+      color: #999;
+    }
+    
+    .boe-empty {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    
+    .boe-alert {
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    
+    .boe-alert-success {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .boe-alert-error {
+      background: #ffebee;
+      color: #c62828;
+    }
+    
+    @media (max-width: 768px) {
+      .boe-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .boe-table {
+        font-size: 11px;
+      }
+      
+      .boe-table th,
+      .boe-table td {
+        padding: 8px 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="boe-dashboard">
+    <!-- Header -->
+    <div class="boe-header">
+      <div>
+        <h2>🔍 BOE Subastas - Rivas Vaciamadrid</h2>
+        <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">Panel de control compacto</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="boe-btn" onclick="boeRunScraper()" id="boeRunBtn">
+          🚀 Ejecutar
+        </button>
+        <button class="boe-btn" onclick="boeLoadData()">
+          🔄 Actualizar
+        </button>
+      </div>
+    </div>
+    
+    <!-- Alerts -->
+    <div id="boeAlerts"></div>
+    
+    <!-- Stats -->
+    <div class="boe-stats">
+      <div class="boe-stat-card">
+        <div class="boe-stat-number" id="boeTotalSubastas">-</div>
+        <div class="boe-stat-label">Total Subastas</div>
+      </div>
+      <div class="boe-stat-card">
+        <div class="boe-stat-number" id="boeLastRun">-</div>
+        <div class="boe-stat-label">Última Ejecución</div>
+      </div>
+      <div class="boe-stat-card">
+        <div class="boe-stat-number" id="boeNewToday">-</div>
+        <div class="boe-stat-label">Nuevas Hoy</div>
+      </div>
+      <div class="boe-stat-card">
+        <div class="boe-stat-number" id="boeStatus">-</div>
+        <div class="boe-stat-label">Estado</div>
+      </div>
+    </div>
+    
+    <!-- Recent Runs -->
+    <div class="boe-card">
+      <h3>📈 Últimas Ejecuciones</h3>
+      <div id="boeRunsTable" class="boe-loading">Cargando...</div>
+    </div>
+    
+    <!-- Recent Subastas -->
+    <div class="boe-card">
+      <h3>📋 Últimas Subastas</h3>
+      <div id="boeSubastasTable" class="boe-loading">Cargando...</div>
+    </div>
+  </div>
+  
+  <script>
+    const BOE_API_URL = 'https://boe-subastas-scraper-production.up.railway.app';
+    
+    function boeShowAlert(message, type = 'success') {
+      const container = document.getElementById('boeAlerts');
+      const alert = document.createElement('div');
+      alert.className = `boe-alert boe-alert-${type}`;
+      alert.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span><span>${message}</span>`;
+      container.appendChild(alert);
+      setTimeout(() => alert.remove(), 4000);
+    }
+    
+    function boeFormatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    
+    function boeFormatDuration(start, end) {
+      const duration = (new Date(end) - new Date(start)) / 1000;
+      return `${duration.toFixed(1)}s`;
+    }
+    
+    async function boeLoadData() {
+      try {
+        // Load stats
+        const statsRes = await fetch(`${BOE_API_URL}/api/stats`);
+        const stats = await statsRes.json();
+        
+        if (stats.success) {
+          document.getElementById('boeTotalSubastas').textContent = stats.data.total_subastas || 0;
+          document.getElementById('boeNewToday').textContent = stats.data.nuevas_hoy || 0;
+        }
+        
+        // Load runs
+        const runsRes = await fetch(`${BOE_API_URL}/api/runs`);
+        const runs = await runsRes.json();
+        
+        if (runs.success && runs.data.length > 0) {
+          const lastRun = runs.data[0];
+          const lastRunDate = new Date(lastRun.start_time);
+          
+          document.getElementById('boeLastRun').textContent = lastRunDate.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+          document.getElementById('boeStatus').textContent = lastRun.status === 'success' ? '✅' : '❌';
+          document.getElementById('boeStatus').style.color = lastRun.status === 'success' ? '#4caf50' : '#f44336';
+          
+          // Runs table
+          let html = '<table class="boe-table"><thead><tr><th>ID</th><th>Fecha</th><th>Duración</th><th>Estado</th><th>Encontradas</th></tr></thead><tbody>';
+          
+          runs.data.slice(0, 5).forEach(run => {
+            const badge = run.status === 'success' ? 'boe-badge-success' : 'boe-badge-error';
+            const statusText = run.status === 'success' ? '✅ OK' : '❌ Error';
+            html += `
+              <tr>
+                <td>#${run.id}</td>
+                <td>${boeFormatDate(run.start_time)}</td>
+                <td>${boeFormatDuration(run.start_time, run.end_time)}</td>
+                <td><span class="boe-badge ${badge}">${statusText}</span></td>
+                <td>${run.total_found}</td>
+              </tr>
+            `;
+          });
+          
+          html += '</tbody></table>';
+          document.getElementById('boeRunsTable').innerHTML = html;
+        } else {
+          document.getElementById('boeRunsTable').innerHTML = '<div class="boe-empty">No hay ejecuciones</div>';
+          document.getElementById('boeLastRun').textContent = 'N/A';
+          document.getElementById('boeStatus').textContent = '⏸️';
+        }
+        
+        // Load subastas
+        const subastasRes = await fetch(`${BOE_API_URL}/api/subastas`);
+        const subastas = await subastasRes.json();
+        
+        if (subastas.success && subastas.data.length > 0) {
+          let html = '<table class="boe-table"><thead><tr><th>ID</th><th>Título</th><th>Tipo</th><th>Valor</th><th>Localidad</th></tr></thead><tbody>';
+          
+          subastas.data.slice(0, 10).forEach(subasta => {
+            const valor = subasta.valor_subasta 
+              ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(subasta.valor_subasta)
+              : '-';
+            
+            html += `
+              <tr>
+                <td>${subasta.id_subasta}</td>
+                <td>${subasta.titulo || 'Sin título'}</td>
+                <td>${subasta.tipo_subasta || '-'}</td>
+                <td>${valor}</td>
+                <td>${subasta.localidad || '-'}</td>
+              </tr>
+            `;
+          });
+          
+          html += '</tbody></table>';
+          if (subastas.data.length > 10) {
+            html += `<p style="text-align: center; margin-top: 10px; color: #999; font-size: 12px;">Mostrando 10 de ${subastas.data.length}</p>`;
+          }
+          document.getElementById('boeSubastasTable').innerHTML = html;
+        } else {
+          document.getElementById('boeSubastasTable').innerHTML = '<div class="boe-empty">No hay subastas</div>';
+        }
+        
+      } catch (error) {
+        console.error('Error:', error);
+        boeShowAlert('Error al cargar datos', 'error');
+      }
+    }
+    
+    async function boeRunScraper() {
+      const btn = document.getElementById('boeRunBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Ejecutando...';
+      
+      try {
+        const response = await fetch(`${BOE_API_URL}/api/scrape`);
+        const data = await response.json();
+        
+        if (data.success) {
+          boeShowAlert('Scraper ejecutado correctamente', 'success');
+          setTimeout(() => {
+            boeLoadData();
+            btn.disabled = false;
+            btn.textContent = '🚀 Ejecutar';
+          }, 3000);
+        } else {
+          boeShowAlert('Error al ejecutar scraper', 'error');
+          btn.disabled = false;
+          btn.textContent = '🚀 Ejecutar';
+        }
+      } catch (error) {
+        boeShowAlert('Error: ' + error.message, 'error');
+        btn.disabled = false;
+        btn.textContent = '🚀 Ejecutar';
+      }
+    }
+    
+    // Load on start
+    boeLoadData();
+    
+    // Auto-refresh every 60 seconds
+    setInterval(boeLoadData, 60000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<style>
+  table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+  th, td { border: 1px solid #999; padding: 6px 8px; text-align: left; }
+  th { background-color: #004080; color: white; }
+  .tarea-fija { background-color: #d9ead3; font-weight: bold; }
+  .tarea-intelectual { background-color: #cfe2f3; }
+  .tarea-administrativa { background-color: #f9cb9c; }
+  .etiqueta { display: inline-block; padding: 2px 6px; margin: 0 4px 2px 0; border-radius: 4px; font-size: 12px; color: white; }
+  .motivacion { background-color: #6fa8dc; }
+  .habitos { background-color: #93c47d; }
+  .obligacion { background-color: #e69138; }
+</style>
+
+<h2>📅 Cronograma del Día (07:00 - 21:00)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Hora</th>
+      <th>Actividad</th>
+      <th>Tipo</th>
+      <th>Etiquetas</th>
+      <th>Duración</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>07:00 - 07:20</td>
+      <td>Desayunar</td>
+      <td class="tarea-fija">Fija</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <!-- 07:20 - 14:00: Alternar tareas intelectuales y administrativas, máximo 2 intelectuales seguidas -->
+    <!-- 11:00 - 14:00 llamadas y gestiones (administrativas) al final de la mañana -->
+    <!-- 14:00 - 15:00 Comer (fija) -->
+    <!-- 15:00 - 21:00 Alternar tareas intelectuales y administrativas -->
+    <!-- Total 42 bloques, 2 fijas, 38 tareas todoist -->
+
+    <!-- Bloques 07:20 - 11:00 (8 bloques) -->
+    <tr>
+      <td>07:20 - 07:40</td>
+      <td>Entrenamiento de fuerza</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta habitos">hábitos</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>07:40 - 08:00</td>
+      <td>contacto constructores presupuesto</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>08:00 - 08:20</td>
+      <td>Próximo viaje bicicleta Irati con Cris</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>08:20 - 08:40</td>
+      <td>SteelframingSG Sin contacto</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>08:40 - 09:00</td>
+      <td>Diseño 3D soporte ala avión</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>09:00 - 09:20</td>
+      <td>Pablo Corral Constructor</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>09:20 - 09:40</td>
+      <td>Leer sal de tu mente entra en tu vida</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>09:40 - 10:00</td>
+      <td>Reformas baratas. Miguel</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>10:00 - 10:20</td>
+      <td>Recordatorio Mantra: No siempre gano en lo que quiero, pero puedo estar ganando ya en otras cosas que a mi mente le sirve( es suficiente) esto la deja tranquila</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta habitos">hábitos</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>10:20 - 10:40</td>
+      <td>SteelframingGreen</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>10:40 - 11:00</td>
+      <td>Proyecto comprar piso en Rivas para vivir</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+
+    <!-- Bloques 11:00 - 14:00 llamadas y gestiones (administrativas) 9 bloques -->
+    <tr>
+      <td>11:00 - 11:20</td>
+      <td>mail</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta autopromotor">autopromotor</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>11:20 - 11:40</td>
+      <td>Convenio especial Seguridad Social cuota autónomos</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>11:40 - 12:00</td>
+      <td>Javier Rengel</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>12:00 - 12:20</td>
+      <td>Raomar Enrique</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>12:20 - 12:40</td>
+      <td>Liquidar impuesto de tasa de basuras plaza de Pedro zerolo en Madrid</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>12:40 - 13:00</td>
+      <td>Amortizar gastos tarjeta de cuenta corriente 1 de diciembre</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligación">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>13:00 - 13:20</td>
+      <td>Ha llegado Pashimina de Cris centro de retiro de silencio ????</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>13:20 - 13:40</td>
+      <td>Steelframing.es. Miriam</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>13:40 - 14:00</td>
+      <td>contacto constructores presupuesto</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+
+    <!-- 14:00 - 15:00 Comer (fija) 3 bloques -->
+    <tr>
+      <td>14:00 - 14:20</td>
+      <td>Comer</td>
+      <td class="tarea-fija">Fija</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>14:20 - 14:40</td>
+      <td>Comer</td>
+      <td class="tarea-fija">Fija</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>14:40 - 15:00</td>
+      <td>Comer</td>
+      <td class="tarea-fija">Fija</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+
+    <!-- 15:00 - 21:00 Alternar tareas intelectuales y administrativas 18 bloques -->
+    <tr>
+      <td>15:00 - 15:20</td>
+      <td>Entrenamiento de fuerza</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta habitos">hábitos</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>15:20 - 15:40</td>
+      <td>Control de gastos</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta habitos">hábitos</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>15:40 - 16:00</td>
+      <td>Próximo viaje bicicleta Irati con Cris</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>16:00 - 16:20</td>
+      <td>Convenio especial Seguridad Social cuota autónomos</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>16:20 - 16:40</td>
+      <td>Buscar obra de teatro del mes</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>16:40 - 17:00</td>
+      <td>Reservar hoteles</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>17:00 - 17:20</td>
+      <td>Leer sal de tu mente entra en tu vida</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>17:20 - 17:40</td>
+      <td>Reservar entrada David de Miguel Angel</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>17:40 - 18:00</td>
+      <td>Proyecto comprar piso en Rivas para vivir</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>18:00 - 18:20</td>
+      <td>Reservar cata de vino</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>18:20 - 18:40</td>
+      <td>Ver vídeo sobre la libertad</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>18:40 - 19:00</td>
+      <td>Amortizar gastos tarjeta de cuenta corriente 1 de diciembre</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>19:00 - 19:20</td>
+      <td>Modelo pickup</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>19:20 - 19:40</td>
+      <td>Reservar curso de cocina</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>19:40 - 20:00</td>
+      <td>Comprar Victor Frank libro</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>20:00 - 20:20</td>
+      <td>Cuotas julio Google sheet</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>20:20 - 20:40</td>
+      <td>La guía para conocer mejor la música clásica que pueda ver para conciertos interesantes</td>
+      <td class="tarea-intelectual">Intelectual</td>
+      <td><span class="etiqueta motivacion">motivación</span></td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>20:40 - 21:00</td>
+      <td>Liquidar impuesto de tasa de basuras plaza de Pedro zerolo en Madrid</td>
+      <td class="tarea-administrativa">Administrativa</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td>20 min</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>📋 Pendientes no asignadas</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Actividad</th>
+      <th>Etiquetas</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sentadillas</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/6793266260" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Dominadas</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/7214028687" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Afilar skis kendo..</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/5597058251" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Billetes de tren Bolonia Milan</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/7341131972" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Ir al físio</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/5607809627" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Repasar curso de primeros auxilios</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td><a href="https://app.todoist.com/app/task/9395878604" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Ir la médico análisis Urologo</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td><a href="https://app.todoist.com/app/task/6793267207" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Cascos para conciertos</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/9348156958" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Viaje de verano</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/7236133720" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Beber agua 1 litro</td>
+      <td><span class="etiqueta habitos">hábitos</span></td>
+      <td><a href="https://app.todoist.com/app/task/9371293046" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Ruedas reformer pilates</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/9371413653" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Enganches muelles reformer</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/9371414529" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Aire acondicionado remoto</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/9371415728" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Visual: vista cuidarme</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/5399475397" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Auditivo: cascos batería</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/5399475943" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Limpieza cutis #</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/5412776405" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Partido pádel el Estudiante</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/7232872609" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Excursion si o no a Cinco Terre</td>
+      <td></td>
+      <td><a href="https://app.todoist.com/app/task/7341131938" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Construir Lego Seriusly Play significado de compartir</td>
+      <td><span class="etiqueta obligacion">obligación</span></td>
+      <td><a href="https://app.todoist.com/app/task/9371593564" target="_blank">Link</a></td>
+    </tr>
+    <tr>
+      <td>Progresión Bateria</td>
+     

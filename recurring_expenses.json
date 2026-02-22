@@ -1,0 +1,82 @@
+{
+  "monthly_expenses": [
+    {
+      "description": "ChatGPT",
+      "amount": 23.00,
+      "category": "Ocio",
+      "day": 1
+    },
+    {
+      "description": "Piso Juan Doña 50%",
+      "amount": 600.00,
+      "category": "Casa",
+      "day": 1
+    },
+    {
+      "description": "Climatización Juana Doña",
+      "amount": 60.00,
+      "category": "Casa",
+      "day": 1
+    },
+    {
+      "description": "Móvil+internet",
+      "amount": 53.00,
+      "category": "Casa",
+      "day": 1
+    },
+    {
+      "description": "Agua Juana Doña",
+      "amount": 20.00,
+      "category": "Casa",
+      "day": 1
+    },
+    {
+      "description": "Luz Juana Doña",
+      "amount": 60.00,
+      "category": "Casa",
+      "day": 1
+    },
+    {
+      "description": "Clases batería",
+      "amount": 67.00,
+      "category": "Ocio",
+      "day": 1
+    },
+    {
+      "description": "Tradingview bolsa",
+      "amount": 20.51,
+      "category": "Formación",
+      "day": 6
+    },
+    {
+      "description": "Tradeando curso bolsa",
+      "amount": 206.00,
+      "category": "Formación",
+      "day": 16
+    }
+  ],
+  "bimonthly_expenses": [
+    {
+      "description": "Clases padel vallina",
+      "amount": 149.00,
+      "category": "Ocio",
+      "day": 7,
+      "months": [1, 3, 5, 7, 9, 11]
+    }
+  ],
+  "yearly_expenses": [
+    {
+      "description": "Impuesto sobre la renta segundo plazo",
+      "amount": 1731.00,
+      "category": "Trámites",
+      "day": 6,
+      "month": 11
+    }
+  ],
+  "notes": {
+    "monthly_total": 1109.51,
+    "bimonthly_average": 74.50,
+    "yearly_average": 144.25,
+    "estimated_monthly_average": 1328.26
+  }
+}

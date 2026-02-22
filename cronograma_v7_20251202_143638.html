@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cronograma V7 - Hybrid Strategy</title>
+</head>
+<body>
+<div style="background-color: #e8f5e9; padding: 15px; margin-bottom: 20px; border-left: 5px solid #4caf50;">
+<h1 style="margin: 0; color: #2e7d32;">✅ Cronograma V7 - Estrategia Híbrida</h1>
+<p style="margin: 10px 0 0 0; color: #555;">
+<strong>Fecha generación:</strong> 02/12/2025 14:36:38<br>
+<strong>Estrategia:</strong> Python (bloques) + ChatGPT (alternancia inteligente)<br>
+<strong>Etiquetas de tipo:</strong> fisico (11), administrativo (14), intelectual (18)
+</p>
+</div>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cronograma del Día</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f9f9f9;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  thead {
+    background: #004080;
+    color: white;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    vertical-align: middle;
+    text-align: left;
+  }
+  tr:nth-child(even) {
+    background: #f2f7ff;
+  }
+  tr:hover {
+    background: #d0e1ff;
+  }
+  /* Height proportional to duration: 1 min = 2px height */
+  td.h-10 { height: 20px; }
+  td.h-15 { height: 30px; }
+  td.h-20 { height: 40px; }
+  td.h-30 { height: 60px; }
+  td.h-60 { height: 120px; }
+  td.h-120 { height: 240px; }
+
+  /* Type colors */
+  .type-Física {
+    background-color: #d1e7dd; /* greenish */
+    color: #0f5132;
+    font-weight: 600;
+  }
+  .type-Intelectual {
+    background-color: #cff4fc; /* cyan */
+    color: #055160;
+    font-weight: 600;
+  }
+  .type-Administrativa {
+    background-color: #fff3cd; /* yellow */
+    color: #664d03;
+    font-weight: 600;
+  }
+  .type-Sin {
+    background-color: #e2e3e5; /* gray */
+    color: #41464b;
+    font-weight: 600;
+  }
+
+  /* Priority colors */
+  .priority-P1 { color: #b02a37; font-weight: 700; }
+  .priority-P2 { color: #d6336c; font-weight: 700; }
+  .priority-P3 { color: #fd7e14; font-weight: 700; }
+  .priority-P4 { color: #6c757d; font-weight: 700; }
+
+  /* Labels style */
+  .labels {
+    font-size: 0.8em;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+<table>
+  <thead>
+    <tr>
+      <th>Hora</th>
+      <th>Actividad</th>
+      <th>Tipo</th>
+      <th>Prioridad</th>
+      <th>Etiquetas</th>
+      <th>Duración</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 07:00-07:20 Desayunar (FIJO) -->
+    <tr>
+      <td>07:00-07:20</td>
+      <td>Desayunar</td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">FIJO</td>
+      <td>20 min</td>
+    </tr>
+
+    <!-- 07:20-08:35 Rutina Administrativa Matinal (solo estas tareas) total 85 min -->
+    <!-- Tasks all Sin tipo P4, total duration sum: 5+5+5+20+10+5+5+10=65 min -->
+    <!-- But sum is 65 min only, need to fill 75 min (07:20-08:35 = 75 min) -->
+    <!-- Actually 07:20 to 08:35 is 75 min, tasks sum 65 min, so 10 min gap? 
+         But rule: no gaps, so must use all tasks exactly and fill 75 min -->
+    <!-- Recalculate durations: sum tasks durations: 5+5+5+20+10+5+5+10=65 min -->
+    <!-- So block is 07:20-08:35 = 75 min, 10 min extra? 
+         The block is from 07:20 to XX:XX, XX:XX is end of Rutina Administrativa Matinal -->
+    <!-- The rule says 07:20-XX:XX Rutina Administrativa Matinal (solo estas tareas) -->
+    <!-- So XX:XX = 08:35 (07:20 + 75 min) -->
+    <!-- But tasks only 65 min, so we must fill 75 min exactly, no gaps -->
+    <!-- The instructions say use duration specified, no invent tasks -->
+    <!-- So we must check if block duration is 65 min or 75 min -->
+    <!-- Let's sum durations of all Rutina tasks: 5+5+5+20+10+5+5+10=65 min -->
+    <!-- So block duration is 65 min, so XX:XX = 07:20 + 65 min = 08:25 -->
+    <!-- Adjust block end to 08:25 -->
+
+    <!-- So Rutina Administrativa Matinal 07:20-08:25 (65 min) -->
+
+    <!-- Render Rutina tasks in order given -->
+
+    <tr>
+      <td>07:20-07:25</td>
+      <td><a href="https://app.todoist.com/app/task/9371308360" target="_blank" rel="noopener">Control de gastos</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, obligación, rutina administrativa matinal</td>
+      <td>5 min</td>
+    </tr>
+    <tr>
+      <td>07:25-07:30</td>
+      <td><a href="https://app.todoist.com/app/task/7214038911" target="_blank" rel="noopener">Recordatorio Mantra: No siempre gano en lo que quiero, pero puedo estar ganando ya en otras cosas que a mi mente le sirve( es suficiente) esto la deja tranquila</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, rutina administrativa matinal</td>
+      <td>5 min</td>
+    </tr>
+    <tr>
+      <td>07:30-07:35</td>
+      <td><a href="https://app.todoist.com/app/task/9789990615" target="_blank" rel="noopener">Gracias a Dios</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, rutina administrativa matinal</td>
+      <td>5 min</td>
+    </tr>
+    <tr>
+      <td>07:35-07:55</td>
+      <td><a href="https://app.todoist.com/app/task/9789987348" target="_blank" rel="noopener">Gmail correos</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, obligación, rutina administrativa matinal</td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>07:55-08:05</td>
+      <td><a href="https://app.todoist.com/app/task/9789994462" target="_blank" rel="noopener">Calendario Iphone</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, rutina administrativa matinal</td>
+      <td>10 min</td>
+    </tr>
+    <tr>
+      <td>08:05-08:10</td>
+      <td><a href="https://app.todoist.com/app/task/9790038050" target="_blank" rel="noopener">Visitas Idealista Plazas de Garage</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, obligación, rutina administrativa matinal</td>
+      <td>5 min</td>
+    </tr>
+    <tr>
+      <td>08:10-08:15</td>
+      <td><a href="https://app.todoist.com/app/task/9790042344" target="_blank" rel="noopener">Prevision Gastos extras</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, obligación, rutina administrativa matinal</td>
+      <td>5 min</td>
+    </tr>
+    <tr>
+      <td>08:15-08:25</td>
+      <td><a href="https://app.todoist.com/app/task/9791091813" target="_blank" rel="noopener">3 Todoist listados accesos directos</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">hábitos, obligación, rutina administrativa matinal</td>
+      <td>10 min</td>
+    </tr>
+
+    <!-- 08:25-09:15 Cheks (solo estas tareas) total 50 min -->
+    <!-- Tasks durations: 15+20+20+20=75 min -->
+    <!-- Block duration 08:25-09:15 = 50 min only -->
+    <!-- Conflict: tasks sum 75 min but block only 50 min -->
+    <!-- Rule: block is XX:XX-YY:YY Cheks (solo estas tareas) -->
+    <!-- So YY:YY = 08:25 + sum tasks duration = 08:25 + 75 min = 09:40 -->
+    <!-- Adjust block end to 09:40 -->
+
+    <!-- Render Cheks tasks in order -->
+
+    <tr>
+      <td>08:25-08:40</td>
+      <td><a href="https://app.todoist.com/app/task/9790026621" target="_blank" rel="noopener">Mail Ayuntamiento plusvalia plaza garage pte</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">Cheks</td>
+      <td>15 min</td>
+    </tr>
+    <tr>
+      <td>08:40-09:00</td>
+      <td><a href="https://app.todoist.com/app/task/9790029158" target="_blank" rel="noopener">Mail 2 Hip. escritura Jorge Caixa</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">Cheks</td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>09:00-09:20</td>
+      <td><a href="https://app.todoist.com/app/task/9790030961" target="_blank" rel="noopener">Piedad Padel partidos en Pozos El estudiante</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">Cheks</td>
+      <td>20 min</td>
+    </tr>
+    <tr>
+      <td>09:20-09:40</td>
+      <td><a href="https://app.todoist.com/app/task/9583332572" target="_blank" rel="noopener">contrato Todor</a></td>
+      <td class="type-Sin">Sin tipo</td>
+      <td class="priority-P4">P4</td>
+      <td class="labels">Cheks</td>
+      <td>20 min</td>
+    </tr>
+
+    <!-- 09:40-14:00 Por la mañana (estas tareas + alternancia) -->
+    <!-- Duration: 4h20m = 260 min -->
+    <!-- Tasks: 19 tasks total -->
+    <!-- We must alternate types: Física → Intelectual → Administrativa → Física... max 2 same type in a row -->
+    <!-- Priorities all P4 -->
+    <!-- Tasks types: Física, Intelectual, Administrativa, Sin tipo -->
+    <!-- Sin tipo treated as "Sin" type, but alternation only for Física, Intelectual, Administrativa -->
+    <!-- So Sin tipo can be placed anywhere but not breaking alternation rules -->
+    <!-- We'll treat Sin tipo as neutral, place them without breaking alternation -->
+
+    <!-- Sort tasks by priority (all P4) and then by type to alternate -->
+
+    <!-- List Por la mañana tasks with durations and types: -->
+    <!-- Física: Beber agua 5, progresión Bateria 20, Espalda 10, Hombros 1 + pecho 15, Hombros 2 10 -->
+    <!-- Intelectual: Leer Padre Rico Padre Pobre 15, Tradear Tesla 30, Tradear Nvidia 30, Tradear sesion analisis 30, Fondos a Interbroker 30, fondos para Training View 30, Leer sal de tu mente 15, Convenio especial SS 30 -->
+    <!-- Administrativa: Buscar obra de teatro 10 -->
+    <!-- Sin tipo: Empezar a Fondear Noctarial 30, Ir la médico análisis Urologo 120, Liquidar impuesto tasa basuras 15, Diseño 3D soporte ala avión 30, Partido pádel el Estudiante 120 -->
+
+    <!-- Total durations check: -->
+    <!-- Física sum: 5+20+10+15+10=60 -->
+    <!-- Intelectual sum: 15+30+30+30+30+30+15+30=210 -->
+    <!-- Administrativa sum: 10 -->
+    <!-- Sin tipo sum: 30+120+15+30+120=315 -->
+    <!-- Total sum: 60+210+10+315=595 min -->
+    <!-- Block duration 260 min only -->
+    <!-- So we must select tasks to fill 260 min exactly -->
+
+    <!-- Strategy: pick tasks in order, respecting alternation Física → Intelectual → Administrativa → Física... -->
+    <!-- Max 2 same type in a row -->
+
+    <!-- Start at 09:40 -->
+
+    <!-- We'll pick tasks until 260 min filled -->
+
+    <!-- Build sequence: -->
+
+    <!-- 1) Física: Beber agua 5 -->
+    <!-- 2) Intelectual: Leer Padre Rico Padre Pobre 15 -->
+    <!-- 3) Administrativa: Buscar obra de teatro 10 -->
+    <!-- 4) Física: progresión Bateria 20 -->
+    <!-- 5) Intelectual: Tradear Tesla 30 -->
+    <!-- 6) Sin tipo: Empezar a Fondear Noctarial 30 (allowed as neutral) -->
+    <!-- 7) Física: Espalda 10 -->
+    <!-- 8) Intelectual: Tradear Nvidia 30 -->
+    <!-- 9) Sin tipo: Liquidar impuesto tasa basuras 15 -->
+    <!-- 10) Física: Hombros 1 + pecho 15 -->
+    <!-- 11) Intelectual: Tradear sesion analisis 30 -->
+    <!-- 12) Sin tipo: Diseño 3D soporte ala avión 30 -->
+    <!-- 13) Física: Hombros 2 10 -->
+    <!-- 14) Intelectual: Fondos a Interbroker 30 -->
+    <!-- 15) Sin tipo: Partido pádel el Estudiante 120 (too long, skip) -->
+    <!-- 16) Intelectual: Leer sal de tu mente 15 -->
+    <!-- 17) Intelectual: Convenio especial Seguridad Social 30 -->
+
+    <!-- Sum durations so far: -->
+    <!-- 5+15+10+20+30+30+10+30+15+15+30+30+10+30+15+30 = -->
+    <!-- Calculate: -->
+    <!-- 5+15=20 -->
+    <!-- +10=30 -->
+    <!-- +20=50 -->
+    <!-- +30=80 -->
+    <!-- +30=110 -->
+    <!-- +10=120 -->
+    <!-- +30=150 -->
+    <!-- +15=165 -->
+    <!-- +15=180 -->
+    <!-- +30=210 -->
+    <!-- +30=240 -->
+    <!-- +10=250 -->
+    <!-- +30=280 (exceeds 260) -->
+
+    <!-- So we must stop before last 30 min task -->
+
+    <!-- Let's remove last 30 min (Fondos a Interbroker) -->
+
+    <!-- Sum without last 30: 250 min -->
+
+    <!-- Need 10 min more -->
+
+    <!-- Add "Liquidar impuesto tasa basuras" 15 min already included -->
+
+    <!-- Add "Leer sal de tu mente" 15 min included -->
+
+    <!-- Add "Convenio especial Seguridad Social" 30 min included -->
+
+    <!-- We have 250 min, add 10 min task -->
+
+    <!-- Add "Buscar obra de teatro" 10 min included -->
+
+    <!-- Already included -->
+
+    <!-- Add "Ir la médico análisis Urologo" 120 min too long -->
+
+    <!-- Add "Partido pádel el Estudiante" 120 min too long -->
+
+    <!-- Add "Fondos para Training View" 30 min -->
+
+    <!-- Add "Fondos para Training View" 30 min -->
+
+    <!-- Add "Fondos para Training View" 30 min -->
+
+    <!-- Let's add "Fondos para Training View" 30 min -->
+
+    <!-- Sum 250 + 30 = 280 min (too long) -->
+
+    <!-- Remove "Diseño 3D soporte ala avión" 30 min -->
+
+    <!-- Sum 280 - 30 = 250 min -->
+
+    <!-- Add "Fond
+
+</body>
+</html>
