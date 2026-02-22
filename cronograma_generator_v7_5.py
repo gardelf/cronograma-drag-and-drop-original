@@ -1798,6 +1798,14 @@ full_html = f'''<!DOCTYPE html>
     padding: 16px;
   }}
   
+  .no-events-day-message {{
+    text-align: center;
+    padding: 20px;
+    color: #9ca3af;
+    font-size: 14px;
+    font-style: italic;
+  }}
+  
   .calendar-event-item {{
     display: flex;
     align-items: flex-start;
@@ -1946,9 +1954,6 @@ async function loadWeeklyCalendar() {{
       const isWeekend = date.getDay() === 0 || date.getDay() === 6;
       const events = data.events[dateKey] || [];
       
-      // Skip days with no events
-      if (events.length === 0) continue;
-      
       // Day header card
       html += `<div class="calendar-day-card ${{isToday ? 'today-card' : ''}}">`;
       html += `<div class="calendar-day-header ${{isWeekend ? 'weekend-header' : ''}}">`;  
@@ -1959,6 +1964,11 @@ async function loadWeeklyCalendar() {{
       
       // Events list
       html += '<div class="calendar-events-list">';
+      
+      // If no events, show message
+      if (events.length === 0) {{
+        html += '<div class="no-events-day-message">Sin eventos programados</div>';
+      }} else {{
       
       const eventColors = ['#667eea', '#f5576c', '#00d4ff', '#38f9d7', '#ffa502', '#ff6348', '#5f27cd', '#00b894'];
       events.forEach((event, index) => {{
@@ -1983,6 +1993,7 @@ async function loadWeeklyCalendar() {{
         
         html += '</div></div>';
       }});
+      }}
       
       html += '</div></div>';
     }}
