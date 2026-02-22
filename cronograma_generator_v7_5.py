@@ -1091,8 +1091,13 @@ for task in final_cronograma:
     else:
         content_html = f'{emoji} {content}'
     
-    # Add link if URL exists
-    if task.get("url"):
+    # Add link to Todoist if task has an ID (Todoist task)
+    task_id = task.get("id")
+    if task_id and task.get("source") != "calendar" and content not in ["Desayunar", "Comer", "Tiempo libre"]:
+        todoist_url = f"https://todoist.com/app/task/{task_id}"
+        content_html = f'<a href="{todoist_url}" target="_blank" style="color: #374151; text-decoration: none; font-weight: 500;">{content_html}</a>'
+    # Add link if custom URL exists
+    elif task.get("url"):
         url = task["url"]
         content_html = f'<a href="{url}" target="_blank">{content_html}</a>'
     
