@@ -1698,6 +1698,16 @@ full_html = f'''<!DOCTYPE html>
 <!-- NEW EVENTS SECTION -->
 {new_events_section}
 
+<!-- WEEKLY CALENDAR SECTION -->
+<div style="margin-top: 40px; padding: 20px; background: white; border-left: 5px solid #667eea; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h2 style="margin: 0 0 20px 0; color: #5a67d8; font-size: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">📅 Calendario Semanal</h2>
+  <div id="weekly-calendar" style="overflow-x: auto;">
+    <div style="text-align: center; padding: 40px; color: #a0aec0;">
+      <p style="margin: 0; font-size: 16px;">Cargando calendario...</p>
+    </div>
+  </div>
+</div>
+
 <div class="card">
   <div class="section-title">Cronograma del Día</div>
   <table>
@@ -1715,16 +1725,6 @@ full_html = f'''<!DOCTYPE html>
 
 <!-- UNASSIGNED TASKS SECTION -->
 {unassigned_tasks_section}
-
-<!-- WEEKLY CALENDAR SECTION -->
-<div style="margin-top: 40px; padding: 20px; background: white; border-left: 5px solid #667eea; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-  <h2 style="margin: 0 0 20px 0; color: #5a67d8; font-size: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">📅 Calendario Semanal</h2>
-  <div id="weekly-calendar" style="overflow-x: auto;">
-    <div style="text-align: center; padding: 40px; color: #a0aec0;">
-      <p style="margin: 0; font-size: 16px;">Cargando calendario...</p>
-    </div>
-  </div>
-</div>
 
 <style>
   /* Horizontal Weekly Calendar Styles */
