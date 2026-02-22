@@ -1793,7 +1793,7 @@ full_html = f'''<!DOCTYPE html>
   }}
   
   .calendar-grid-body {{
-    max-height: 600px;
+    max-height: 250px;
     overflow-y: auto;
   }}
   
@@ -1808,7 +1808,7 @@ full_html = f'''<!DOCTYPE html>
   }}
   
   .calendar-time-cell {{
-    padding: 12px;
+    padding: 6px;
     text-align: center;
     font-size: 12px;
     color: #6b7280;
@@ -1819,7 +1819,7 @@ full_html = f'''<!DOCTYPE html>
   
   .calendar-hour-cell {{
     padding: 4px;
-    min-height: 60px;
+    min-height: 30px;
     border-right: 1px solid #e5e7eb;
     position: relative;
     background: white;
