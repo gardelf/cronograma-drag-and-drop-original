@@ -1727,128 +1727,144 @@ full_html = f'''<!DOCTYPE html>
 </div>
 
 <style>
-  .modern-week-calendar {{
-    width: 100%;
-    padding: 15px;
-    border-radius: 10px;
-    background: #fafbfc;
+  /* Professional Calendar Cards Design */
+  .calendar-cards-container {{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    padding: 10px 0;
   }}
   
-  .global-header {{
-    display: flex;
-    margin-bottom: 0;
-  }}
-  
-  .global-header-day-space {{
-    width: 90px;
-    background: #8b9dc3;
-    border-radius: 6px 0 0 0;
-  }}
-  
-  .global-header-hours {{
-    flex: 1;
-    display: flex;
+  .calendar-day-card {{
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     overflow: hidden;
-  }}
-  
-  .global-hour-label {{
-    flex: 1;
-    padding: 10px 3px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 10px;
-    color: white;
-    background: #8b9dc3;
-    border-right: 1px solid #6b7fa3;
-  }}
-  
-  .global-hour-label:last-child {{
-    border-radius: 0 6px 0 0;
-  }}
-  
-  .modern-day-row {{
-    margin-bottom: 3px;
-    display: flex;
-    align-items: stretch;
-    border-radius: 6px;
-    overflow: visible;
-    background: #f9fafb;
-  }}
-  
-  .modern-day-row.today-row {{
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
     border: 1px solid #e5e7eb;
   }}
   
-  .modern-day-row.weekend {{
-    background: #f0f9f6;
+  .calendar-day-card:hover {{
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
   }}
   
-  .modern-day-label {{
-    background: #a8b5cc;
+  .calendar-day-card.today-card {{
+    border: 2px solid #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  }}
+  
+  .calendar-day-header {{
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 10px 8px;
-    font-weight: 700;
-    font-size: 12px;
-    text-align: center;
+    padding: 16px 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 90px;
-    border-radius: 6px 0 0 6px;
-  }}
-  
-  .modern-day-row.weekend .modern-day-label {{
-    background: #6fb3a0;
-  }}
-  
-  .modern-timeline-container {{
-    flex: 1;
+    justify-content: space-between;
     position: relative;
-    overflow: visible;
   }}
   
-  .modern-timeline-body {{
-    position: relative;
-    height: 60px;
-    display: flex;
+  .calendar-day-header.weekend-header {{
+    background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
   }}
   
-  .modern-hour-cell {{
-    flex: 1;
-    position: relative;
-    border: 1px solid #e8e8e8;
-    margin: 2px;
-    border-radius: 6px;
+  .calendar-day-name {{
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }}
   
-  .modern-event-bar {{
+  .calendar-day-date {{
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.95;
+  }}
+  
+  .today-badge {{
     position: absolute;
-    background: white;
-    border-left: 4px solid #667eea;
-    color: #555;
-    padding: 6px 8px;
-    border-radius: 8px;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.25);
+    padding: 4px 12px;
+    border-radius: 12px;
     font-size: 11px;
     font-weight: 600;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    top: 10px;
-    height: 40px;
-    z-index: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }}
   
-  .modern-event-bar:hover {{
-    z-index: 100;
-    transform: scale(1.08);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    overflow: visible;
-    white-space: normal;
+  .calendar-events-list {{
+    padding: 16px;
+  }}
+  
+  .calendar-event-item {{
+    display: flex;
+    align-items: flex-start;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    transition: all 0.2s ease;
+  }}
+  
+  .calendar-event-item:last-child {{
+    margin-bottom: 0;
+  }}
+  
+  .calendar-event-item:hover {{
+    background: #f3f4f6;
+    transform: translateX(4px);
+  }}
+  
+  .event-icon {{
+    font-size: 24px;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }}
+  
+  .event-details {{
+    flex: 1;
+  }}
+  
+  .event-title {{
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }}
+  
+  .event-time {{
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+  }}
+  
+  .event-description {{
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 6px;
+    line-height: 1.4;
+  }}
+  
+  .no-events-message {{
+    text-align: center;
+    padding: 40px 20px;
+    color: #9ca3af;
+  }}
+  
+  .no-events-message p {{
+    margin: 0;
+    font-size: 16px;
+  }}
+  
+  @media (max-width: 768px) {{
+    .calendar-cards-container {{
+      grid-template-columns: 1fr;
+    }}
   }}
 </style>
 
@@ -1906,20 +1922,12 @@ async function loadWeeklyCalendar() {{
     // Get today's date and next 6 days
     const today = new Date();
     const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     
-    // Create modern grid calendar
-    let html = '<div class="modern-week-calendar">';
+    // Create professional card-based calendar
+    let html = '<div class="calendar-cards-container">';
     
-    // Global header with hours (only once)
-    html += '<div class="global-header">';
-    html += '<div class="global-header-day-space"></div>';
-    html += '<div class="global-header-hours">';
-    for (let hour = 8; hour <= 21; hour++) {{
-      html += `<div class="global-hour-label">${{hour}}</div>`;
-    }}
-    html += '</div></div>';
-    
-    // Create rows for each day (7 days)
+    // Get events for the next 7 days
     const dates = [];
     for (let i = 0; i < 7; i++) {{
       const date = new Date(today);
@@ -1927,55 +1935,79 @@ async function loadWeeklyCalendar() {{
       dates.push(date);
     }}
     
-    // Create one row per day
+    // Group events by day and create cards
     for (let dayIndex = 0; dayIndex < 7; dayIndex++) {{
       const date = dates[dayIndex];
       const dateKey = date.toISOString().split('T')[0];
       const dayName = daysOfWeek[date.getDay()];
+      const dayNumber = date.getDate();
+      const monthName = monthNames[date.getMonth()];
       const isToday = dayIndex === 0;
       const isWeekend = date.getDay() === 0 || date.getDay() === 6;
       const events = data.events[dateKey] || [];
       
-      // Day row
-      html += `<div class="modern-day-row ${{isToday ? 'today-row' : ''}} ${{isWeekend ? 'weekend' : ''}}">`;  
-      html += `<div class="modern-day-label">${{dayName}}</div>`;
+      // Skip days with no events
+      if (events.length === 0) continue;
       
-      // Timeline container
-      html += '<div class="modern-timeline-container">';
-      html += '<div class="modern-timeline-body">';
+      // Day header card
+      html += `<div class="calendar-day-card ${{isToday ? 'today-card' : ''}}">`;
+      html += `<div class="calendar-day-header ${{isWeekend ? 'weekend-header' : ''}}">`;  
+      html += `<div class="calendar-day-name">${{dayName}}</div>`;
+      html += `<div class="calendar-day-date">${{dayNumber}} ${{monthName}}</div>`;
+      if (isToday) html += '<div class="today-badge">Hoy</div>';
+      html += '</div>';
       
-      // Hour cells
-      for (let hour = 8; hour <= 21; hour++) {{
-        html += '<div class="modern-hour-cell"></div>';
-      }}
+      // Events list
+      html += '<div class="calendar-events-list">';
       
-      // Events positioned absolutely
       const eventColors = ['#667eea', '#f5576c', '#00d4ff', '#38f9d7', '#ffa502', '#ff6348', '#5f27cd', '#00b894'];
       events.forEach((event, index) => {{
-        if (!event.all_day) {{
-          const [startHour, startMinute] = event.start.split(':').map(Number);
-          const [endHour, endMinute] = event.end.split(':').map(Number);
-          
-          // Calculate position and width
-          const startOffset = (startHour - 8) + (startMinute / 60);
-          const duration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
-          const durationHours = duration / 60;
-          const durationText = duration >= 60 ? `${{Math.floor(duration/60)}}h` : `${{duration}}m`;
-          
-          // Calculate position and width as percentage
-          const totalHours = 14; // 8 to 21 = 14 hours
-          const leftPercent = (startOffset / totalHours) * 100;
-          const widthPercent = (durationHours / totalHours) * 100;
-          const color = eventColors[index % eventColors.length];
-          
-          html += `<div class="modern-event-bar" style="left: ${{leftPercent}}%; width: ${{widthPercent}}%; border-left-color: ${{color}};" title="${{event.summary}} (${{event.start}} - ${{event.end}})">${{event.summary}}</div>`;
+        const color = eventColors[index % eventColors.length];
+        const icon = event.all_day ? '📅' : '🕐';
+        
+        html += `<div class="calendar-event-item" style="border-left-color: ${{color}};">`;
+        html += `<div class="event-icon">${{icon}}</div>`;
+        html += '<div class="event-details">';
+        html += `<div class="event-title">${{event.summary}}</div>`;
+        
+        if (event.all_day) {{
+          html += '<div class="event-time">Todo el día</div>';
+        }} else {{
+          const duration = calculateDuration(event.start, event.end);
+          html += `<div class="event-time">${{event.start}} - ${{event.end}} (${{duration}})</div>`;
         }}
+        
+        if (event.description) {{
+          html += `<div class="event-description">${{event.description}}</div>`;
+        }}
+        
+        html += '</div></div>';
       }});
       
-      html += '</div></div></div>';
+      html += '</div></div>';
+    }}
+    
+    // If no events in the next 7 days
+    if (html === '<div class="calendar-cards-container">') {{
+      html += '<div class="no-events-message">';
+      html += '<p>📅 No hay eventos programados en los próximos 7 días</p>';
+      html += '</div>';
     }}
     
     html += '</div>';
+    
+    // Helper function to calculate duration
+    function calculateDuration(start, end) {{
+      const [startHour, startMinute] = start.split(':').map(Number);
+      const [endHour, endMinute] = end.split(':').map(Number);
+      const duration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+      if (duration >= 60) {{
+        const hours = Math.floor(duration / 60);
+        const minutes = duration % 60;
+        return minutes > 0 ? `${{hours}}h ${{minutes}}m` : `${{hours}}h`;
+      }}
+      return `${{duration}}m`;
+    }}
     
     calendarContainer.innerHTML = html;
     
