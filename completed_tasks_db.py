@@ -8,7 +8,11 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 import os
 
-DB_PATH = os.getenv('DB_PATH', '/app/data/completed_tasks.db')
+# Use a path that works in both local and Railway environments
+if os.path.exists('/app'):
+    DB_PATH = os.getenv('DB_PATH', '/app/data/completed_tasks.db')
+else:
+    DB_PATH = os.getenv('DB_PATH', os.path.join(os.path.dirname(__file__), 'data', 'completed_tasks.db'))
 
 def init_db():
     """Initialize the completed tasks database"""
