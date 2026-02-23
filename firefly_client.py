@@ -17,12 +17,49 @@ class FireflyClient:
         }
     
     def _make_request(self, endpoint, params=None):
-        """Make a GET request to Firefly III API"""
+        """Make a GET request to Firefly III API with pagination support"""
         try:
             url = f"{self.base_url}/api/v1/{endpoint}"
-            response = requests.get(url, headers=self.headers, params=params, timeout=10)
-            response.raise_for_status()
-            return response.json()
+            
+            # Initialize params if None
+            if params is None:
+                params = {}
+            
+            # Start with page 1
+            params['page'] = 1
+            
+            all_data = []
+            
+            while True:
+                response = requests.get(url, headers=self.headers, params=params, timeout=10)
+                response.raise_for_status()
+                data = response.json()
+                
+                # Add current page data
+                if 'data' in data:
+                    all_data.extend(data['data'])
+                
+                # Check if there are more pages
+                meta = data.get('meta', {})
+                pagination = meta.get('pagination', {})
+                current_page = pagination.get('current_page', 1)
+                total_pages = pagination.get('total_pages', 1)
+                
+                print(f"📄 Página {current_page}/{total_pages} obtenida ({len(data.get('data', []))} transacciones)")
+                
+                # If this is the last page, break
+                if current_page >= total_pages:
+                    break
+                
+                # Move to next page
+                params['page'] = current_page + 1
+            
+            # Return data in the same format as before
+            return {
+                'data': all_data,
+                'meta': data.get('meta', {})
+            }
+            
         except Exception as e:
             print(f"❌ Error calling Firefly API: {e}")
             return None
