@@ -1961,7 +1961,7 @@ async function loadWeeklyCalendar() {{
         // Find events that overlap with this hour
         const hourEvents = events.filter(event => {{
           if (event.all_day) return false;
-          const [startHour] = event.start.split(':').map(Number);
+          let startHour = parseInt(event.start.split(':')[0]);
           
           // Handle multi-day events (end might be "Dom 10:00" instead of "10:00")
           let endHour;
@@ -1970,8 +1970,15 @@ async function loadWeeklyCalendar() {{
             const endParts = event.end.split(' ');
             const timePart = endParts[endParts.length - 1]; // Get last part ("10:00")
             endHour = parseInt(timePart.split(':')[0]);
-            // For multi-day events shown on start date, show until end of day
-            endHour = 22; // Show until 22:00 (last hour in calendar)
+            
+            // If event starts before calendar view (before 7:00), treat as starting at 7:00
+            if (startHour < 7) {{
+              startHour = 7;
+            }}
+            // If event ends after calendar view or is 23:59, treat as ending at 22:00
+            if (endHour > 22 || event.end === '23:59') {{
+              endHour = 22;
+            }}
           }} else {{
             endHour = parseInt(event.end.split(':')[0]);
           }}
@@ -1983,9 +1990,14 @@ async function loadWeeklyCalendar() {{
         
         if (hourEvents.length > 0) {{
           hourEvents.forEach(event => {{
-            const [startHour, startMin] = event.start.split(':').map(Number);
+            let startHour = parseInt(event.start.split(':')[0]);
             
-            // Only show event title in the first hour
+            // For multi-day events starting before calendar view, adjust display start
+            if (event.multi_day && startHour < 7) {{
+              startHour = 7;
+            }}
+            
+            // Only show event title in the first visible hour
             if (startHour === hour) {{
               html += `<div class="calendar-event-block">`;
               html += `<div class="event-block-title">${{event.summary}}</div>`;
