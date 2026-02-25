@@ -649,7 +649,8 @@ def get_week_calendar():
                         }
                     else:
                         # Multi-day event - show end date + time
-                        days_of_week = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+                        # weekday() returns 0=Monday, 6=Sunday
+                        days_of_week = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
                         end_day_name = days_of_week[event['end'].weekday()]
                         formatted_event = {
                             'summary': event['summary'],
