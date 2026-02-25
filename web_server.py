@@ -634,6 +634,7 @@ def get_week_calendar():
                         'end': '',
                         'all_day': True
                     }
+                    formatted_events[date_key].append(formatted_event)
                 else:
                     # Check if event spans multiple days
                     start_date = event['start'].date()
@@ -647,20 +648,48 @@ def get_week_calendar():
                             'end': event['end'].strftime('%H:%M'),
                             'all_day': False
                         }
+                        formatted_events[date_key].append(formatted_event)
                     else:
-                        # Multi-day event - show end date + time
-                        # weekday() returns 0=Monday, 6=Sunday
+                        # Multi-day event - duplicate it for each day it spans
                         days_of_week = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
                         end_day_name = days_of_week[event['end'].weekday()]
-                        formatted_event = {
-                            'summary': event['summary'],
-                            'start': event['start'].strftime('%H:%M'),
-                            'end': f"{end_day_name} {event['end'].strftime('%H:%M')}",
-                            'all_day': False,
-                            'multi_day': True
-                        }
-                
-                formatted_events[date_key].append(formatted_event)
+                        
+                        # Iterate through each day the event spans
+                        current_date = start_date
+                        while current_date <= end_date:
+                            current_date_key = current_date.strftime('%Y-%m-%d')
+                            
+                            # Initialize the date key if it doesn't exist
+                            if current_date_key not in formatted_events:
+                                formatted_events[current_date_key] = []
+                            
+                            # Determine start and end times for this specific day
+                            if current_date == start_date:
+                                # First day: show actual start time
+                                day_start = event['start'].strftime('%H:%M')
+                            else:
+                                # Subsequent days: starts at beginning of day
+                                day_start = '00:00'
+                            
+                            if current_date == end_date:
+                                # Last day: show actual end time with day name
+                                day_end = f"{end_day_name} {event['end'].strftime('%H:%M')}"
+                            else:
+                                # Not last day: goes until end of day
+                                day_end = '23:59'
+                            
+                            formatted_event = {
+                                'summary': event['summary'],
+                                'start': day_start,
+                                'end': day_end,
+                                'all_day': False,
+                                'multi_day': True
+                            }
+                            
+                            formatted_events[current_date_key].append(formatted_event)
+                            
+                            # Move to next day
+                            current_date += timedelta(days=1)
         
         print(f"   ✅ Found events in {len(formatted_events)} days")
         
