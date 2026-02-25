@@ -1837,6 +1837,14 @@ full_html = f'''<!DOCTYPE html>
     background: #f9fafb;
   }}
   
+  .calendar-hour-cell.has-event {{
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  }}
+  
+  .calendar-hour-cell.has-event.weekend-cell {{
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(118, 75, 162, 0.12) 100%);
+  }}
+  
   .calendar-event-block {{
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -1986,7 +1994,11 @@ async function loadWeeklyCalendar() {{
           return startHour <= hour && endHour > hour;
         }});
         
-        html += `<div class="calendar-hour-cell ${{isWeekend ? 'weekend-cell' : ''}}">`;
+        // Check if this cell has any active events
+        const hasEvents = hourEvents.length > 0;
+        const cellClass = `calendar-hour-cell ${{isWeekend ? 'weekend-cell' : ''}} ${{hasEvents ? 'has-event' : ''}}`;
+        
+        html += `<div class="${{cellClass}}">`;
         
         if (hourEvents.length > 0) {{
           hourEvents.forEach(event => {{
