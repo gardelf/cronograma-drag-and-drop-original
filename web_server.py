@@ -7,7 +7,7 @@ from flask_cors import CORS
 from calendar_client import iCloudCalendarClient
 from events_db import mark_event_copied, mark_event_ignored, get_new_events
 from firefly_client import FireflyClient
-from datetime import datetime
+from datetime import datetime, timedelta
 import subprocess
 import os
 import json
@@ -72,7 +72,7 @@ def debug_firefly():
             debug_info['client_url'] = client.base_url
             
             # Try to get monthly summary directly
-            from datetime import datetime
+            from datetime import datetime, timedelta
             november_data = client.get_monthly_summary(2025, 11)
             debug_info['november_raw'] = november_data
             
@@ -118,7 +118,7 @@ def debug_firefly():
 def debug_files():
     """Debug endpoint to list cronograma files"""
     import glob
-    from datetime import datetime as dt
+    from datetime import datetime, timedelta as dt
     
     base_dir = os.path.dirname(os.path.abspath(__file__))
     pattern = os.path.join(base_dir, 'cronograma_v7_5_*.html')
@@ -150,7 +150,7 @@ def debug_calendar():
     try:
         import os
         from config import load_env_file
-        from datetime import datetime
+        from datetime import datetime, timedelta
         
         # Load .env if exists
         load_env_file()
@@ -272,7 +272,7 @@ def debug_todoist():
                 }
             
             # Filter tasks for today
-            from datetime import datetime
+            from datetime import datetime, timedelta
             today_str = datetime.now().strftime("%Y-%m-%d")
             
             today_tasks = []
