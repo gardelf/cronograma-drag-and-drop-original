@@ -1962,7 +1962,20 @@ async function loadWeeklyCalendar() {{
         const hourEvents = events.filter(event => {{
           if (event.all_day) return false;
           const [startHour] = event.start.split(':').map(Number);
-          const [endHour] = event.end.split(':').map(Number);
+          
+          // Handle multi-day events (end might be "Dom 10:00" instead of "10:00")
+          let endHour;
+          if (event.multi_day) {{
+            // For multi-day events, extract just the hour part
+            const endParts = event.end.split(' ');
+            const timePart = endParts[endParts.length - 1]; // Get last part ("10:00")
+            endHour = parseInt(timePart.split(':')[0]);
+            // For multi-day events shown on start date, show until end of day
+            endHour = 22; // Show until 22:00 (last hour in calendar)
+          }} else {{
+            endHour = parseInt(event.end.split(':')[0]);
+          }}
+          
           return startHour <= hour && endHour > hour;
         }});
         
@@ -1971,11 +1984,9 @@ async function loadWeeklyCalendar() {{
         if (hourEvents.length > 0) {{
           hourEvents.forEach(event => {{
             const [startHour, startMin] = event.start.split(':').map(Number);
-            const [endHour, endMin] = event.end.split(':').map(Number);
             
             // Only show event title in the first hour
             if (startHour === hour) {{
-              const duration = calculateDuration(event.start, event.end);
               html += `<div class="calendar-event-block">`;
               html += `<div class="event-block-title">${{event.summary}}</div>`;
               html += `<div class="event-block-time">${{event.start}}-${{event.end}}</div>`;
