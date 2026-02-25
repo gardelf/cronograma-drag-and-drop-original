@@ -625,15 +625,41 @@ def get_week_calendar():
         # Format events for JSON response
         formatted_events = {}
         for date_key, events in events_by_date.items():
-            formatted_events[date_key] = [
-                {
-                    'summary': event['summary'],
-                    'start': event['start'].strftime('%H:%M') if not event['all_day'] else 'Todo el día',
-                    'end': event['end'].strftime('%H:%M') if not event['all_day'] else '',
-                    'all_day': event['all_day']
-                }
-                for event in events
-            ]
+            formatted_events[date_key] = []
+            for event in events:
+                if event['all_day']:
+                    formatted_event = {
+                        'summary': event['summary'],
+                        'start': 'Todo el día',
+                        'end': '',
+                        'all_day': True
+                    }
+                else:
+                    # Check if event spans multiple days
+                    start_date = event['start'].date()
+                    end_date = event['end'].date()
+                    
+                    if start_date == end_date:
+                        # Same day event - show only times
+                        formatted_event = {
+                            'summary': event['summary'],
+                            'start': event['start'].strftime('%H:%M'),
+                            'end': event['end'].strftime('%H:%M'),
+                            'all_day': False
+                        }
+                    else:
+                        # Multi-day event - show end date + time
+                        days_of_week = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+                        end_day_name = days_of_week[event['end'].weekday()]
+                        formatted_event = {
+                            'summary': event['summary'],
+                            'start': event['start'].strftime('%H:%M'),
+                            'end': f"{end_day_name} {event['end'].strftime('%H:%M')}",
+                            'all_day': False,
+                            'multi_day': True
+                        }
+                
+                formatted_events[date_key].append(formatted_event)
         
         print(f"   ✅ Found events in {len(formatted_events)} days")
         
