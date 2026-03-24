@@ -1141,7 +1141,10 @@ for task in final_cronograma:
     has_check_label = any(label.lower() in ['check', 'checks'] for label in labels)
     check_class = "has-check-label" if has_check_label else ""
     
-    html_rows += f'''        <tr class="{priority_class} {height_class} {completed_class} {check_class}">
+    content_escaped_row = content.replace('"', '&quot;').replace("'", '&#39;')
+    labels_json_row = json.dumps(task.get('labels', [])).replace('"', '&quot;')
+    is_fixed = 'true' if content in ['Desayunar', 'Comer', 'Tiempo libre'] else 'false'
+    html_rows += f'''        <tr class="{priority_class} {height_class} {completed_class} {check_class} cronograma-row" data-duration="{duration}" data-content="{content_escaped_row}" data-priority="{priority}" data-task-id="{task.get('id', '')}" data-labels="{labels_json_row}" data-fixed="{is_fixed}">
           <td class="checkbox-col">{checkbox_html}</td>
           <td class="time-col" style="background-color: {time_color};">{time_range_html}</td>
           <td class="activity-col">{content_html}</td>
@@ -1226,7 +1229,10 @@ if unassigned_tasks:
         duration = task.get("duration", 20)
         priority_badge_html = f'<span class="priority-badge {priority.lower()}">{priority}</span>'
         
-        unassigned_html_rows += f'''        <tr class="{priority_class}">
+        task_id_unassigned = task.get('id', '')
+        content_escaped_unassigned = content.replace('"', '&quot;').replace("'", '&#39;')
+        labels_json_unassigned = json.dumps(task.get('labels', [])).replace('"', '&quot;')
+        unassigned_html_rows += f'''        <tr class="{priority_class} unassigned-row" data-duration="{duration}" data-content="{content_escaped_unassigned}" data-priority="{priority}" data-task-id="{task_id_unassigned}" data-labels="{labels_json_unassigned}">
           <td class="activity-col">{content_html}</td>
           <td class="priority-cell priority-col">{priority_badge_html}</td>
           <td class="duration-col">{duration} min</td>
@@ -1236,13 +1242,13 @@ if unassigned_tasks:
     
     unassigned_tasks_section = f'''
 <div class="card" style="background: #fffbeb; border-left: 4px solid #f59e0b;">
-  <div class="section-title" style="color: #92400e;">⚠️ Tareas Sin Asignar ({len(unassigned_tasks)})</div>
-  <p class="subtext" style="margin-bottom: 16px; color: #78350f;">Estas tareas de Todoist no entraron en el cronograma de hoy:</p>
+  <div class="section-title" style="color: #92400e;">⚠️ Tareas Sin Asignar (<span id="unassigned-count">{len(unassigned_tasks)}</span>)</div>
+  <p class="subtext" style="margin-bottom: 16px; color: #78350f;">Estas tareas de Todoist no entraron en el cronograma de hoy. <strong>Arrastra al cronograma para asignarlas.</strong></p>
   <table>
     <thead>
       <tr><th>Actividad</th><th>P</th><th>Duración</th><th>Etiquetas</th></tr>
     </thead>
-    <tbody>
+    <tbody id="unassigned-tbody">
 {unassigned_html_rows}    </tbody>
   </table>
 </div>
@@ -2131,83 +2137,221 @@ document.addEventListener('DOMContentLoaded', function() {{
 <!-- Sortable.js for drag & drop -->
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
-// Función para recalcular los tiempos después de reordenar
+
+// ============================================================
+// DRAG & DROP - Cronograma ↔ Tareas Sin Asignar
+// ============================================================
+
+// Recalcular tiempos del cronograma desde las 07:00
 function recalcularTiempos() {{
     const tbody = document.getElementById('cronograma-tbody');
     if (!tbody) return;
-    
-    const rows = tbody.querySelectorAll('tr');
-    let currentTime = new Date();
-    currentTime.setHours(7, 0, 0, 0); // Empezar a las 07:00
-    
+
+    const rows = Array.from(tbody.querySelectorAll('tr.cronograma-row'));
+    let totalMinutes = 7 * 60; // Empezar a las 07:00
+
     rows.forEach(function(row) {{
-        const timeCell = row.cells[1]; // Segunda columna es la hora
-        const durationCell = row.cells[4]; // Quinta columna es la duración
-        
-        if (!timeCell || !durationCell) return;
-        
-        // Extraer duración en minutos
-        const durationText = durationCell.textContent.trim();
-        let minutes = 0;
-        
-        if (durationText.includes('hora')) {{
-            const hours = parseInt(durationText.match(/\d+/));
-            minutes = hours * 60;
-        }} else if (durationText.includes('min')) {{
-            minutes = parseInt(durationText.match(/\d+/));
+        const timeCell = row.cells[1];
+        const duration = parseInt(row.dataset.duration) || 0;
+
+        if (!timeCell) return;
+
+        const startH = Math.floor(totalMinutes / 60);
+        const startM = totalMinutes % 60;
+        totalMinutes += duration;
+        const endH = Math.floor(totalMinutes / 60);
+        const endM = totalMinutes % 60;
+
+        const startStr = String(startH).padStart(2,'0') + ':' + String(startM).padStart(2,'0');
+        const endStr   = String(endH).padStart(2,'0')   + ':' + String(endM).padStart(2,'0');
+
+        // Actualizar el badge de hora
+        const badge = timeCell.querySelector('.time-badge');
+        if (badge) {{
+            const spanStart = badge.querySelector('.time-start');
+            const spanEnd   = badge.querySelector('.time-end');
+            if (spanStart) spanStart.textContent = startStr;
+            if (spanEnd)   spanEnd.textContent   = endStr;
+        }} else {{
+            timeCell.textContent = startStr + '-' + endStr;
         }}
-        
-        // Calcular hora de inicio y fin
-        const startHour = currentTime.getHours();
-        const startMin = currentTime.getMinutes();
-        
-        currentTime.setMinutes(currentTime.getMinutes() + minutes);
-        
-        const endHour = currentTime.getHours();
-        const endMin = currentTime.getMinutes();
-        
-        // Formatear y actualizar la celda de hora
-        const startTime = String(startHour).padStart(2, '0') + ':' + String(startMin).padStart(2, '0');
-        const endTime = String(endHour).padStart(2, '0') + ':' + String(endMin).padStart(2, '0');
-        timeCell.textContent = startTime + '-' + endTime;
     }});
-    
-    console.log('✅ Tiempos recalculados correctamente');
+    console.log('✅ Tiempos recalculados');
 }}
 
-// Initialize drag & drop for cronograma table
+// Actualizar contador de tareas sin asignar
+function actualizarContador() {{
+    const unassignedTbody = document.getElementById('unassigned-tbody');
+    const counter = document.getElementById('unassigned-count');
+    if (!unassignedTbody || !counter) return;
+    const count = unassignedTbody.querySelectorAll('tr.unassigned-row').length;
+    counter.textContent = count;
+}}
+
+// Convertir fila de Sin Asignar → fila del Cronograma
+function convertirAFilaCronograma(row) {{
+    const content  = row.dataset.content  || '';
+    const duration = row.dataset.duration || '0';
+    const priority = row.dataset.priority || 'P4';
+    const taskId   = row.dataset.taskId   || '';
+    const labels   = row.dataset.labels   || '[]';
+    const priorityClass = 'priority-' + priority.toLowerCase();
+
+    // Crear nueva fila con estructura del cronograma (6 columnas)
+    const newRow = document.createElement('tr');
+    newRow.className = priorityClass + ' cronograma-row';
+    newRow.dataset.duration = duration;
+    newRow.dataset.content  = content;
+    newRow.dataset.priority = priority;
+    newRow.dataset.taskId   = taskId;
+    newRow.dataset.labels   = labels;
+    newRow.dataset.fixed    = 'false';
+
+    // Parsear labels
+    let labelsArr = [];
+    try {{ labelsArr = JSON.parse(labels.replace(/&quot;/g, '"')); }} catch(e) {{}}
+    const labelsHtml = labelsArr.map(l => `<span class="label">${{l}}</span>`).join('');
+    const labelsContainer = labelsHtml ? `<div class="labels-container">${{labelsHtml}}</div>` : '';
+
+    newRow.innerHTML = `
+      <td class="checkbox-col"></td>
+      <td class="time-col"><span class="time-badge"><span class="time-start">--:--</span><span class="time-separator">-</span><span class="time-end">--:--</span></span></td>
+      <td class="activity-col">${{content}}</td>
+      <td class="priority-cell priority-col"><span class="priority-badge ${{priority.toLowerCase()}}">${{priority}}</span></td>
+      <td class="duration-col"><span class="duration-badge">${{duration}} min</span></td>
+      <td class="labels-col">${{labelsContainer}}</td>
+    `;
+    return newRow;
+}}
+
+// Convertir fila del Cronograma → fila de Sin Asignar
+function convertirAFilaUnassigned(row) {{
+    const content  = row.dataset.content  || '';
+    const duration = row.dataset.duration || '0';
+    const priority = row.dataset.priority || 'P4';
+    const taskId   = row.dataset.taskId   || '';
+    const labels   = row.dataset.labels   || '[]';
+    const priorityClass = 'priority-' + priority.toLowerCase();
+
+    let labelsArr = [];
+    try {{ labelsArr = JSON.parse(labels.replace(/&quot;/g, '"')); }} catch(e) {{}}
+    const labelsHtml = labelsArr.map(l => `<span class="label">${{l}}</span>`).join('');
+    const labelsContainer = labelsHtml ? `<div class="labels-container">${{labelsHtml}}</div>` : '';
+
+    const newRow = document.createElement('tr');
+    newRow.className = priorityClass + ' unassigned-row';
+    newRow.dataset.duration = duration;
+    newRow.dataset.content  = content;
+    newRow.dataset.priority = priority;
+    newRow.dataset.taskId   = taskId;
+    newRow.dataset.labels   = labels;
+
+    newRow.innerHTML = `
+      <td class="activity-col">${{content}}</td>
+      <td class="priority-cell priority-col"><span class="priority-badge ${{priority.toLowerCase()}}">${{priority}}</span></td>
+      <td class="duration-col">${{duration}} min</td>
+      <td class="labels-col">${{labelsContainer}}</td>
+    `;
+    return newRow;
+}}
+
+// Inicializar Drag & Drop
 document.addEventListener('DOMContentLoaded', function() {{
-    const tbody = document.getElementById('cronograma-tbody');
-    if (tbody) {{
-        new Sortable(tbody, {{
-            animation: 150,
-            handle: 'tr',
-            ghostClass: 'sortable-ghost',
-            dragClass: 'sortable-drag',
-            onEnd: function(evt) {{
-                console.log('Tarea movida de posición ' + evt.oldIndex + ' a ' + evt.newIndex);
+    const cronogramaTbody  = document.getElementById('cronograma-tbody');
+    const unassignedTbody  = document.getElementById('unassigned-tbody');
+
+    if (!cronogramaTbody) return;
+
+    // --- Sortable del Cronograma ---
+    new Sortable(cronogramaTbody, {{
+        group: 'tareas',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        filter: '[data-fixed="true"]',  // Bloquear bloques fijos
+        onAdd: function(evt) {{
+            // Una fila de Sin Asignar llegó al cronograma
+            const oldRow = evt.item;
+            if (!oldRow.classList.contains('unassigned-row')) return;
+            const newRow = convertirAFilaCronograma(oldRow);
+            cronogramaTbody.replaceChild(newRow, oldRow);
+            recalcularTiempos();
+            actualizarContador();
+            mostrarNotificacion('✅ Tarea añadida al cronograma');
+        }},
+        onEnd: function(evt) {{
+            // Reordenamiento dentro del cronograma
+            if (evt.from === cronogramaTbody && evt.to === cronogramaTbody) {{
                 recalcularTiempos();
             }}
+        }}
+    }});
+
+    // --- Sortable de Sin Asignar ---
+    if (unassignedTbody) {{
+        new Sortable(unassignedTbody, {{
+            group: 'tareas',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            onAdd: function(evt) {{
+                // Una fila del Cronograma llegó a Sin Asignar
+                const oldRow = evt.item;
+                if (!oldRow.classList.contains('cronograma-row')) return;
+                // Bloquear bloques fijos
+                if (oldRow.dataset.fixed === 'true') {{
+                    cronogramaTbody.appendChild(oldRow);
+                    mostrarNotificacion('⛔ No puedes quitar bloques fijos del cronograma');
+                    return;
+                }}
+                const newRow = convertirAFilaUnassigned(oldRow);
+                unassignedTbody.replaceChild(newRow, oldRow);
+                recalcularTiempos();
+                actualizarContador();
+                mostrarNotificacion('↩️ Tarea devuelta a Sin Asignar');
+            }}
         }});
-        console.log('✅ Drag & drop inicializado en el cronograma');
     }}
+
+    console.log('✅ Drag & drop completo inicializado');
 }});
+
+// Notificación flotante
+function mostrarNotificacion(msg) {{
+    const div = document.createElement('div');
+    div.textContent = msg;
+    div.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:white;padding:12px 20px;border-radius:8px;font-size:14px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.3);transition:opacity 0.5s';
+    document.body.appendChild(div);
+    setTimeout(() => {{ div.style.opacity = '0'; setTimeout(() => div.remove(), 500); }}, 2500);
+}}
+
 </script>
 
 <style>
 .sortable-ghost {{
-    opacity: 0.4;
-    background: #f0f0f0;
+    opacity: 0.3;
+    background: #c8e6c9 !important;
 }}
 .sortable-drag {{
-    opacity: 0.8;
-    cursor: move;
+    opacity: 0.85;
+    cursor: grabbing;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }}
-#cronograma-tbody tr {{
-    cursor: move;
+#cronograma-tbody tr.cronograma-row {{
+    cursor: grab;
 }}
-#cronograma-tbody tr:hover {{
-    background-color: #f9fafb;
+#cronograma-tbody tr.cronograma-row:hover {{
+    background-color: #f0f4ff;
+}}
+#cronograma-tbody tr[data-fixed="true"] {{
+    cursor: not-allowed;
+    opacity: 0.85;
+}}
+#unassigned-tbody tr.unassigned-row {{
+    cursor: grab;
+}}
+#unassigned-tbody tr.unassigned-row:hover {{
+    background-color: #fef3c7;
 }}
 </style>
 
