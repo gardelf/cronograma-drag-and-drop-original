@@ -1232,7 +1232,9 @@ if unassigned_tasks:
         task_id_unassigned = task.get('id', '')
         content_escaped_unassigned = content.replace('"', '&quot;').replace("'", '&#39;')
         labels_json_unassigned = json.dumps(task.get('labels', [])).replace('"', '&quot;')
+        unassigned_checkbox_html = f'<input type="checkbox" class="task-checkbox unassigned-checkbox" data-task-id="{task_id_unassigned}" data-content="{content_escaped_unassigned}" data-priority="{priority}" data-labels="{labels_json_unassigned}" title="Marcar como completada">'
         unassigned_html_rows += f'''        <tr class="{priority_class} unassigned-row" data-duration="{duration}" data-content="{content_escaped_unassigned}" data-priority="{priority}" data-task-id="{task_id_unassigned}" data-labels="{labels_json_unassigned}">
+          <td class="checkbox-col">{unassigned_checkbox_html}</td>
           <td class="activity-col">{content_html}</td>
           <td class="priority-cell priority-col">{priority_badge_html}</td>
           <td class="duration-col">{duration} min</td>
@@ -1246,7 +1248,7 @@ if unassigned_tasks:
   <p class="subtext" style="margin-bottom: 16px; color: #78350f;">Estas tareas de Todoist no entraron en el cronograma de hoy. <strong>Arrastra al cronograma para asignarlas.</strong></p>
   <table>
     <thead>
-      <tr><th>Actividad</th><th>P</th><th>Duración</th><th>Etiquetas</th></tr>
+      <tr><th style="width:40px;"></th><th>Actividad</th><th>P</th><th>Duración</th><th>Etiquetas</th></tr>
     </thead>
     <tbody id="unassigned-tbody">
 {unassigned_html_rows}    </tbody>
@@ -2247,6 +2249,7 @@ function convertirAFilaUnassigned(row) {{
     newRow.dataset.labels   = labels;
 
     newRow.innerHTML = `
+      <td class="checkbox-col"><input type="checkbox" class="task-checkbox unassigned-checkbox" data-task-id="${{taskId}}" data-content="${{content}}" data-priority="${{priority}}" data-labels="${{labels}}" title="Marcar como completada"></td>
       <td class="activity-col">${{content}}</td>
       <td class="priority-cell priority-col"><span class="priority-badge ${{priority.toLowerCase()}}">${{priority}}</span></td>
       <td class="duration-col">${{duration}} min</td>
