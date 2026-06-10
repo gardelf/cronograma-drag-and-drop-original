@@ -799,8 +799,9 @@
                     <span id="prog-bar-center">Día — / —</span>
                     <span id="prog-bar-end">Día —</span>
                 </div>
-                <div class="progress-bar-track">
-                    <div class="progress-bar-fill days-fill" id="prog-days-bar" style="width: 0%"></div>
+                <!-- Barra de días con ticks -->
+                <div id="prog-days-ticks-container" style="position: relative; width: 100%; height: 28px;">
+                    <!-- Los ticks se generan dinámicamente por JS -->
                 </div>
             </div>
 
@@ -1243,11 +1244,65 @@
         document.getElementById('prog-target-today').textContent =
             'Hoy deberías llevar: ' + formatEUR(p.proportional_target);
 
-        // Days progress bar
-        document.getElementById('prog-days-bar').style.width = p.progress_pct + '%';
+        // Days progress bar with ticks
         document.getElementById('prog-bar-center').textContent =
             'Día ' + p.days_elapsed + ' / ' + p.days_in_month;
         document.getElementById('prog-bar-end').textContent = 'Día ' + p.days_in_month;
+
+        (function renderDaysTicks(daysElapsed, daysInMonth) {
+            const container = document.getElementById('prog-days-ticks-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // Fondo de la barra
+            const track = document.createElement('div');
+            track.style.cssText = 'position:absolute;top:10px;left:0;right:0;height:8px;background:var(--bg-secondary);border-radius:4px;overflow:hidden;';
+
+            // Relleno azul hasta el día actual
+            const fill = document.createElement('div');
+            const fillPct = Math.min((daysElapsed / daysInMonth) * 100, 100);
+            fill.style.cssText = 'height:100%;border-radius:4px;background:linear-gradient(90deg,#58a6ff,#388bfd);width:' + fillPct + '%;transition:width 0.8s ease;';
+            track.appendChild(fill);
+            container.appendChild(track);
+
+            // Ticks para cada día
+            for (let d = 1; d <= daysInMonth; d++) {
+                const pct = ((d - 1) / (daysInMonth - 1)) * 100;
+                const tick = document.createElement('div');
+                const isPast = d <= daysElapsed;
+                const isToday = d === daysElapsed;
+                const tickH = isToday ? 20 : (d % 5 === 0 ? 14 : 8);
+                const tickTop = 10 + (8 - tickH) / 2; // centrado en la barra
+                tick.style.cssText = [
+                    'position:absolute',
+                    'left:' + pct + '%',
+                    'top:' + tickTop + 'px',
+                    'width:' + (isToday ? '3px' : '1.5px'),
+                    'height:' + tickH + 'px',
+                    'transform:translateX(-50%)',
+                    'border-radius:1px',
+                    'background:' + (isToday ? '#ffffff' : isPast ? 'rgba(88,166,255,0.7)' : 'rgba(255,255,255,0.15)'),
+                    'z-index:2'
+                ].join(';');
+                container.appendChild(tick);
+
+                // Número del día para múltiplos de 5 y el último
+                if (d % 5 === 0 || d === daysInMonth || d === 1) {
+                    const lbl = document.createElement('div');
+                    lbl.textContent = d;
+                    lbl.style.cssText = [
+                        'position:absolute',
+                        'left:' + pct + '%',
+                        'top:22px',
+                        'transform:translateX(-50%)',
+                        'font-size:9px',
+                        'color:' + (isToday ? '#ffffff' : isPast ? 'rgba(88,166,255,0.8)' : 'rgba(255,255,255,0.3)'),
+                        'white-space:nowrap'
+                    ].join(';');
+                    container.appendChild(lbl);
+                }
+            }
+        })(p.days_elapsed, p.days_in_month);
 
         // Goal bar: based on discretionary expenses vs discretionary goal (capped at 110%)
         const goalPct = Math.min(p.goal_pct, 110);
