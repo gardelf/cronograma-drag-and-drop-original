@@ -1384,6 +1384,65 @@ def regenerate_cronograma():
         print(f"Error regenerating cronograma: {e}")
         return None
 
+@app.route('/panel-gastos', methods=['GET'])
+def panel_gastos():
+    """Serve the financial panel page"""
+    try:
+        return render_template('panel_gastos.html')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/panel-gastos/data', methods=['GET'])
+def panel_gastos_data():
+    """Return all financial data for the panel as JSON"""
+    try:
+        client = FireflyClient()
+        now = datetime.now()
+
+        # Current month
+        current_month = client.get_monthly_summary(now.year, now.month)
+
+        # Previous month
+        if now.month == 1:
+            prev_year = now.year - 1
+            prev_month = 12
+        else:
+            prev_year = now.year
+            prev_month = now.month - 1
+        previous_month = client.get_monthly_summary(prev_year, prev_month)
+
+        # Yesterday expenses
+        yesterday = client.get_yesterday_expenses()
+
+        # Last 7 days summary
+        weekly = client.get_weekly_summary()
+
+        # Last 7 days detail
+        weekly_detail = client.get_weekly_transactions_detail()
+
+        # Extraordinary expenses next month
+        extraordinary = client.get_extraordinary_expenses_next_month()
+
+        return jsonify({
+            'success': True,
+            'data': {
+                'current_month': current_month,
+                'previous_month': previous_month,
+                'yesterday': yesterday,
+                'weekly': weekly,
+                'weekly_detail': weekly_detail,
+                'extraordinary': extraordinary,
+                'last_updated': now.strftime('%Y-%m-%d %H:%M:%S')
+            }
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     print("\n" + "=" * 80)
     print("🚀 Starting Cronograma Web Server")

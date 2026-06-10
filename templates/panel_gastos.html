@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Financiero</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1c2128;
+            --bg-card-hover: #21262d;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-green: #3fb950;
+            --accent-green-dim: #1a3a1f;
+            --accent-red: #f85149;
+            --accent-red-dim: #3a1a1a;
+            --accent-blue: #58a6ff;
+            --accent-blue-dim: #1a2a3a;
+            --accent-orange: #d29922;
+            --accent-orange-dim: #2d2210;
+            --accent-purple: #bc8cff;
+            --accent-purple-dim: #2d1a4a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3fb950, #1a7f37);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .last-updated {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .refresh-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            padding: 24px 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* KPI CARDS ROW */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: border-color 0.15s ease;
+        }
+
+        .kpi-card:hover {
+            border-color: #444c56;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value.green { color: var(--accent-green); }
+        .kpi-value.red { color: var(--accent-red); }
+        .kpi-value.blue { color: var(--accent-blue); }
+        .kpi-value.orange { color: var(--accent-orange); }
+        .kpi-value.purple { color: var(--accent-purple); }
+
+        .kpi-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .kpi-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .kpi-badge.up {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .kpi-badge.down {
+            background: var(--accent-red-dim);
+            color: var(--accent-red);
+        }
+
+        /* CONTENT GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .content-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        /* PANEL CARD */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-green { background: var(--accent-green); }
+        .dot-blue { background: var(--accent-blue); }
+        .dot-orange { background: var(--accent-orange); }
+        .dot-red { background: var(--accent-red); }
+        .dot-purple { background: var(--accent-purple); }
+
+        .panel-total {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .panel-body {
+            padding: 0;
+        }
+
+        /* TRANSACTION TABLE */
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tx-table th {
+            padding: 10px 20px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tx-table th:last-child {
+            text-align: right;
+        }
+
+        .tx-table td {
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .tx-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: var(--accent-red);
+        }
+
+        .tx-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tx-table tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        .tx-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .tx-description {
+            font-weight: 500;
+        }
+
+        .tx-category {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .empty-state-text {
+            font-size: 13px;
+        }
+
+        /* EXTRAORDINARY PANEL */
+        .extraordinary-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.1s;
+        }
+
+        .extraordinary-item:last-child {
+            border-bottom: none;
+        }
+
+        .extraordinary-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .extraordinary-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .extraordinary-desc {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .extraordinary-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .extraordinary-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+
+        /* LOADING SPINNER */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-muted);
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* SECTION DIVIDER */
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            margin-top: 8px;
+            padding-left: 2px;
+        }
+
+        /* COMPARISON BAR */
+        .comparison {
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comparison-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .comparison-bar-container {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .comparison-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .bar-current { background: var(--accent-blue); }
+        .bar-previous { background: var(--text-muted); }
+
+        .comparison-value {
+            font-size: 12px;
+            font-weight: 600;
+            width: 80px;
+            text-align: right;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 11px;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid-3 { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 700px) {
+            .main { padding: 16px; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .content-grid, .content-grid-3 { grid-template-columns: 1fr; }
+            .header { padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">
+        <div class="header-icon">💰</div>
+        <div>
+            <div class="header-title">Panel Financiero</div>
+            <div class="header-subtitle">Resumen de gastos — Firefly III</div>
+        </div>
+    </div>
+    <div class="header-right">
+        <span class="last-updated" id="last-updated">Cargando...</span>
+        <button class="refresh-btn" onclick="loadData()">
+            <span id="refresh-icon">↻</span> Actualizar
+        </button>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- KPI CARDS -->
+    <div class="section-label">Resumen</div>
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Gastos Ayer</div>
+            <div class="kpi-value red" id="kpi-ayer">—</div>
+            <div class="kpi-meta" id="kpi-ayer-count">— transacciones</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Última Semana</div>
+            <div class="kpi-value blue" id="kpi-semana">—</div>
+            <div class="kpi-meta" id="kpi-semana-count">— transacciones</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Mes Actual</div>
+            <div class="kpi-value orange" id="kpi-mes-actual">—</div>
+            <div class="kpi-meta" id="kpi-mes-actual-label">Acumulado hasta hoy</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Mes Anterior</div>
+            <div class="kpi-value" style="color: var(--text-secondary)" id="kpi-mes-anterior">—</div>
+            <div class="kpi-meta" id="kpi-mes-anterior-label">Total del mes</div>
+        </div>
+    </div>
+
+    <!-- COMPARATIVA MES ACTUAL VS ANTERIOR -->
+    <div class="content-grid" style="margin-bottom: 16px;">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="dot dot-blue"></span>
+                    Comparativa Mensual
+                </div>
+            </div>
+            <div class="comparison" id="comparison-bars">
+                <div class="loading"><div class="spinner"></div> Cargando...</div>
+            </div>
+        </div>
+
+        <!-- GASTOS EXTRAORDINARIOS PRÓXIMO MES -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="dot dot-orange"></span>
+                    Gastos Extraordinarios — Próximo Mes
+                </div>
+                <div class="panel-total orange" id="extraordinary-total">—</div>
+            </div>
+            <div class="panel-body" id="extraordinary-list">
+                <div class="loading"><div class="spinner"></div> Cargando...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GASTOS DE AYER -->
+    <div class="section-label">Detalle de Gastos</div>
+    <div class="content-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="dot dot-red"></span>
+                    Gastos de Ayer
+                </div>
+                <div class="panel-total" style="color: var(--accent-red)" id="ayer-total">—</div>
+            </div>
+            <div class="panel-body">
+                <table class="tx-table" id="ayer-table">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Categoría</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ayer-tbody">
+                        <tr><td colspan="3"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ÚLTIMOS 7 DÍAS -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span class="dot dot-blue"></span>
+                    Últimos 7 Días
+                </div>
+                <div class="panel-total" style="color: var(--accent-blue)" id="semana-total">—</div>
+            </div>
+            <div class="panel-body">
+                <table class="tx-table" id="semana-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Descripción</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="semana-tbody">
+                        <tr><td colspan="3"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    Panel Financiero · Datos en tiempo real desde Firefly III
+</div>
+
+<script>
+    const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+    function formatEUR(amount) {
+        return new Intl.NumberFormat('es-ES', {
+            style: 'currency',
+            currency: 'EUR',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '—';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+    }
+
+    async function loadData() {
+        document.getElementById('refresh-icon').style.animation = 'spin 0.8s linear infinite';
+        document.getElementById('last-updated').textContent = 'Actualizando...';
+
+        try {
+            const response = await fetch('/panel-gastos/data');
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error || 'Error desconocido');
+            }
+
+            const data = result.data;
+            renderKPIs(data);
+            renderAyer(data.yesterday);
+            renderSemana(data.weekly_detail);
+            renderComparativa(data.current_month, data.previous_month);
+            renderExtraordinarios(data.extraordinary);
+
+            const now = new Date();
+            document.getElementById('last-updated').textContent =
+                'Actualizado: ' + now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+        } catch (err) {
+            document.getElementById('last-updated').textContent = 'Error al cargar datos';
+            console.error(err);
+        }
+
+        document.getElementById('refresh-icon').style.animation = '';
+    }
+
+    function renderKPIs(data) {
+        const now = new Date();
+        const prevMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+
+        document.getElementById('kpi-ayer').textContent = formatEUR(data.yesterday.total);
+        document.getElementById('kpi-ayer-count').textContent = data.yesterday.count + ' transacciones';
+
+        document.getElementById('kpi-semana').textContent = formatEUR(data.weekly.expenses);
+        document.getElementById('kpi-semana-count').textContent = data.weekly.transactions_count + ' transacciones';
+
+        document.getElementById('kpi-mes-actual').textContent = formatEUR(data.current_month.expenses);
+        document.getElementById('kpi-mes-actual-label').textContent = MESES[now.getMonth()] + ' ' + now.getFullYear();
+
+        document.getElementById('kpi-mes-anterior').textContent = formatEUR(data.previous_month.expenses);
+        document.getElementById('kpi-mes-anterior-label').textContent = MESES[prevMonth];
+    }
+
+    function renderAyer(yesterday) {
+        const total = document.getElementById('ayer-total');
+        const tbody = document.getElementById('ayer-tbody');
+
+        total.textContent = formatEUR(yesterday.total);
+
+        if (!yesterday.expenses || yesterday.expenses.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3"><div class="empty-state">
+                <div class="empty-state-icon">✓</div>
+                <div class="empty-state-text">Sin gastos registrados ayer</div>
+            </div></td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = yesterday.expenses.map(tx => `
+            <tr>
+                <td><div class="tx-description">${tx.description}</div></td>
+                <td><span class="tx-category">${tx.category || 'Sin categoría'}</span></td>
+                <td>${formatEUR(tx.amount)}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderSemana(transactions) {
+        const total = document.getElementById('semana-total');
+        const tbody = document.getElementById('semana-tbody');
+
+        if (!transactions || transactions.length === 0) {
+            total.textContent = formatEUR(0);
+            tbody.innerHTML = `<tr><td colspan="3"><div class="empty-state">
+                <div class="empty-state-icon">✓</div>
+                <div class="empty-state-text">Sin gastos en los últimos 7 días</div>
+            </div></td></tr>`;
+            return;
+        }
+
+        const totalAmount = transactions.reduce((sum, tx) => sum + tx.amount, 0);
+        total.textContent = formatEUR(totalAmount);
+        document.getElementById('kpi-semana').textContent = formatEUR(totalAmount);
+
+        tbody.innerHTML = transactions.map(tx => `
+            <tr>
+                <td><div class="tx-date">${formatDate(tx.date)}</div></td>
+                <td><div class="tx-description">${tx.description}</div></td>
+                <td>${formatEUR(tx.amount)}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderComparativa(current, previous) {
+        const container = document.getElementById('comparison-bars');
+        const maxVal = Math.max(current.expenses, previous.expenses, 1);
+        const currentPct = Math.round((current.expenses / maxVal) * 100);
+        const previousPct = Math.round((previous.expenses / maxVal) * 100);
+
+        const now = new Date();
+        const prevMonthIdx = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+        const currentLabel = MESES[now.getMonth()];
+        const previousLabel = MESES[prevMonthIdx];
+
+        const diff = current.expenses - previous.expenses;
+        const diffPct = previous.expenses > 0 ? ((diff / previous.expenses) * 100).toFixed(1) : 0;
+        const diffColor = diff > 0 ? 'var(--accent-red)' : 'var(--accent-green)';
+        const diffSign = diff > 0 ? '+' : '';
+
+        container.innerHTML = `
+            <div class="comparison-row">
+                <div class="comparison-label">${currentLabel}</div>
+                <div class="comparison-bar-container">
+                    <div class="comparison-bar bar-current" style="width: ${currentPct}%"></div>
+                </div>
+                <div class="comparison-value" style="color: var(--accent-blue)">${formatEUR(current.expenses)}</div>
+            </div>
+            <div class="comparison-row">
+                <div class="comparison-label">${previousLabel}</div>
+                <div class="comparison-bar-container">
+                    <div class="comparison-bar bar-previous" style="width: ${previousPct}%"></div>
+                </div>
+                <div class="comparison-value" style="color: var(--text-muted)">${formatEUR(previous.expenses)}</div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted);">
+                Variación vs mes anterior:
+                <span style="font-weight: 700; color: ${diffColor}; margin-left: 6px;">
+                    ${diffSign}${formatEUR(diff)} (${diffSign}${diffPct}%)
+                </span>
+            </div>
+        `;
+    }
+
+    function renderExtraordinarios(extraordinary) {
+        const totalEl = document.getElementById('extraordinary-total');
+        const listEl = document.getElementById('extraordinary-list');
+
+        if (!extraordinary || extraordinary.length === 0) {
+            totalEl.textContent = '0,00 €';
+            listEl.innerHTML = `<div class="empty-state">
+                <div class="empty-state-icon">✓</div>
+                <div class="empty-state-text">Sin gastos extraordinarios el próximo mes</div>
+            </div>`;
+            return;
+        }
+
+        const total = extraordinary.reduce((sum, item) => sum + item.amount, 0);
+        totalEl.textContent = formatEUR(total);
+        totalEl.style.color = 'var(--accent-orange)';
+
+        listEl.innerHTML = extraordinary.map(item => `
+            <div class="extraordinary-item">
+                <div class="extraordinary-left">
+                    <div class="extraordinary-desc">${item.description}</div>
+                    <div class="extraordinary-date">${formatDate(item.date)}</div>
+                </div>
+                <div class="extraordinary-amount">${formatEUR(item.amount)}</div>
+            </div>
+        `).join('');
+    }
+
+    // Load data on page load
+    loadData();
+</script>
+
+</body>
+</html>
