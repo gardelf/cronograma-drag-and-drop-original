@@ -726,6 +726,58 @@
 
     <!-- PROGRESO MENSUAL -->
     <div class="section-label">Progreso Mensual</div>
+
+    <!-- RECTÁNGULO RESUMEN: objetivo + fijos + discrecional + total + margen + barra -->
+    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px;">
+
+        <!-- Título + mes -->
+        <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;">Objetivo total del mes — <span id="prog-month-name2">—</span></div>
+
+        <!-- 3000€ -->
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px;">
+            <div style="font-size: 36px; font-weight: 800; color: var(--accent-green); letter-spacing: -0.03em;">3.000 €</div>
+            <div style="font-size: 13px; color: var(--text-muted);">límite mensual</div>
+        </div>
+
+        <!-- Fijos + Discrecional -->
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                <span style="color: var(--text-secondary);">Fijos este mes</span>
+                <span style="font-weight: 600; color: var(--text-secondary);" id="sum-fixed-amount">—</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                <span style="color: var(--text-secondary);">Discrecional acumulado</span>
+                <span style="font-weight: 700; color: var(--accent-orange);" id="sum-discr-amount">—</span>
+            </div>
+        </div>
+
+        <!-- Separador -->
+        <div style="height: 1px; background: var(--border); margin-bottom: 14px;"></div>
+
+        <!-- Total gastado + Margen -->
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                <span style="color: var(--text-secondary);">Total gastado</span>
+                <span style="font-weight: 700; color: var(--text-primary);" id="sum-total-spent">—</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                <span style="color: var(--text-secondary);">Margen restante</span>
+                <span style="font-weight: 700;" id="sum-margin">—</span>
+            </div>
+        </div>
+
+        <!-- Barra de progreso total -->
+        <div style="background: var(--bg-secondary); border-radius: 6px; height: 10px; overflow: hidden; margin-bottom: 8px;">
+            <div id="sum-goal-bar" style="height: 100%; width: 0%; border-radius: 6px; background: var(--accent-green); transition: width 0.6s ease;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+            <span>0 €</span>
+            <span id="sum-goal-pct">—% del objetivo</span>
+            <span>3.000 €</span>
+        </div>
+
+    </div>
+
     <div class="progress-widget" id="progress-widget">
         <div class="progress-widget-header">
             <div class="panel-title">
@@ -1132,6 +1184,39 @@
     }
 
     function renderMonthlyProgress(p) {
+        // --- RECTÁNGULO RESUMEN (arriba del todo) ---
+        const mn2 = document.getElementById('prog-month-name2');
+        if (mn2) mn2.textContent = p.month_name;
+
+        const sumFixed = document.getElementById('sum-fixed-amount');
+        if (sumFixed) sumFixed.textContent = formatEUR(p.fixed_expenses);
+
+        const sumDiscr = document.getElementById('sum-discr-amount');
+        if (sumDiscr) sumDiscr.textContent = formatEUR(p.discretionary_expenses);
+
+        const sumSpent = document.getElementById('sum-total-spent');
+        if (sumSpent) {
+            sumSpent.textContent = formatEUR(p.expenses_accumulated);
+            sumSpent.style.color = p.expenses_accumulated > p.monthly_goal ? 'var(--accent-red)' : 'var(--text-primary)';
+        }
+
+        const sumMargin = document.getElementById('sum-margin');
+        const margin = p.monthly_goal - p.expenses_accumulated;
+        if (sumMargin) {
+            sumMargin.textContent = formatEUR(margin);
+            sumMargin.style.color = margin >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+        }
+
+        const sumBar = document.getElementById('sum-goal-bar');
+        const sumPct = Math.min((p.expenses_accumulated / p.monthly_goal) * 100, 100);
+        if (sumBar) {
+            sumBar.style.width = sumPct + '%';
+            sumBar.style.background = sumPct > 100 ? 'var(--accent-red)' : sumPct > 85 ? 'var(--accent-orange)' : 'var(--accent-green)';
+        }
+
+        const sumPctEl = document.getElementById('sum-goal-pct');
+        if (sumPctEl) sumPctEl.textContent = sumPct.toFixed(1) + '% del objetivo';
+
         // Header
         document.getElementById('prog-month-name').textContent = p.month_name;
         document.getElementById('prog-days-label').textContent =
