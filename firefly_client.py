@@ -464,3 +464,79 @@ class FireflyClient:
             import traceback
             traceback.print_exc()
             return []
+
+    def get_recurring_fixed_for_month(self, year, month):
+        """
+        Returns the list of recurring expenses that apply to the given month,
+        without any proration. Each recurrence is included only if it fires
+        during that month:
+          - monthly / ndom / weekly → always fires every month
+          - yearly / half-year / quarterly → only if the configured date falls
+            within the requested month
+        """
+        try:
+            import calendar
+            data = self._make_request('recurrences')
+            if not data or 'data' not in data:
+                return {'items': [], 'total': 0.0}
+
+            items = []
+            total = 0.0
+
+            for rec in data['data']:
+                attrs = rec.get('attributes', {})
+                if not attrs.get('active', False):
+                    continue
+
+                reps = attrs.get('repetitions', [])
+                txs = attrs.get('transactions', [])
+
+                for tx in txs:
+                    if tx.get('type', '') not in ('withdrawal', ''):
+                        continue
+                    amt = abs(float(tx.get('amount', 0) or 0))
+                    if amt == 0:
+                        continue
+
+                    for rep in reps:
+                        freq = rep.get('type', '')
+                        moment = rep.get('moment', '') or ''
+
+                        fires_this_month = False
+
+                        if freq in ('monthly', 'weekly', 'ndom'):
+                            # These always fire every month
+                            fires_this_month = True
+
+                        elif freq in ('yearly', 'half-year', 'quarterly'):
+                            # moment is a date string like "2026-11-06"
+                            # Check if that date falls in the requested month
+                            try:
+                                m_date = datetime.strptime(moment[:10], '%Y-%m-%d')
+                                if m_date.month == month:
+                                    fires_this_month = True
+                            except Exception:
+                                pass
+
+                        if fires_this_month:
+                            item = {
+                                'title': attrs.get('title', ''),
+                                'description': tx.get('description', ''),
+                                'amount': round(amt, 2),
+                                'category': tx.get('category_name', ''),
+                                'frequency': freq,
+                                'moment': moment,
+                                'tags': tx.get('tags', []),
+                            }
+                            items.append(item)
+                            total += amt
+                            break  # only count once per recurrence
+
+            items.sort(key=lambda x: -x['amount'])
+            return {'items': items, 'total': round(total, 2)}
+
+        except Exception as e:
+            print(f"❌ Error getting recurring fixed expenses: {e}")
+            import traceback
+            traceback.print_exc()
+            return {'items': [], 'total': 0.0}

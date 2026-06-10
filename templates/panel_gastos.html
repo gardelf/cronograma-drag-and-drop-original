@@ -744,18 +744,18 @@
                     <div class="progress-stat-sub" id="prog-days-sub">de — días</div>
                 </div>
                 <div class="progress-stat">
-                    <div class="progress-stat-label">Gasto acumulado</div>
-                    <div class="progress-stat-value" style="color: var(--accent-orange)" id="prog-accumulated">—</div>
-                    <div class="progress-stat-sub">hasta hoy</div>
+                    <div class="progress-stat-label">Gasto total acumulado</div>
+                    <div class="progress-stat-value" style="color: var(--text-secondary)" id="prog-accumulated">—</div>
+                    <div class="progress-stat-sub" id="prog-fixed-sub">Fijos: — €</div>
                 </div>
                 <div class="progress-stat">
-                    <div class="progress-stat-label">Media diaria</div>
-                    <div class="progress-stat-value" style="color: var(--text-primary)" id="prog-daily-avg">—</div>
-                    <div class="progress-stat-sub">€ / día</div>
+                    <div class="progress-stat-label">Gasto discrecional</div>
+                    <div class="progress-stat-value" style="color: var(--accent-orange)" id="prog-discr">—</div>
+                    <div class="progress-stat-sub" id="prog-daily-avg-sub">Media: — €/día</div>
                 </div>
                 <div class="progress-stat">
-                    <div class="progress-stat-label">Objetivo</div>
-                    <div class="progress-stat-value" style="color: var(--accent-green)">3.000 €</div>
+                    <div class="progress-stat-label">Objetivo discrecional</div>
+                    <div class="progress-stat-value" style="color: var(--accent-green)" id="prog-discr-goal">—</div>
                     <div class="progress-stat-sub" id="prog-target-today">Hoy: — €</div>
                 </div>
             </div>
@@ -1089,9 +1089,12 @@
         document.getElementById('prog-days-elapsed').textContent = p.days_elapsed;
         document.getElementById('prog-days-sub').textContent = 'de ' + p.days_in_month + ' días';
         document.getElementById('prog-accumulated').textContent = formatEUR(p.expenses_accumulated);
-        document.getElementById('prog-daily-avg').textContent = formatEUR(p.daily_average);
+        document.getElementById('prog-fixed-sub').textContent = 'Fijos este mes: ' + formatEUR(p.fixed_expenses);
+        document.getElementById('prog-discr').textContent = formatEUR(p.discretionary_expenses);
+        document.getElementById('prog-daily-avg-sub').textContent = 'Media: ' + formatEUR(p.daily_average) + '/día';
+        document.getElementById('prog-discr-goal').textContent = formatEUR(p.discretionary_goal);
         document.getElementById('prog-target-today').textContent =
-            'Hoy: ' + formatEUR(p.proportional_target);
+            'Hoy deberías llevar: ' + formatEUR(p.proportional_target);
 
         // Days progress bar
         document.getElementById('prog-days-bar').style.width = p.progress_pct + '%';
@@ -1099,7 +1102,7 @@
             'Día ' + p.days_elapsed + ' / ' + p.days_in_month;
         document.getElementById('prog-bar-end').textContent = 'Día ' + p.days_in_month;
 
-        // Goal bar (capped at 110% for display)
+        // Goal bar: based on discretionary expenses vs discretionary goal (capped at 110%)
         const goalPct = Math.min(p.goal_pct, 110);
         const goalBar = document.getElementById('prog-goal-bar');
         goalBar.style.width = goalPct + '%';
@@ -1111,35 +1114,41 @@
             goalBar.className = 'goal-bar-fill under';
         }
 
-        // Target marker (proportional target position on goal bar)
-        const markerPct = Math.min((p.proportional_target / p.monthly_goal) * 100, 100);
+        // Update goal bar labels to show discretionary goal
+        document.getElementById('prog-goal-bar-label').textContent =
+            'Discrecional vs objetivo (' + formatEUR(p.discretionary_goal) + ')';
+
+        // Target marker (proportional target position on discretionary goal bar)
+        const markerPct = p.discretionary_goal > 0
+            ? Math.min((p.proportional_target / p.discretionary_goal) * 100, 100)
+            : 0;
         const marker = document.getElementById('prog-target-marker');
         marker.style.left = markerPct + '%';
         document.getElementById('prog-target-marker-label').textContent =
             'objetivo hoy (' + formatEUR(p.proportional_target) + ')';
 
-        // Deviation
+        // Deviation (vs discretionary proportional target)
         const devEl = document.getElementById('prog-deviation');
         const devSign = p.deviation >= 0 ? '+' : '';
         devEl.textContent = devSign + formatEUR(p.deviation);
         devEl.className = 'deviation-value ' + (p.deviation > 0 ? 'over' : 'under');
         document.getElementById('prog-deviation-sub').textContent =
-            devSign + p.deviation_pct.toFixed(1) + '% sobre el objetivo proporcional al día de hoy';
+            devSign + p.deviation_pct.toFixed(1) + '% sobre el objetivo discrecional proporcional al día de hoy';
 
-        // Projection
+        // Projection: based on discretionary spending pace
         const projEl = document.getElementById('prog-projection');
-        projEl.textContent = formatEUR(p.projected_total);
-        const projDiff = p.projected_total - p.monthly_goal;
+        projEl.textContent = formatEUR(p.projected_discr);
+        const projDiff = p.projected_discr - p.discretionary_goal;
         const projSign = projDiff >= 0 ? '+' : '';
-        if (p.projected_total > p.monthly_goal * 1.05) {
+        if (p.projected_discr > p.discretionary_goal * 1.05) {
             projEl.className = 'projection-value over';
-        } else if (p.projected_total < p.monthly_goal * 0.95) {
+        } else if (p.projected_discr < p.discretionary_goal * 0.95) {
             projEl.className = 'projection-value under';
         } else {
             projEl.className = 'projection-value ok';
         }
         document.getElementById('prog-projection-sub').textContent =
-            projSign + formatEUR(projDiff) + ' vs objetivo (3.000 €)';
+            projSign + formatEUR(projDiff) + ' vs objetivo discrecional (' + formatEUR(p.discretionary_goal) + ')';
     }
 
     // Load data on page load
