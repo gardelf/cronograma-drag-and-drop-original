@@ -1298,26 +1298,32 @@
         // --- OBJETIVO TOTAL (3000€) ---
         const totalSpent = p.expenses_accumulated;
         const totalGoal = p.monthly_goal;
-        const margin = totalGoal - totalSpent;
+        const totalMargin = totalGoal - totalSpent;
         const totalPct = Math.min((totalSpent / totalGoal) * 100, 110);
 
         document.getElementById('total-fixed-amount').textContent = formatEUR(p.fixed_expenses);
         document.getElementById('total-discr-amount').textContent = formatEUR(p.discretionary_expenses);
 
         const spentEl = document.getElementById('total-spent-amount');
-        spentEl.textContent = formatEUR(totalSpent);
-        spentEl.style.color = totalSpent > totalGoal ? 'var(--accent-red)' : 'var(--text-primary)';
+        if (spentEl) {
+            spentEl.textContent = formatEUR(totalSpent);
+            spentEl.style.color = totalSpent > totalGoal ? 'var(--accent-red)' : 'var(--text-primary)';
+        }
 
-        const marginEl = document.getElementById('total-margin-amount');
-        marginEl.textContent = (margin >= 0 ? '' : '') + formatEUR(margin);
-        marginEl.style.color = margin >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+        const marginEl2 = document.getElementById('total-margin-amount');
+        if (marginEl2) {
+            marginEl2.textContent = formatEUR(totalMargin);
+            marginEl2.style.color = totalMargin >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+        }
 
         const totalBar = document.getElementById('total-goal-bar');
-        totalBar.style.width = totalPct + '%';
-        totalBar.className = 'goal-bar-fill ' + (totalPct > 100 ? 'over' : totalPct > 85 ? 'warning' : 'under');
+        if (totalBar) {
+            totalBar.style.width = totalPct + '%';
+            totalBar.className = 'goal-bar-fill ' + (totalPct > 100 ? 'over' : totalPct > 85 ? 'warning' : 'under');
+        }
 
-        document.getElementById('total-goal-pct').textContent =
-            ((totalSpent / totalGoal) * 100).toFixed(1) + '% del objetivo';
+        const totalGoalPct = document.getElementById('total-goal-pct');
+        if (totalGoalPct) totalGoalPct.textContent = ((totalSpent / totalGoal) * 100).toFixed(1) + '% del objetivo';
 
         // --- LISTA DE GASTOS FIJOS ---
         const fixedList = document.getElementById('fixed-items-list');
