@@ -454,6 +454,207 @@
             text-align: right;
         }
 
+        /* MONTHLY PROGRESS WIDGET */
+        .progress-widget {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-widget-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-widget-body {
+            padding: 20px;
+        }
+
+        .progress-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .progress-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .progress-stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        .progress-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .progress-stat-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* MAIN PROGRESS BAR (days) */
+        .progress-bar-section {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: visible;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+
+        .progress-bar-fill.days-fill {
+            background: linear-gradient(90deg, #58a6ff, #388bfd);
+        }
+
+        /* GOAL PROGRESS BAR */
+        .goal-bar-track {
+            width: 100%;
+            height: 14px;
+            background: var(--bg-secondary);
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .goal-bar-fill {
+            height: 100%;
+            border-radius: 7px;
+            transition: width 0.8s ease;
+        }
+
+        .goal-bar-fill.under { background: linear-gradient(90deg, #3fb950, #2ea043); }
+        .goal-bar-fill.over { background: linear-gradient(90deg, #f85149, #da3633); }
+        .goal-bar-fill.warning { background: linear-gradient(90deg, #d29922, #bb8009); }
+
+        /* Goal marker line */
+        .goal-marker {
+            position: absolute;
+            top: -3px;
+            width: 2px;
+            height: 20px;
+            background: var(--text-muted);
+            border-radius: 1px;
+            transform: translateX(-50%);
+        }
+
+        .goal-marker-label {
+            position: absolute;
+            top: -20px;
+            font-size: 10px;
+            color: var(--text-muted);
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+
+        /* DEVIATION BADGE */
+        .deviation-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .deviation-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .deviation-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        .deviation-value {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .deviation-value.over { color: var(--accent-red); }
+        .deviation-value.under { color: var(--accent-green); }
+
+        .deviation-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .projection-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: right;
+        }
+
+        .projection-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .projection-value {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .projection-value.over { color: var(--accent-red); }
+        .projection-value.under { color: var(--accent-green); }
+        .projection-value.ok { color: var(--accent-orange); }
+
+        .projection-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        @media (max-width: 700px) {
+            .progress-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         /* FOOTER */
         .footer {
             text-align: center;
@@ -520,6 +721,89 @@
             <div class="kpi-label">Mes Anterior</div>
             <div class="kpi-value" style="color: var(--text-secondary)" id="kpi-mes-anterior">—</div>
             <div class="kpi-meta" id="kpi-mes-anterior-label">Total del mes</div>
+        </div>
+    </div>
+
+    <!-- PROGRESO MENSUAL -->
+    <div class="section-label">Progreso Mensual</div>
+    <div class="progress-widget" id="progress-widget">
+        <div class="progress-widget-header">
+            <div class="panel-title">
+                <span class="dot dot-green"></span>
+                Objetivo Mensual — <span id="prog-month-name">—</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted)" id="prog-days-label">Cargando...</div>
+        </div>
+        <div class="progress-widget-body">
+
+            <!-- STATS ROW -->
+            <div class="progress-stats-grid">
+                <div class="progress-stat">
+                    <div class="progress-stat-label">Días transcurridos</div>
+                    <div class="progress-stat-value" style="color: var(--accent-blue)" id="prog-days-elapsed">—</div>
+                    <div class="progress-stat-sub" id="prog-days-sub">de — días</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-label">Gasto acumulado</div>
+                    <div class="progress-stat-value" style="color: var(--accent-orange)" id="prog-accumulated">—</div>
+                    <div class="progress-stat-sub">hasta hoy</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-label">Media diaria</div>
+                    <div class="progress-stat-value" style="color: var(--text-primary)" id="prog-daily-avg">—</div>
+                    <div class="progress-stat-sub">€ / día</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-label">Objetivo</div>
+                    <div class="progress-stat-value" style="color: var(--accent-green)">3.000 €</div>
+                    <div class="progress-stat-sub" id="prog-target-today">Hoy: — €</div>
+                </div>
+            </div>
+
+            <!-- DAYS PROGRESS BAR -->
+            <div class="progress-bar-section">
+                <div class="progress-bar-labels">
+                    <span>Día 1</span>
+                    <span id="prog-bar-center">Día — / —</span>
+                    <span id="prog-bar-end">Día —</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill days-fill" id="prog-days-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- GOAL PROGRESS BAR -->
+            <div class="progress-bar-section" style="margin-bottom: 0">
+                <div class="progress-bar-labels">
+                    <span>0 €</span>
+                    <span style="font-weight: 600; color: var(--text-secondary)" id="prog-goal-bar-label">Gasto vs Objetivo</span>
+                    <span>3.000 €</span>
+                </div>
+                <div class="goal-bar-track" style="position: relative; overflow: visible;">
+                    <!-- Proportional target marker -->
+                    <div style="position: absolute; top: -18px; left: 0; width: 100%; height: 100%;">
+                        <div id="prog-target-marker" style="position: absolute; top: 18px; width: 2px; height: 26px; background: var(--text-muted); border-radius: 1px; transform: translateX(-50%);">
+                            <div id="prog-target-marker-label" style="position: absolute; top: -16px; font-size: 10px; color: var(--text-muted); white-space: nowrap; transform: translateX(-50%);">objetivo hoy</div>
+                        </div>
+                    </div>
+                    <div class="goal-bar-fill" id="prog-goal-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- DEVIATION ROW -->
+            <div class="deviation-row">
+                <div class="deviation-info">
+                    <div class="deviation-label">Desviación vs objetivo proporcional</div>
+                    <div class="deviation-value" id="prog-deviation">—</div>
+                    <div class="deviation-sub" id="prog-deviation-sub">—</div>
+                </div>
+                <div class="projection-box">
+                    <div class="projection-label">Proyección fin de mes</div>
+                    <div class="projection-value" id="prog-projection">—</div>
+                    <div class="projection-sub" id="prog-projection-sub">al ritmo actual</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -647,6 +931,7 @@
             renderSemana(data.weekly_detail);
             renderComparativa(data.current_month, data.previous_month);
             renderExtraordinarios(data.extraordinary);
+            if (data.monthly_progress) renderMonthlyProgress(data.monthly_progress);
 
             const now = new Date();
             document.getElementById('last-updated').textContent =
@@ -792,6 +1077,69 @@
                 <div class="extraordinary-amount">${formatEUR(item.amount)}</div>
             </div>
         `).join('');
+    }
+
+    function renderMonthlyProgress(p) {
+        // Header
+        document.getElementById('prog-month-name').textContent = p.month_name;
+        document.getElementById('prog-days-label').textContent =
+            p.days_elapsed + ' de ' + p.days_in_month + ' días — ' + p.progress_pct + '% del mes';
+
+        // Stats
+        document.getElementById('prog-days-elapsed').textContent = p.days_elapsed;
+        document.getElementById('prog-days-sub').textContent = 'de ' + p.days_in_month + ' días';
+        document.getElementById('prog-accumulated').textContent = formatEUR(p.expenses_accumulated);
+        document.getElementById('prog-daily-avg').textContent = formatEUR(p.daily_average);
+        document.getElementById('prog-target-today').textContent =
+            'Hoy: ' + formatEUR(p.proportional_target);
+
+        // Days progress bar
+        document.getElementById('prog-days-bar').style.width = p.progress_pct + '%';
+        document.getElementById('prog-bar-center').textContent =
+            'Día ' + p.days_elapsed + ' / ' + p.days_in_month;
+        document.getElementById('prog-bar-end').textContent = 'Día ' + p.days_in_month;
+
+        // Goal bar (capped at 110% for display)
+        const goalPct = Math.min(p.goal_pct, 110);
+        const goalBar = document.getElementById('prog-goal-bar');
+        goalBar.style.width = goalPct + '%';
+        if (p.goal_pct > 100) {
+            goalBar.className = 'goal-bar-fill over';
+        } else if (p.goal_pct > 85) {
+            goalBar.className = 'goal-bar-fill warning';
+        } else {
+            goalBar.className = 'goal-bar-fill under';
+        }
+
+        // Target marker (proportional target position on goal bar)
+        const markerPct = Math.min((p.proportional_target / p.monthly_goal) * 100, 100);
+        const marker = document.getElementById('prog-target-marker');
+        marker.style.left = markerPct + '%';
+        document.getElementById('prog-target-marker-label').textContent =
+            'objetivo hoy (' + formatEUR(p.proportional_target) + ')';
+
+        // Deviation
+        const devEl = document.getElementById('prog-deviation');
+        const devSign = p.deviation >= 0 ? '+' : '';
+        devEl.textContent = devSign + formatEUR(p.deviation);
+        devEl.className = 'deviation-value ' + (p.deviation > 0 ? 'over' : 'under');
+        document.getElementById('prog-deviation-sub').textContent =
+            devSign + p.deviation_pct.toFixed(1) + '% sobre el objetivo proporcional al día de hoy';
+
+        // Projection
+        const projEl = document.getElementById('prog-projection');
+        projEl.textContent = formatEUR(p.projected_total);
+        const projDiff = p.projected_total - p.monthly_goal;
+        const projSign = projDiff >= 0 ? '+' : '';
+        if (p.projected_total > p.monthly_goal * 1.05) {
+            projEl.className = 'projection-value over';
+        } else if (p.projected_total < p.monthly_goal * 0.95) {
+            projEl.className = 'projection-value under';
+        } else {
+            projEl.className = 'projection-value ok';
+        }
+        document.getElementById('prog-projection-sub').textContent =
+            projSign + formatEUR(projDiff) + ' vs objetivo (3.000 €)';
     }
 
     // Load data on page load

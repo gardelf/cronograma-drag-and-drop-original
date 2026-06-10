@@ -1424,6 +1424,35 @@ def panel_gastos_data():
         # Extraordinary expenses next month
         extraordinary = client.get_extraordinary_expenses_next_month()
 
+        # Monthly progress data
+        import calendar
+        days_in_month = calendar.monthrange(now.year, now.month)[1]
+        days_elapsed = now.day
+        monthly_expenses = current_month.get('expenses', 0)
+        daily_average = monthly_expenses / days_elapsed if days_elapsed > 0 else 0
+        monthly_goal = 3000.0
+        projected_total = daily_average * days_in_month
+        # Proportional target: what you should have spent by today
+        proportional_target = (monthly_goal / days_in_month) * days_elapsed
+        deviation = monthly_expenses - proportional_target  # positive = over budget
+        deviation_pct = (deviation / proportional_target * 100) if proportional_target > 0 else 0
+
+        monthly_progress = {
+            'days_in_month': days_in_month,
+            'days_elapsed': days_elapsed,
+            'days_remaining': days_in_month - days_elapsed,
+            'progress_pct': round((days_elapsed / days_in_month) * 100, 1),
+            'expenses_accumulated': round(monthly_expenses, 2),
+            'daily_average': round(daily_average, 2),
+            'monthly_goal': monthly_goal,
+            'projected_total': round(projected_total, 2),
+            'proportional_target': round(proportional_target, 2),
+            'deviation': round(deviation, 2),
+            'deviation_pct': round(deviation_pct, 1),
+            'goal_pct': round((monthly_expenses / monthly_goal) * 100, 1) if monthly_goal > 0 else 0,
+            'month_name': now.strftime('%B %Y')
+        }
+
         return jsonify({
             'success': True,
             'data': {
@@ -1433,6 +1462,7 @@ def panel_gastos_data():
                 'weekly': weekly,
                 'weekly_detail': weekly_detail,
                 'extraordinary': extraordinary,
+                'monthly_progress': monthly_progress,
                 'last_updated': now.strftime('%Y-%m-%d %H:%M:%S')
             }
         })
