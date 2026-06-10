@@ -1393,6 +1393,38 @@ def panel_gastos():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/panel-gastos/mes-detalle', methods=['GET'])
+def panel_gastos_mes_detalle():
+    """Return all transactions of current month for analysis"""
+    try:
+        client = FireflyClient()
+        now = datetime.now()
+        start_date = datetime(now.year, now.month, 1)
+        params = {
+            'start': start_date.strftime('%Y-%m-%d'),
+            'end': now.strftime('%Y-%m-%d')
+        }
+        data = client._make_request('transactions', params=params)
+        transactions = []
+        if data and 'data' in data:
+            for transaction in data['data']:
+                attrs = transaction.get('attributes', {})
+                for trans in attrs.get('transactions', []):
+                    if trans.get('type') == 'withdrawal':
+                        transactions.append({
+                            'date': trans.get('date', '')[:10],
+                            'description': trans.get('description', ''),
+                            'amount': abs(float(trans.get('amount', 0))),
+                            'category': trans.get('category_name') or 'Sin categoría',
+                            'tags': trans.get('tags', []),
+                        })
+        transactions.sort(key=lambda x: x['date'])
+        total = sum(t['amount'] for t in transactions)
+        return jsonify({'success': True, 'total': total, 'count': len(transactions), 'transactions': transactions})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/panel-gastos/data', methods=['GET'])
 def panel_gastos_data():
     """Return all financial data for the panel as JSON"""
