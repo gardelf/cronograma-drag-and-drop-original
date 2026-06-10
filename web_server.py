@@ -1393,6 +1393,40 @@ def panel_gastos():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/panel-gastos/recurrentes', methods=['GET'])
+def panel_gastos_recurrentes():
+    """Return recurring transactions configured in Firefly III"""
+    try:
+        client = FireflyClient()
+        data = client._make_request('recurrences')
+        recurrences = []
+        if data and 'data' in data:
+            for rec in data['data']:
+                attrs = rec.get('attributes', {})
+                reps = attrs.get('repetitions', [])
+                txs = attrs.get('transactions', [])
+                for tx in txs:
+                    recurrences.append({
+                        'id': rec.get('id'),
+                        'title': attrs.get('title', ''),
+                        'description': attrs.get('description', ''),
+                        'active': attrs.get('active', False),
+                        'repeat_freq': reps[0].get('type', '') if reps else '',
+                        'repeat_moment': reps[0].get('moment', '') if reps else '',
+                        'amount': tx.get('amount', 0),
+                        'currency': tx.get('currency_code', 'EUR'),
+                        'category': tx.get('category_name', ''),
+                        'tx_description': tx.get('description', ''),
+                        'type': tx.get('type', ''),
+                        'tags': tx.get('tags', []),
+                    })
+        total = sum(float(r['amount']) for r in recurrences if r['type'] == 'withdrawal' and r['active'])
+        return jsonify({'success': True, 'total_monthly': round(total, 2), 'count': len(recurrences), 'recurrences': recurrences})
+    except Exception as e:
+        import traceback
+        return jsonify({'success': False, 'error': str(e), 'trace': traceback.format_exc()}), 500
+
+
 @app.route('/panel-gastos/mes-detalle', methods=['GET'])
 def panel_gastos_mes_detalle():
     """Return all transactions of current month for analysis"""
