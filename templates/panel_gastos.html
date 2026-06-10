@@ -726,59 +726,13 @@
 
     <!-- PROGRESO MENSUAL -->
     <div class="section-label">Progreso Mensual</div>
-
-    <!-- BLOQUE 1: RESUMEN HORIZONTAL (objetivo + fijos + discrecional) -->
-    <div class="progress-widget" style="margin-bottom: 12px;">
+    <div class="progress-widget" id="progress-widget">
         <div class="progress-widget-header">
             <div class="panel-title">
                 <span class="dot dot-green"></span>
                 Objetivo Mensual — <span id="prog-month-name">—</span>
             </div>
             <div style="font-size: 12px; color: var(--text-muted)" id="prog-days-label">Cargando...</div>
-        </div>
-        <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 0; align-items: stretch;">
-
-            <!-- COLUMNA 1: OBJETIVO -->
-            <div style="padding: 20px 24px; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; gap: 6px; min-width: 160px;">
-                <div class="progress-stat-label">Objetivo del mes</div>
-                <div style="font-size: 32px; font-weight: 800; color: var(--accent-green); letter-spacing: -0.03em;">3.000 €</div>
-                <div style="font-size: 11px; color: var(--text-muted);">límite mensual total</div>
-            </div>
-
-            <!-- COLUMNA 2: GASTOS FIJOS (lista) -->
-            <div style="padding: 16px 20px; border-right: 1px solid var(--border);">
-                <div class="progress-stat-label" style="margin-bottom: 10px;">Gastos fijos del mes</div>
-                <div id="fixed-items-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 20px; max-height: 180px; overflow-y: auto;">
-                    <div style="color: var(--text-muted); font-size: 12px;">Cargando...</div>
-                </div>
-                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 12px;">
-                    <span style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;">Total fijos</span>
-                    <span style="font-weight: 700; color: var(--text-secondary);" id="total-fixed-amount">—</span>
-                </div>
-            </div>
-
-            <!-- COLUMNA 3: DISCRECIONAL ACUMULADO -->
-            <div style="padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 180px;">
-                <div class="progress-stat-label">Discrecional acumulado</div>
-                <div style="font-size: 28px; font-weight: 800; color: var(--accent-orange); letter-spacing: -0.02em;" id="total-discr-amount">—</div>
-                <div style="font-size: 11px; color: var(--text-muted);" id="prog-daily-avg-sub">Media: — €/día</div>
-                <div style="margin-top: 4px; font-size: 11px;">
-                    <span style="color: var(--text-muted);">Objetivo discrecional: </span>
-                    <span style="color: var(--accent-green); font-weight: 600;" id="prog-discr-goal">—</span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- BLOQUE 2: GRÁFICA DE PROGRESO -->
-    <div class="progress-widget" id="progress-widget">
-        <div class="progress-widget-header">
-            <div class="panel-title">
-                <span class="dot dot-orange"></span>
-                Seguimiento del gasto
-            </div>
-            <div style="font-size: 12px; color: var(--text-muted);" id="prog-days-label2"></div>
         </div>
         <div class="progress-widget-body">
 
@@ -790,19 +744,19 @@
                     <div class="progress-stat-sub" id="prog-days-sub">de — días</div>
                 </div>
                 <div class="progress-stat">
-                    <div class="progress-stat-label">Total gastado</div>
+                    <div class="progress-stat-label">Gasto total acumulado</div>
                     <div class="progress-stat-value" style="color: var(--text-secondary)" id="prog-accumulated">—</div>
                     <div class="progress-stat-sub" id="prog-fixed-sub">Fijos: — €</div>
                 </div>
                 <div class="progress-stat">
-                    <div class="progress-stat-label">Margen restante</div>
-                    <div class="progress-stat-value" id="total-margin-amount">—</div>
-                    <div class="progress-stat-sub" id="total-goal-pct">—% del objetivo</div>
+                    <div class="progress-stat-label">Gasto discrecional</div>
+                    <div class="progress-stat-value" style="color: var(--accent-orange)" id="prog-discr">—</div>
+                    <div class="progress-stat-sub" id="prog-daily-avg-sub">Media: — €/día</div>
                 </div>
                 <div class="progress-stat">
-                    <div class="progress-stat-label">Objetivo proporcional hoy</div>
-                    <div class="progress-stat-value" style="color: var(--text-muted)" id="prog-discr">—</div>
-                    <div class="progress-stat-sub" id="prog-target-today">Hoy deberías llevar: —</div>
+                    <div class="progress-stat-label">Objetivo discrecional</div>
+                    <div class="progress-stat-value" style="color: var(--accent-green)" id="prog-discr-goal">—</div>
+                    <div class="progress-stat-sub" id="prog-target-today">Hoy: — €</div>
                 </div>
             </div>
 
@@ -822,10 +776,11 @@
             <div class="progress-bar-section" style="margin-bottom: 0">
                 <div class="progress-bar-labels">
                     <span>0 €</span>
-                    <span style="font-weight: 600; color: var(--text-secondary)" id="prog-goal-bar-label">Gasto discrecional vs objetivo</span>
+                    <span style="font-weight: 600; color: var(--text-secondary)" id="prog-goal-bar-label">Gasto vs Objetivo</span>
                     <span>3.000 €</span>
                 </div>
                 <div class="goal-bar-track" style="position: relative; overflow: visible;">
+                    <!-- Proportional target marker -->
                     <div style="position: absolute; top: -18px; left: 0; width: 100%; height: 100%;">
                         <div id="prog-target-marker" style="position: absolute; top: 18px; width: 2px; height: 26px; background: var(--text-muted); border-radius: 1px; transform: translateX(-50%);">
                             <div id="prog-target-marker-label" style="position: absolute; top: -16px; font-size: 10px; color: var(--text-muted); white-space: nowrap; transform: translateX(-50%);">objetivo hoy</div>
@@ -849,17 +804,56 @@
                 </div>
             </div>
 
-            <!-- TOTAL GOAL BAR -->
-            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
-                <div class="progress-bar-labels">
-                    <span style="font-size: 11px; color: var(--text-muted);">0 €</span>
-                    <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Total gastado vs objetivo 3.000 €</span>
-                    <span style="font-size: 11px; color: var(--text-muted);">3.000 €</span>
+            <!-- OBJETIVO TOTAL Y GASTOS FIJOS -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+                <!-- OBJETIVO TOTAL -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;">
+                    <div class="progress-stat-label" style="margin-bottom: 10px;">Objetivo total del mes</div>
+                    <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px;">
+                        <div style="font-size: 26px; font-weight: 700; color: var(--accent-green);">3.000 €</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">límite mensual</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Fijos este mes</span>
+                            <span style="color: var(--text-secondary); font-weight: 600;" id="total-fixed-amount">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Discrecional acumulado</span>
+                            <span style="color: var(--accent-orange); font-weight: 600;" id="total-discr-amount">—</span>
+                        </div>
+                        <div style="height: 1px; background: var(--border); margin: 4px 0;"></div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Total gastado</span>
+                            <span style="font-weight: 700;" id="total-spent-amount">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Margen restante</span>
+                            <span style="font-weight: 700;" id="total-margin-amount">—</span>
+                        </div>
+                    </div>
+                    <!-- Total progress bar -->
+                    <div style="margin-top: 10px;">
+                        <div class="goal-bar-track" style="height: 8px; overflow: hidden;">
+                            <div id="total-goal-bar" class="goal-bar-fill" style="width: 0%; height: 100%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 4px;">
+                            <span>0 €</span>
+                            <span id="total-goal-pct">—% del objetivo</span>
+                            <span>3.000 €</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="goal-bar-track" style="height: 10px; overflow: hidden; margin-top: 6px;">
-                    <div id="total-goal-bar" class="goal-bar-fill" style="width: 0%; height: 100%;"></div>
+
+                <!-- GASTOS FIJOS DEL MES -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow: hidden;">
+                    <div class="progress-stat-label" style="margin-bottom: 10px;">Gastos fijos del mes</div>
+                    <div id="fixed-items-list" style="display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto;">
+                        <div style="color: var(--text-muted); font-size: 12px;">Cargando...</div>
+                    </div>
                 </div>
-                <div style="text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="total-goal-pct2"></div>
+
             </div>
 
         </div>
@@ -1208,60 +1202,51 @@
         document.getElementById('prog-projection-sub').textContent =
             projSign + formatEUR(projDiff) + ' vs objetivo discrecional (' + formatEUR(p.discretionary_goal) + ')';
 
-        // --- BLOQUE 1: RESUMEN (objetivo + fijos + discrecional) ---
+        // --- OBJETIVO TOTAL (3000€) ---
+        const totalSpent = p.expenses_accumulated;
+        const totalGoal = p.monthly_goal;
+        const margin = totalGoal - totalSpent;
+        const totalPct = Math.min((totalSpent / totalGoal) * 100, 110);
+
         document.getElementById('total-fixed-amount').textContent = formatEUR(p.fixed_expenses);
         document.getElementById('total-discr-amount').textContent = formatEUR(p.discretionary_expenses);
-        document.getElementById('prog-daily-avg-sub').textContent = 'Media: ' + formatEUR(p.daily_average) + '/día';
-        document.getElementById('prog-discr-goal').textContent = formatEUR(p.discretionary_goal);
 
-        // Lista de gastos fijos
+        const spentEl = document.getElementById('total-spent-amount');
+        spentEl.textContent = formatEUR(totalSpent);
+        spentEl.style.color = totalSpent > totalGoal ? 'var(--accent-red)' : 'var(--text-primary)';
+
+        const marginEl = document.getElementById('total-margin-amount');
+        marginEl.textContent = (margin >= 0 ? '' : '') + formatEUR(margin);
+        marginEl.style.color = margin >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+        const totalBar = document.getElementById('total-goal-bar');
+        totalBar.style.width = totalPct + '%';
+        totalBar.className = 'goal-bar-fill ' + (totalPct > 100 ? 'over' : totalPct > 85 ? 'warning' : 'under');
+
+        document.getElementById('total-goal-pct').textContent =
+            ((totalSpent / totalGoal) * 100).toFixed(1) + '% del objetivo';
+
+        // --- LISTA DE GASTOS FIJOS ---
         const fixedList = document.getElementById('fixed-items-list');
         if (!p.fixed_items || p.fixed_items.length === 0) {
             fixedList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px;">Sin gastos fijos este mes</div>';
         } else {
             const freqLabel = { monthly: 'mensual', weekly: 'semanal', ndom: 'bimensual', yearly: 'anual', 'half-year': 'semestral', quarterly: 'trimestral' };
             fixedList.innerHTML = p.fixed_items.map(item => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid var(--border);">
-                    <div style="display: flex; flex-direction: column; gap: 1px; overflow: hidden;">
-                        <span style="font-size: 11px; color: var(--text-primary); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                    <div style="display: flex; flex-direction: column; gap: 1px;">
+                        <span style="font-size: 12px; color: var(--text-primary); font-weight: 500;">${item.title}</span>
                         <span style="font-size: 10px; color: var(--text-muted);">${freqLabel[item.frequency] || item.frequency}</span>
                     </div>
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary); white-space: nowrap; margin-left: 10px;">${formatEUR(item.amount)}</span>
+                    <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary); white-space: nowrap; margin-left: 12px;">${formatEUR(item.amount)}</span>
                 </div>
-            `).join('');
+            `).join('') + `
+                <div style="display: flex; justify-content: space-between; padding: 6px 0 2px; font-size: 12px; font-weight: 700;">
+                    <span style="color: var(--text-muted);">Total fijos</span>
+                    <span style="color: var(--text-secondary);">${formatEUR(p.fixed_expenses)}</span>
+                </div>
+            `;
         }
-
-        // --- BLOQUE 2: GRÁFICA ---
-        const totalSpent = p.expenses_accumulated;
-        const totalGoal = p.monthly_goal;
-        const margin = totalGoal - totalSpent;
-        const totalPct = Math.min((totalSpent / totalGoal) * 100, 110);
-
-        // Stats row bloque 2
-        document.getElementById('prog-accumulated').textContent = formatEUR(totalSpent);
-        document.getElementById('prog-fixed-sub').textContent = 'Fijos: ' + formatEUR(p.fixed_expenses);
-
-        const marginEl = document.getElementById('total-margin-amount');
-        marginEl.textContent = formatEUR(margin);
-        marginEl.style.color = margin >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-
-        document.getElementById('total-goal-pct').textContent =
-            ((totalSpent / totalGoal) * 100).toFixed(1) + '% del objetivo total';
-
-        document.getElementById('prog-discr').textContent = formatEUR(p.discretionary_expenses);
-        document.getElementById('prog-target-today').textContent =
-            'Hoy deberías llevar: ' + formatEUR(p.proportional_target);
-
-        // Barra total gastado vs 3000€
-        const totalBar = document.getElementById('total-goal-bar');
-        totalBar.style.width = totalPct + '%';
-        totalBar.className = 'goal-bar-fill ' + (totalPct > 100 ? 'over' : totalPct > 85 ? 'warning' : 'under');
-        const tg2 = document.getElementById('total-goal-pct2');
-        if (tg2) tg2.textContent = formatEUR(totalSpent) + ' de 3.000 € (' + ((totalSpent / totalGoal) * 100).toFixed(1) + '%)';
-
-        // Barra de días
-        document.getElementById('prog-days-label2').textContent =
-            p.days_elapsed + ' de ' + p.days_in_month + ' días — ' + p.progress_pct + '% del mes';
     }
 
     // Load data on page load
