@@ -798,10 +798,62 @@
                     <div class="deviation-sub" id="prog-deviation-sub">—</div>
                 </div>
                 <div class="projection-box">
-                    <div class="projection-label">Proyección fin de mes</div>
+                    <div class="projection-label">Proyección fin de mes (discrecional)</div>
                     <div class="projection-value" id="prog-projection">—</div>
                     <div class="projection-sub" id="prog-projection-sub">al ritmo actual</div>
                 </div>
+            </div>
+
+            <!-- OBJETIVO TOTAL Y GASTOS FIJOS -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+                <!-- OBJETIVO TOTAL -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;">
+                    <div class="progress-stat-label" style="margin-bottom: 10px;">Objetivo total del mes</div>
+                    <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px;">
+                        <div style="font-size: 26px; font-weight: 700; color: var(--accent-green);">3.000 €</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">límite mensual</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Fijos este mes</span>
+                            <span style="color: var(--text-secondary); font-weight: 600;" id="total-fixed-amount">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Discrecional acumulado</span>
+                            <span style="color: var(--accent-orange); font-weight: 600;" id="total-discr-amount">—</span>
+                        </div>
+                        <div style="height: 1px; background: var(--border); margin: 4px 0;"></div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Total gastado</span>
+                            <span style="font-weight: 700;" id="total-spent-amount">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-muted);">Margen restante</span>
+                            <span style="font-weight: 700;" id="total-margin-amount">—</span>
+                        </div>
+                    </div>
+                    <!-- Total progress bar -->
+                    <div style="margin-top: 10px;">
+                        <div class="goal-bar-track" style="height: 8px; overflow: hidden;">
+                            <div id="total-goal-bar" class="goal-bar-fill" style="width: 0%; height: 100%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 4px;">
+                            <span>0 €</span>
+                            <span id="total-goal-pct">—% del objetivo</span>
+                            <span>3.000 €</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GASTOS FIJOS DEL MES -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow: hidden;">
+                    <div class="progress-stat-label" style="margin-bottom: 10px;">Gastos fijos del mes</div>
+                    <div id="fixed-items-list" style="display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto;">
+                        <div style="color: var(--text-muted); font-size: 12px;">Cargando...</div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -1149,6 +1201,52 @@
         }
         document.getElementById('prog-projection-sub').textContent =
             projSign + formatEUR(projDiff) + ' vs objetivo discrecional (' + formatEUR(p.discretionary_goal) + ')';
+
+        // --- OBJETIVO TOTAL (3000€) ---
+        const totalSpent = p.expenses_accumulated;
+        const totalGoal = p.monthly_goal;
+        const margin = totalGoal - totalSpent;
+        const totalPct = Math.min((totalSpent / totalGoal) * 100, 110);
+
+        document.getElementById('total-fixed-amount').textContent = formatEUR(p.fixed_expenses);
+        document.getElementById('total-discr-amount').textContent = formatEUR(p.discretionary_expenses);
+
+        const spentEl = document.getElementById('total-spent-amount');
+        spentEl.textContent = formatEUR(totalSpent);
+        spentEl.style.color = totalSpent > totalGoal ? 'var(--accent-red)' : 'var(--text-primary)';
+
+        const marginEl = document.getElementById('total-margin-amount');
+        marginEl.textContent = (margin >= 0 ? '' : '') + formatEUR(margin);
+        marginEl.style.color = margin >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+        const totalBar = document.getElementById('total-goal-bar');
+        totalBar.style.width = totalPct + '%';
+        totalBar.className = 'goal-bar-fill ' + (totalPct > 100 ? 'over' : totalPct > 85 ? 'warning' : 'under');
+
+        document.getElementById('total-goal-pct').textContent =
+            ((totalSpent / totalGoal) * 100).toFixed(1) + '% del objetivo';
+
+        // --- LISTA DE GASTOS FIJOS ---
+        const fixedList = document.getElementById('fixed-items-list');
+        if (!p.fixed_items || p.fixed_items.length === 0) {
+            fixedList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px;">Sin gastos fijos este mes</div>';
+        } else {
+            const freqLabel = { monthly: 'mensual', weekly: 'semanal', ndom: 'bimensual', yearly: 'anual', 'half-year': 'semestral', quarterly: 'trimestral' };
+            fixedList.innerHTML = p.fixed_items.map(item => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                    <div style="display: flex; flex-direction: column; gap: 1px;">
+                        <span style="font-size: 12px; color: var(--text-primary); font-weight: 500;">${item.title}</span>
+                        <span style="font-size: 10px; color: var(--text-muted);">${freqLabel[item.frequency] || item.frequency}</span>
+                    </div>
+                    <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary); white-space: nowrap; margin-left: 12px;">${formatEUR(item.amount)}</span>
+                </div>
+            `).join('') + `
+                <div style="display: flex; justify-content: space-between; padding: 6px 0 2px; font-size: 12px; font-weight: 700;">
+                    <span style="color: var(--text-muted);">Total fijos</span>
+                    <span style="color: var(--text-secondary);">${formatEUR(p.fixed_expenses)}</span>
+                </div>
+            `;
+        }
     }
 
     // Load data on page load
