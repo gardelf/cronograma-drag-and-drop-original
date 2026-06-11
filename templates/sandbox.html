@@ -6,22 +6,24 @@
     <title>Panel — Sandbox</title>
     <style>
         :root {
-            --bg-base:       #0d1117;
-            --bg-card:       #161b22;
-            --bg-secondary:  #1c2128;
-            --border:        #30363d;
-            --text-primary:  #e6edf3;
-            --text-secondary:#8b949e;
-            --text-muted:    #484f58;
-            --accent-blue:   #58a6ff;
-            --accent-green:  #3fb950;
-            --accent-orange: #d29922;
-            --accent-red:    #f85149;
-            --accent-purple: #bc8cff;
-            --accent-teal:   #39d353;
-            --radius-sm:     6px;
-            --radius-md:     10px;
-            --radius-lg:     14px;
+            --bg-base:       #eef2f7;
+            --bg-card:       #ffffff;
+            --bg-secondary:  #f6f8fb;
+            --border:        #e4e9f0;
+            --text-primary:  #1a1f2e;
+            --text-secondary:#5a6478;
+            --text-muted:    #9aa3b5;
+            --accent-blue:   #2563eb;
+            --accent-cyan:   #06b6d4;
+            --accent-purple: #7c3aed;
+            --accent-green:  #16a34a;
+            --accent-orange: #ea580c;
+            --accent-red:    #dc2626;
+            --radius-sm:     8px;
+            --radius-md:     12px;
+            --radius-lg:     16px;
+            --shadow-sm:     0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md:     0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,20 +33,20 @@
             background: var(--bg-base);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 0;
         }
 
         /* ── HEADER ── */
         .site-header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 14px 28px;
+            padding: 14px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
 
         .header-brand {
@@ -54,39 +56,42 @@
         }
 
         .header-icon {
-            width: 34px;
-            height: 34px;
-            background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            color: #fff;
         }
 
         .header-title {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
         .header-subtitle {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
+            margin-top: 1px;
         }
 
         .header-meta {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .header-date {
             font-size: 13px;
+            font-weight: 500;
             color: var(--text-secondary);
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
         }
 
@@ -94,9 +99,10 @@
             background: none;
             border: 1px solid var(--border);
             color: var(--text-secondary);
-            padding: 6px 14px;
+            padding: 7px 16px;
             border-radius: var(--radius-sm);
             font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -107,25 +113,26 @@
         .refresh-btn:hover {
             border-color: var(--accent-blue);
             color: var(--accent-blue);
+            background: rgba(37,99,235,0.04);
         }
 
-        .spin { animation: spin 0.8s linear infinite; }
+        .spin { animation: spin 0.8s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ── MAIN ── */
         .main {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 24px 28px;
+            padding: 28px 32px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
         /* ── SECTION LABEL ── */
         .section-label {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.8px;
             text-transform: uppercase;
             color: var(--text-muted);
@@ -137,19 +144,21 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
         }
 
         .card-header {
-            padding: 16px 20px;
+            padding: 16px 22px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: var(--bg-card);
         }
 
         .card-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
             display: flex;
@@ -166,9 +175,9 @@
         .dot-blue   { background: var(--accent-blue); }
         .dot-green  { background: var(--accent-green); }
         .dot-orange { background: var(--accent-orange); }
-        .dot-purple { background: var(--accent-purple); }
+        .dot-cyan   { background: var(--accent-cyan); }
 
-        .card-body { padding: 20px; }
+        .card-body { padding: 22px; }
 
         /* ── WEEKLY CALENDAR ── */
         .calendar-grid {
@@ -203,40 +212,40 @@
         .cal-header-day:last-child { border-right: none; }
 
         .cal-header-day.today {
-            background: rgba(88, 166, 255, 0.12);
+            background: linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(124,58,237,0.12) 100%);
         }
 
         .cal-header-day.weekend {
-            background: rgba(188, 140, 255, 0.08);
+            background: rgba(124,58,237,0.05);
         }
 
         .cal-day-name {
             font-size: 10px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             margin-bottom: 3px;
         }
 
         .cal-day-num {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1;
         }
 
         .cal-header-day.today .cal-day-num {
-            color: var(--accent-blue);
+            color: var(--accent-cyan);
         }
 
         .cal-today-badge {
             display: inline-block;
-            background: var(--accent-blue);
+            background: linear-gradient(135deg, #06b6d4, #7c3aed);
             color: #fff;
             font-size: 9px;
             font-weight: 700;
-            padding: 2px 7px;
+            padding: 2px 8px;
             border-radius: 10px;
             margin-top: 4px;
             letter-spacing: 0.3px;
@@ -246,11 +255,6 @@
             font-size: 10px;
             color: var(--text-muted);
             margin-top: 2px;
-        }
-
-        /* Body rows */
-        .cal-body {
-            display: contents;
         }
 
         .cal-time-cell {
@@ -277,24 +281,22 @@
         .cal-event-cell:last-child { border-right: none; }
 
         .cal-event-cell.weekend-cell {
-            background: rgba(188, 140, 255, 0.04);
+            background: rgba(124,58,237,0.025);
         }
 
         .cal-event-cell.today-cell {
-            background: rgba(88, 166, 255, 0.05);
+            background: rgba(6,182,212,0.04);
         }
 
         .cal-event {
-            background: linear-gradient(135deg, rgba(88,166,255,0.25) 0%, rgba(188,140,255,0.25) 100%);
-            border-left: 2px solid var(--accent-blue);
+            background: linear-gradient(135deg, rgba(6,182,212,0.18) 0%, rgba(124,58,237,0.18) 100%);
+            border-left: 2px solid var(--accent-cyan);
             color: var(--text-primary);
             padding: 3px 6px;
-            border-radius: 3px;
+            border-radius: 4px;
             font-size: 10px;
             margin-bottom: 2px;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .cal-event-title {
@@ -312,29 +314,21 @@
         }
 
         .cal-event.all-day {
-            background: rgba(63, 185, 80, 0.2);
+            background: rgba(22,163,74,0.12);
             border-left-color: var(--accent-green);
         }
-
-        /* Calendar scroll wrapper */
-        .calendar-scroll {
-            max-height: 380px;
-            overflow-y: auto;
-        }
-
-        .calendar-scroll::-webkit-scrollbar { width: 4px; }
-        .calendar-scroll::-webkit-scrollbar-track { background: var(--bg-secondary); }
-        .calendar-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
         /* ── TWO-COL GRID ── */
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
         }
 
         @media (max-width: 900px) {
             .two-col { grid-template-columns: 1fr; }
+            .main { padding: 16px; }
+            .site-header { padding: 12px 16px; }
         }
 
         /* ── BOE WIDGET ── */
@@ -342,35 +336,37 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .boe-stat {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 14px;
+            padding: 16px 12px;
             text-align: center;
         }
 
         .boe-stat-label {
             font-size: 10px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .boe-stat-value {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--accent-blue);
             line-height: 1;
         }
 
         .boe-stat-value.small {
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         .boe-actions {
@@ -379,27 +375,29 @@
         }
 
         .btn-primary {
-            background: var(--accent-blue);
+            background: linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
             color: #fff;
             border: none;
-            padding: 8px 18px;
+            padding: 9px 20px;
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: opacity 0.2s;
+            box-shadow: 0 2px 8px rgba(124,58,237,0.25);
         }
 
-        .btn-primary:hover { opacity: 0.85; }
+        .btn-primary:hover { opacity: 0.88; }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text-secondary);
             border: 1px solid var(--border);
-            padding: 8px 14px;
+            padding: 9px 16px;
             border-radius: var(--radius-sm);
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -410,8 +408,8 @@
         }
 
         .boe-message {
-            margin-top: 10px;
-            padding: 8px 12px;
+            margin-top: 12px;
+            padding: 10px 14px;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
@@ -425,7 +423,7 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 18px;
             margin-bottom: 12px;
         }
 
@@ -435,7 +433,7 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -444,24 +442,28 @@
         .property-metrics {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
 
         .metric {
             text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 8px;
         }
 
         .metric-label {
             font-size: 10px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .metric-value {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--accent-blue);
             line-height: 1;
@@ -469,27 +471,20 @@
 
         .metric-delta {
             font-size: 11px;
-            margin-top: 3px;
+            margin-top: 4px;
+            font-weight: 500;
         }
 
         .metric-delta.up   { color: var(--accent-green); }
         .metric-delta.down { color: var(--accent-red); }
         .metric-delta.flat { color: var(--text-muted); }
 
-        .property-updated {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border);
-        }
-
         /* ── LOADING ── */
         .loading-state {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 24px;
+            padding: 28px;
             color: var(--text-muted);
             font-size: 13px;
         }
@@ -498,7 +493,7 @@
             width: 16px;
             height: 16px;
             border: 2px solid var(--border);
-            border-top-color: var(--accent-blue);
+            border-top-color: var(--accent-cyan);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             flex-shrink: 0;
@@ -511,8 +506,15 @@
             font-size: 11px;
             color: var(--text-muted);
             border-top: 1px solid var(--border);
-            margin-top: 10px;
+            background: var(--bg-card);
+            margin-top: 8px;
         }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -542,12 +544,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <span class="dot dot-blue"></span>
+                    <span class="dot dot-cyan"></span>
                     Próximos 7 días
                 </div>
                 <div id="cal-last-updated" style="font-size:11px;color:var(--text-muted);">—</div>
             </div>
-            <div class="card-body" style="padding: 0;">
+            <div class="card-body" style="padding:0;">
                 <div id="weekly-calendar">
                     <div class="loading-state">
                         <div class="spinner"></div>
@@ -574,7 +576,7 @@
                 <div class="card-body">
                     <div class="boe-stats-grid">
                         <div class="boe-stat">
-                            <div class="boe-stat-label">Total subastas</div>
+                            <div class="boe-stat-label">Total</div>
                             <div class="boe-stat-value" id="boeTotalSubastas">—</div>
                         </div>
                         <div class="boe-stat">
@@ -582,7 +584,7 @@
                             <div class="boe-stat-value" id="boeNuevasHoy">—</div>
                         </div>
                         <div class="boe-stat">
-                            <div class="boe-stat-label">Última ejecución</div>
+                            <div class="boe-stat-label">Última ejec.</div>
                             <div class="boe-stat-value small" id="boeUltimaEjecucion">—</div>
                         </div>
                         <div class="boe-stat">
@@ -635,16 +637,16 @@ const DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MONTHS_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
-function fmtDate(d) {
-    return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-}
-
 function fmtTime(d) {
     return d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
 }
 
 // ── HEADER DATE ────────────────────────────────────────────────────────────
-document.getElementById('header-date').textContent = fmtDate(new Date());
+(function() {
+    const d = new Date();
+    document.getElementById('header-date').textContent =
+        `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+})();
 
 // ── WEEKLY CALENDAR ────────────────────────────────────────────────────────
 async function loadWeeklyCalendar() {
@@ -659,9 +661,7 @@ async function loadWeeklyCalendar() {
             'Actualizado: ' + fmtTime(new Date());
 
         const today = new Date();
-
-        // Build 7 day columns
-        const days = [];
+        const days  = [];
         for (let i = 0; i < 7; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
@@ -669,16 +669,13 @@ async function loadWeeklyCalendar() {
             days.push({ date: d, key, events: data.events[key] || [] });
         }
 
-        // Collect all-day events per day
         const allDayRows = days.map(d => d.events.filter(e => e.all_day));
-
-        // Hours to show: 7-22
-        const HOURS = Array.from({length: 16}, (_, i) => i + 7);
+        const HOURS      = Array.from({length: 16}, (_, i) => i + 7);
 
         let html = '<div style="overflow-x:auto;">';
         html += '<div class="calendar-grid" style="min-width:700px;">';
 
-        // ── HEADER ROW ──
+        // Header
         html += '<div class="cal-header-time">Hora</div>';
         days.forEach(({date}, i) => {
             const isToday   = i === 0;
@@ -691,7 +688,7 @@ async function loadWeeklyCalendar() {
             html += '</div>';
         });
 
-        // ── ALL-DAY ROW (only if any) ──
+        // All-day row
         const hasAllDay = allDayRows.some(r => r.length > 0);
         if (hasAllDay) {
             html += '<div class="cal-time-cell" style="font-size:9px;padding-top:6px;">Todo el día</div>';
@@ -708,8 +705,7 @@ async function loadWeeklyCalendar() {
             });
         }
 
-        // ── HOUR ROWS ──
-        html += '<div class="calendar-scroll" style="display:contents;">';
+        // Hour rows
         HOURS.forEach(hour => {
             html += `<div class="cal-time-cell">${hour}:00</div>`;
             days.forEach(({date, events}, i) => {
@@ -730,7 +726,6 @@ async function loadWeeklyCalendar() {
                 html += '</div>';
             });
         });
-        html += '</div>';
 
         html += '</div></div>';
         container.innerHTML = html;
@@ -817,7 +812,7 @@ async function loadIdealista() {
 
         let html = '';
         data.properties.forEach(p => {
-            const curr = p.current || {};
+            const curr = p.current  || {};
             const prev = p.previous || {};
 
             function delta(cur, prv) {
@@ -869,10 +864,10 @@ async function loadAll() {
     icon.classList.remove('spin');
 }
 
-// Auto-refresh BOE each 2 min
+// Auto-refresh BOE cada 2 min
 setInterval(boeLoadData, 120000);
 
-// Initial load
+// Carga inicial
 loadAll();
 </script>
 
