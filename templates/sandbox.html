@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel — Sandbox</title>
+    <style>
+        :root {
+            --bg-base:       #0d1117;
+            --bg-card:       #161b22;
+            --bg-secondary:  #1c2128;
+            --border:        #30363d;
+            --text-primary:  #e6edf3;
+            --text-secondary:#8b949e;
+            --text-muted:    #484f58;
+            --accent-blue:   #58a6ff;
+            --accent-green:  #3fb950;
+            --accent-orange: #d29922;
+            --accent-red:    #f85149;
+            --accent-purple: #bc8cff;
+            --accent-teal:   #39d353;
+            --radius-sm:     6px;
+            --radius-md:     10px;
+            --radius-lg:     14px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* ── HEADER ── */
+        .site-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .spin { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── MAIN ── */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ── SECTION LABEL ── */
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-blue   { background: var(--accent-blue); }
+        .dot-green  { background: var(--accent-green); }
+        .dot-orange { background: var(--accent-orange); }
+        .dot-purple { background: var(--accent-purple); }
+
+        .card-body { padding: 20px; }
+
+        /* ── WEEKLY CALENDAR ── */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 52px repeat(7, 1fr);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .cal-header-time {
+            background: var(--bg-secondary);
+            padding: 10px 6px;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cal-header-day {
+            background: var(--bg-secondary);
+            padding: 10px 8px;
+            text-align: center;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cal-header-day:last-child { border-right: none; }
+
+        .cal-header-day.today {
+            background: rgba(88, 166, 255, 0.12);
+        }
+
+        .cal-header-day.weekend {
+            background: rgba(188, 140, 255, 0.08);
+        }
+
+        .cal-day-name {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 3px;
+        }
+
+        .cal-day-num {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .cal-header-day.today .cal-day-num {
+            color: var(--accent-blue);
+        }
+
+        .cal-today-badge {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .cal-month {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Body rows */
+        .cal-body {
+            display: contents;
+        }
+
+        .cal-time-cell {
+            background: var(--bg-secondary);
+            padding: 4px 6px;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: right;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+            vertical-align: top;
+        }
+
+        .cal-event-cell {
+            padding: 2px 3px;
+            min-height: 28px;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            background: var(--bg-card);
+        }
+
+        .cal-event-cell:last-child { border-right: none; }
+
+        .cal-event-cell.weekend-cell {
+            background: rgba(188, 140, 255, 0.04);
+        }
+
+        .cal-event-cell.today-cell {
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        .cal-event {
+            background: linear-gradient(135deg, rgba(88,166,255,0.25) 0%, rgba(188,140,255,0.25) 100%);
+            border-left: 2px solid var(--accent-blue);
+            color: var(--text-primary);
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .cal-event-title {
+            font-weight: 600;
+            font-size: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cal-event-time {
+            font-size: 9px;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+
+        .cal-event.all-day {
+            background: rgba(63, 185, 80, 0.2);
+            border-left-color: var(--accent-green);
+        }
+
+        /* Calendar scroll wrapper */
+        .calendar-scroll {
+            max-height: 380px;
+            overflow-y: auto;
+        }
+
+        .calendar-scroll::-webkit-scrollbar { width: 4px; }
+        .calendar-scroll::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        .calendar-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        /* ── TWO-COL GRID ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+
+        /* ── BOE WIDGET ── */
+        .boe-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .boe-stat {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            text-align: center;
+        }
+
+        .boe-stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .boe-stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            line-height: 1;
+        }
+
+        .boe-stat-value.small {
+            font-size: 16px;
+        }
+
+        .boe-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .boe-message {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        /* ── IDEALISTA ── */
+        .property-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .property-card:last-child { margin-bottom: 0; }
+
+        .property-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .property-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            line-height: 1;
+        }
+
+        .metric-delta {
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .metric-delta.up   { color: var(--accent-green); }
+        .metric-delta.down { color: var(--accent-red); }
+        .metric-delta.flat { color: var(--text-muted); }
+
+        .property-updated {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── LOADING ── */
+        .loading-state {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+    <div class="header-brand">
+        <div class="header-icon">🗂️</div>
+        <div>
+            <div class="header-title">Panel Sandbox</div>
+            <div class="header-subtitle">Calendario · BOE · Idealista</div>
+        </div>
+    </div>
+    <div class="header-meta">
+        <div class="header-date" id="header-date">—</div>
+        <button class="refresh-btn" onclick="loadAll()">
+            <span id="refresh-icon">↻</span> Actualizar
+        </button>
+    </div>
+</header>
+
+<div class="main">
+
+    <!-- ── CALENDARIO SEMANAL ── -->
+    <div>
+        <div class="section-label">Calendario Semanal</div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="dot dot-blue"></span>
+                    Próximos 7 días
+                </div>
+                <div id="cal-last-updated" style="font-size:11px;color:var(--text-muted);">—</div>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div id="weekly-calendar">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        Cargando calendario...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── BOE + IDEALISTA ── -->
+    <div class="two-col">
+
+        <!-- BOE SUBASTAS -->
+        <div>
+            <div class="section-label">BOE Subastas</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="dot dot-orange"></span>
+                        Rivas Vaciamadrid
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="boe-stats-grid">
+                        <div class="boe-stat">
+                            <div class="boe-stat-label">Total subastas</div>
+                            <div class="boe-stat-value" id="boeTotalSubastas">—</div>
+                        </div>
+                        <div class="boe-stat">
+                            <div class="boe-stat-label">Nuevas hoy</div>
+                            <div class="boe-stat-value" id="boeNuevasHoy">—</div>
+                        </div>
+                        <div class="boe-stat">
+                            <div class="boe-stat-label">Última ejecución</div>
+                            <div class="boe-stat-value small" id="boeUltimaEjecucion">—</div>
+                        </div>
+                        <div class="boe-stat">
+                            <div class="boe-stat-label">Estado</div>
+                            <div class="boe-stat-value" id="boeEstado">⏳</div>
+                        </div>
+                    </div>
+                    <div class="boe-actions">
+                        <button class="btn-primary" onclick="boeExecuteScraper()" id="boe-run-btn">🚀 Ejecutar</button>
+                        <button class="btn-secondary" onclick="boeLoadData()">🔄 Actualizar</button>
+                    </div>
+                    <div class="boe-message" id="boeMessage"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IDEALISTA -->
+        <div>
+            <div class="section-label">Estadísticas Idealista</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="dot dot-green"></span>
+                        Plazas de garaje
+                    </div>
+                    <div id="idealista-updated" style="font-size:11px;color:var(--text-muted);">—</div>
+                </div>
+                <div class="card-body">
+                    <div id="idealista-container">
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            Cargando datos...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    Panel Sandbox · Datos en tiempo real
+</div>
+
+<script>
+// ── UTILS ──────────────────────────────────────────────────────────────────
+const DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MONTHS_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+function fmtDate(d) {
+    return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function fmtTime(d) {
+    return d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+}
+
+// ── HEADER DATE ────────────────────────────────────────────────────────────
+document.getElementById('header-date').textContent = fmtDate(new Date());
+
+// ── WEEKLY CALENDAR ────────────────────────────────────────────────────────
+async function loadWeeklyCalendar() {
+    const container = document.getElementById('weekly-calendar');
+    try {
+        const res  = await fetch('/week-calendar');
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error || 'Error');
+
+        document.getElementById('cal-last-updated').textContent =
+            'Actualizado: ' + fmtTime(new Date());
+
+        const today = new Date();
+
+        // Build 7 day columns
+        const days = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            const key = d.toISOString().split('T')[0];
+            days.push({ date: d, key, events: data.events[key] || [] });
+        }
+
+        // Collect all-day events per day
+        const allDayRows = days.map(d => d.events.filter(e => e.all_day));
+
+        // Hours to show: 7-22
+        const HOURS = Array.from({length: 16}, (_, i) => i + 7);
+
+        let html = '<div style="overflow-x:auto;">';
+        html += '<div class="calendar-grid" style="min-width:700px;">';
+
+        // ── HEADER ROW ──
+        html += '<div class="cal-header-time">Hora</div>';
+        days.forEach(({date}, i) => {
+            const isToday   = i === 0;
+            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+            html += `<div class="cal-header-day ${isToday ? 'today' : ''} ${isWeekend ? 'weekend' : ''}">`;
+            html += `<div class="cal-day-name">${DAYS[date.getDay()]}</div>`;
+            html += `<div class="cal-day-num">${date.getDate()}</div>`;
+            html += `<div class="cal-month">${MONTHS_SHORT[date.getMonth()]}</div>`;
+            if (isToday) html += '<div class="cal-today-badge">Hoy</div>';
+            html += '</div>';
+        });
+
+        // ── ALL-DAY ROW (only if any) ──
+        const hasAllDay = allDayRows.some(r => r.length > 0);
+        if (hasAllDay) {
+            html += '<div class="cal-time-cell" style="font-size:9px;padding-top:6px;">Todo el día</div>';
+            days.forEach(({date}, i) => {
+                const isToday   = i === 0;
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                html += `<div class="cal-event-cell ${isWeekend ? 'weekend-cell' : ''} ${isToday ? 'today-cell' : ''}" style="padding:3px;">`;
+                allDayRows[i].forEach(ev => {
+                    html += `<div class="cal-event all-day" title="${ev.summary}">
+                        <div class="cal-event-title">${ev.summary}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            });
+        }
+
+        // ── HOUR ROWS ──
+        html += '<div class="calendar-scroll" style="display:contents;">';
+        HOURS.forEach(hour => {
+            html += `<div class="cal-time-cell">${hour}:00</div>`;
+            days.forEach(({date, events}, i) => {
+                const isToday   = i === 0;
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                const hourEvs   = events.filter(ev => {
+                    if (ev.all_day) return false;
+                    const sh = parseInt((ev.start || '').split(':')[0], 10);
+                    return sh === hour;
+                });
+                html += `<div class="cal-event-cell ${isWeekend ? 'weekend-cell' : ''} ${isToday ? 'today-cell' : ''}">`;
+                hourEvs.forEach(ev => {
+                    html += `<div class="cal-event" title="${ev.summary} ${ev.start}-${ev.end}">
+                        <div class="cal-event-title">${ev.summary}</div>
+                        <div class="cal-event-time">${ev.start}–${ev.end}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            });
+        });
+        html += '</div>';
+
+        html += '</div></div>';
+        container.innerHTML = html;
+
+    } catch (err) {
+        console.error('Calendar error:', err);
+        container.innerHTML = `<div class="loading-state" style="color:var(--accent-red);">
+            ❌ Error al cargar el calendario: ${err.message}
+        </div>`;
+    }
+}
+
+// ── BOE ────────────────────────────────────────────────────────────────────
+const BOE_API_URL = 'https://boe-subastas-scraper-production.up.railway.app';
+
+async function boeLoadData() {
+    try {
+        const [statsRes, runsRes] = await Promise.all([
+            fetch(`${BOE_API_URL}/api/stats`),
+            fetch(`${BOE_API_URL}/api/runs`)
+        ]);
+        if (statsRes.ok) {
+            const stats = await statsRes.json();
+            document.getElementById('boeTotalSubastas').textContent = stats.data?.total_subastas ?? '—';
+            document.getElementById('boeNuevasHoy').textContent     = stats.data?.nuevas_hoy ?? '—';
+        }
+        if (runsRes.ok) {
+            const runs = await runsRes.json();
+            if (runs.data && runs.data.length > 0) {
+                const last = runs.data[0];
+                const t = new Date(last.end_time).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+                document.getElementById('boeUltimaEjecucion').textContent = t;
+                document.getElementById('boeEstado').textContent = last.status === 'success' ? '✅' : '❌';
+            }
+        }
+    } catch (e) {
+        console.error('BOE error:', e);
+    }
+}
+
+async function boeExecuteScraper() {
+    const btn = document.getElementById('boe-run-btn');
+    const msg = document.getElementById('boeMessage');
+    btn.disabled = true;
+    btn.textContent = '⏳ Ejecutando...';
+    msg.style.display = 'block';
+    msg.textContent = '⏳ Scraper en ejecución...';
+    try {
+        const res    = await fetch(`${BOE_API_URL}/api/scrape`);
+        const result = await res.json();
+        if (result.success) {
+            msg.textContent = '✅ Ejecutado correctamente';
+            setTimeout(() => boeLoadData(), 3000);
+        } else {
+            msg.textContent = '❌ Error: ' + result.error;
+        }
+    } catch (e) {
+        msg.textContent = '❌ Error de conexión';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 Ejecutar';
+        setTimeout(() => { msg.style.display = 'none'; }, 5000);
+    }
+}
+
+// ── IDEALISTA ──────────────────────────────────────────────────────────────
+async function loadIdealista() {
+    const container = document.getElementById('idealista-container');
+    try {
+        const res  = await fetch('/idealista-data');
+        const data = await res.json();
+
+        if (!data || !data.properties || data.properties.length === 0) {
+            container.innerHTML = '<div class="loading-state" style="color:var(--text-muted);">Sin datos disponibles</div>';
+            return;
+        }
+
+        if (data.last_updated) {
+            const d = new Date(data.last_updated);
+            document.getElementById('idealista-updated').textContent =
+                d.toLocaleDateString('es-ES', {day:'2-digit', month:'short'}) + ' ' +
+                d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+        }
+
+        let html = '';
+        data.properties.forEach(p => {
+            const curr = p.current || {};
+            const prev = p.previous || {};
+
+            function delta(cur, prv) {
+                const d = (cur || 0) - (prv || 0);
+                if (d > 0) return `<div class="metric-delta up">▲ +${d}</div>`;
+                if (d < 0) return `<div class="metric-delta down">▼ ${d}</div>`;
+                return `<div class="metric-delta flat">→ 0</div>`;
+            }
+
+            html += `<div class="property-card">
+                <div class="property-title">🏠 ${p.address || 'Propiedad'}</div>
+                <div class="property-metrics">
+                    <div class="metric">
+                        <div class="metric-label">👁 Visitas</div>
+                        <div class="metric-value">${curr.visits ?? '—'}</div>
+                        ${delta(curr.visits, prev.visits)}
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">❤️ Favoritos</div>
+                        <div class="metric-value">${curr.favorites ?? '—'}</div>
+                        ${delta(curr.favorites, prev.favorites)}
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">💬 Mensajes</div>
+                        <div class="metric-value">${curr.contacts ?? '—'}</div>
+                        ${delta(curr.contacts, prev.contacts)}
+                    </div>
+                </div>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+
+    } catch (e) {
+        console.error('Idealista error:', e);
+        container.innerHTML = `<div class="loading-state" style="color:var(--accent-red);">❌ Error al cargar datos</div>`;
+    }
+}
+
+// ── LOAD ALL ───────────────────────────────────────────────────────────────
+async function loadAll() {
+    const icon = document.getElementById('refresh-icon');
+    icon.classList.add('spin');
+    await Promise.all([
+        loadWeeklyCalendar(),
+        boeLoadData(),
+        loadIdealista()
+    ]);
+    icon.classList.remove('spin');
+}
+
+// Auto-refresh BOE each 2 min
+setInterval(boeLoadData, 120000);
+
+// Initial load
+loadAll();
+</script>
+
+</body>
+</html>

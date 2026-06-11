@@ -37,6 +37,11 @@ def boe_dashboard():
     """BOE Subastas Dashboard"""
     return render_template('boe-dashboard.html')
 
+@app.route('/sandbox', methods=['GET'])
+def sandbox_panel():
+    """Panel Sandbox - Calendario semanal, BOE e Idealista"""
+    return render_template('sandbox.html')
+
 @app.route('/debug/firefly', methods=['GET'])
 def debug_firefly():
     """Debug endpoint for Firefly III connection"""
