@@ -542,10 +542,12 @@
     <div>
         <div class="section-label">Panel Financiero</div>
 
-        <!-- Fila 1: Objetivo + Fijos + Discrecional -->
+        <!-- Fila 1+2: Resumen numérico + Barra tricolor -->
         <div class="card" style="margin-bottom:16px;">
             <div class="card-body" style="padding:22px;">
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;">
+
+                <!-- Números resumen -->
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-bottom:24px;">
 
                     <!-- Objetivo -->
                     <div style="padding:0 24px 0 0;border-right:1px solid var(--border);">
@@ -556,42 +558,55 @@
 
                     <!-- Fijos -->
                     <div style="padding:0 24px;border-right:1px solid var(--border);">
-                        <div class="section-label" style="margin-bottom:8px;">Fijos este mes</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--text-primary);line-height:1;" id="fin-fixed">—</div>
+                        <div class="section-label" style="margin-bottom:8px;">Gastos fijos</div>
+                        <div style="font-size:28px;font-weight:700;color:var(--accent-blue);line-height:1;" id="fin-fixed">—</div>
                         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">gastos recurrentes del mes</div>
                     </div>
 
-                    <!-- Discrecional -->
+                    <!-- Objetivo discrecional -->
                     <div style="padding:0 0 0 24px;">
-                        <div class="section-label" style="margin-bottom:8px;">Discrecional acumulado</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--accent-orange);line-height:1;" id="fin-discr">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">media: <span id="fin-daily-avg">—</span> €/día</div>
+                        <div class="section-label" style="margin-bottom:8px;">Objetivo discrecional</div>
+                        <div style="font-size:28px;font-weight:700;color:var(--accent-orange);line-height:1;" id="fin-discr-goal-top">—</div>
+                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">margen para gastos del día a día</div>
                     </div>
 
                 </div>
-            </div>
-        </div>
 
-        <!-- Fila 2: Total gastado + Margen + Barra -->
-        <div class="card" style="margin-bottom:16px;">
-            <div class="card-body" style="padding:22px;">
-                <div style="display:flex;justify-content:space-between;margin-bottom:14px;">
-                    <span style="font-size:14px;color:var(--text-secondary);">Total gastado</span>
-                    <span style="font-size:14px;font-weight:700;color:var(--text-primary);" id="fin-total">—</span>
+                <!-- Barra tricolor 0€ → 3000€ -->
+                <div style="margin-bottom:8px;">
+                    <div style="position:relative;height:22px;background:var(--bg-secondary);border-radius:8px;border:1px solid var(--border);overflow:hidden;display:flex;">
+                        <!-- Segmento fijos (azul) -->
+                        <div id="fin-bar-fixed" style="height:100%;background:#2563eb;transition:width 0.6s ease;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                            <span id="fin-bar-fixed-label" style="font-size:10px;font-weight:700;color:#fff;white-space:nowrap;padding:0 6px;"></span>
+                        </div>
+                        <!-- Segmento variables (naranja) -->
+                        <div id="fin-bar-discr" style="height:100%;background:#ea580c;transition:width 0.6s ease;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                            <span id="fin-bar-discr-label" style="font-size:10px;font-weight:700;color:#fff;white-space:nowrap;padding:0 6px;"></span>
+                        </div>
+                        <!-- Segmento por gastar (gris) -->
+                        <div id="fin-bar-remaining" style="height:100%;background:var(--border);flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                            <span id="fin-bar-remaining-label" style="font-size:10px;font-weight:600;color:#dc2626;white-space:nowrap;padding:0 6px;"></span>
+                        </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:5px;">
+                        <span style="font-size:11px;color:var(--text-muted);">0 €</span>
+                        <div style="display:flex;gap:16px;">
+                            <span style="font-size:11px;color:#2563eb;">■ Fijos</span>
+                            <span style="font-size:11px;color:#ea580c;">■ Variables</span>
+                            <span style="font-size:11px;color:var(--text-muted);">■ Por gastar</span>
+                        </div>
+                        <span style="font-size:11px;color:var(--text-muted);">3.000 €</span>
+                    </div>
                 </div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-                    <span style="font-size:14px;color:var(--text-secondary);">Margen restante</span>
-                    <span style="font-size:14px;font-weight:700;color:var(--accent-green);" id="fin-margin">—</span>
-                </div>
-                <!-- Barra de progreso total -->
-                <div style="position:relative;height:10px;background:var(--bg-secondary);border-radius:5px;border:1px solid var(--border);overflow:hidden;">
-                    <div id="fin-bar" style="height:100%;border-radius:5px;background:linear-gradient(90deg,#06b6d4,#7c3aed);transition:width 0.6s ease;"></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:6px;">
-                    <span style="font-size:11px;color:var(--text-muted);">0 €</span>
-                    <span style="font-size:11px;color:var(--text-secondary);font-weight:600;" id="fin-bar-pct">—</span>
-                    <span style="font-size:11px;color:var(--text-muted);">3.000 €</span>
-                </div>
+
+                <!-- Ocultos para compatibilidad JS -->
+                <span id="fin-total" style="display:none;"></span>
+                <span id="fin-margin" style="display:none;"></span>
+                <span id="fin-bar" style="display:none;"></span>
+                <span id="fin-bar-pct" style="display:none;"></span>
+                <span id="fin-discr" style="display:none;"></span>
+                <span id="fin-daily-avg" style="display:none;"></span>
+
             </div>
         </div>
 
@@ -600,7 +615,7 @@
             <div class="card-header">
                 <div class="card-title">
                     <span class="dot dot-blue"></span>
-                    Objetivo Mensual — <span id="fin-month-name2" style="margin-left:4px;">—</span>
+                    RITMO DE GASTO — <span id="fin-month-name2" style="margin-left:4px;">—</span>
                 </div>
                 <div style="font-size:12px;color:var(--text-muted);" id="fin-days-header">—</div>
             </div>
@@ -611,16 +626,17 @@
                         <div class="section-label" style="margin-bottom:6px;">Días transcurridos</div>
                         <div style="font-size:36px;font-weight:800;color:var(--accent-blue);" id="fin-days-elapsed">—</div>
                         <div style="font-size:12px;color:var(--text-muted);" id="fin-days-of">—</div>
-                    </div>
-                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
-                        <div class="section-label" style="margin-bottom:6px;">Gasto total acumulado</div>
-                        <div style="font-size:24px;font-weight:700;color:var(--text-primary);" id="fin-total2">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);" id="fin-fixed2">—</div>
+                        <div style="font-size:12px;color:var(--accent-green);font-weight:600;margin-top:6px;" id="fin-daily-budget">—</div>
                     </div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
                         <div class="section-label" style="margin-bottom:6px;">Gasto discrecional</div>
                         <div style="font-size:24px;font-weight:700;color:var(--accent-orange);" id="fin-discr2">—</div>
                         <div style="font-size:12px;color:var(--text-muted);" id="fin-daily2">—</div>
+                    </div>
+                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
+                        <div class="section-label" style="margin-bottom:6px;">Por gastar</div>
+                        <div style="font-size:24px;font-weight:700;color:var(--accent-green);" id="fin-total2">—</div>
+                        <div style="font-size:12px;color:var(--text-muted);" id="fin-fixed2">—</div>
                     </div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
                         <div class="section-label" style="margin-bottom:6px;">Objetivo discrecional</div>
@@ -629,72 +645,73 @@
                     </div>
                 </div>
 
-                <!-- Barra de días con ticks -->
-                <div style="margin-bottom:20px;">
-                    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:6px;">
-                        <span>Día 1</span>
-                        <span id="fin-day-center">—</span>
-                        <span>Día 30</span>
+                <!-- Días transcurridos / restantes: centrados en su zona proporcional -->
+                <div id="fin-days-row" style="position:relative;height:70px;margin-bottom:10px;">
+                    <div id="fin-card-elapsed" style="position:absolute;transform:translateX(-50%);display:flex;gap:8px;align-items:stretch;">
+                        <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:8px;padding:8px 16px;text-align:center;">
+                            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--accent-blue);margin-bottom:2px;">Días transcurridos</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--accent-blue);line-height:1;" id="fin-days-elapsed2">—</div>
+                        </div>
+                        <div style="background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.2);border-radius:8px;padding:8px 16px;text-align:center;">
+                            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--accent-green);margin-bottom:2px;">Puedo gastar/día</div>
+                            <div style="font-size:28px;font-weight:800;color:var(--accent-green);line-height:1;" id="fin-daily-budget2">—</div>
+                        </div>
                     </div>
-                    <div id="fin-days-ticks" style="display:flex;align-items:flex-end;gap:2px;height:32px;"></div>
+                    <div id="fin-card-remaining" style="position:absolute;transform:translateX(-50%);background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.2);border-radius:8px;padding:8px 16px;text-align:center;">
+                        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--accent-green);margin-bottom:2px;">Días restantes</div>
+                        <div style="font-size:28px;font-weight:800;color:var(--accent-green);line-height:1;" id="fin-days-remaining">—</div>
+                    </div>
+                    <div id="fin-day-center" style="display:none;"></div>
                 </div>
 
-                <!-- Barra de gasto discrecional -->
+                <!-- Bloque ticks + barras alineadas -->
                 <div style="margin-bottom:20px;">
-                    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:6px;">
-                        <span>0 €</span>
-                        <span id="fin-discr-label" style="color:var(--text-secondary);font-weight:600;">—</span>
-                        <span>3.000 €</span>
+
+                    <!-- Etiquetas: días transcurridos centrado en zona izq, días restantes centrado en zona der -->
+                    <div style="position:relative;height:18px;margin-bottom:2px;">
+                        <span id="fin-label-elapsed" style="position:absolute;font-size:11px;font-weight:700;color:var(--accent-blue);transform:translateX(-50%);"></span>
+                        <span id="fin-label-remaining" style="position:absolute;font-size:11px;font-weight:700;color:var(--accent-green);transform:translateX(-50%);"></span>
                     </div>
-                    <div style="position:relative;height:12px;background:var(--bg-secondary);border-radius:6px;border:1px solid var(--border);overflow:visible;">
-                        <div id="fin-discr-bar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,#16a34a,#06b6d4);transition:width 0.6s;"></div>
-                        <div id="fin-target-marker" style="position:absolute;top:-4px;width:2px;height:20px;background:var(--accent-orange);border-radius:1px;"></div>
-                    </div>
-                    <div style="font-size:10px;color:var(--accent-orange);margin-top:4px;text-align:left;" id="fin-target-label">—</div>
+
+                    <!-- Contenedor único: ticks + barras comparten exactamente el mismo ancho -->
+                    <div id="fin-unified-track">
+
+                        <!-- Ticks de días -->
+                        <div id="fin-days-ticks" style="display:flex;align-items:flex-end;height:52px;"></div>
+
+                        <!-- Barra IDEAL: ancho = % días transcurridos; valor en el espacio restante -->
+                        <div style="margin-top:8px;margin-bottom:10px;">
+                            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent-orange);margin-bottom:3px;">Ideal</div>
+                            <div style="position:relative;height:16px;background:var(--bg-secondary);border-radius:7px;border:1px solid var(--border);">
+                                <div id="fin-ideal-bar" style="height:100%;border-radius:7px;background:linear-gradient(90deg,#ea580c,#f97316);transition:width 0.6s ease;"></div>
+                                <span id="fin-ideal-value" style="position:absolute;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--accent-orange);white-space:nowrap;margin-left:8px;">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Barra REAL: ancho = % gasto real sobre objetivo discrecional -->
+                        <div>
+                            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent-cyan);margin-bottom:3px;">Real</div>
+                            <div style="position:relative;height:16px;background:var(--bg-secondary);border-radius:7px;border:1px solid var(--border);">
+                                <div id="fin-real-bar" style="height:100%;border-radius:7px;background:linear-gradient(90deg,#06b6d4,#7c3aed);transition:width 0.6s ease;"></div>
+                                <span id="fin-real-value" style="position:absolute;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--accent-cyan);white-space:nowrap;margin-left:8px;">—</span>
+                            </div>
+                        </div>
+
+                    </div><!-- fin-unified-track -->
+
+                    <!-- Ocultos para compatibilidad -->
+                    <div id="fin-target-marker" style="display:none;"></div>
+                    <div id="fin-target-label" style="display:none;"></div>
+                    <div id="fin-discr-label" style="display:none;"></div>
+                    <div id="fin-discr-goal-label" style="display:none;"></div>
                 </div>
 
-                <!-- Desviación + Proyección -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <!-- Ahorro / Déficit -->
+                <div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
-                        <div class="section-label" style="margin-bottom:6px;">Desviación vs objetivo proporcional</div>
+                        <div class="section-label" style="margin-bottom:6px;" id="fin-deviation-title">Ahorro / Déficit</div>
                         <div style="font-size:28px;font-weight:700;" id="fin-deviation">—</div>
                         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="fin-deviation-pct">—</div>
-                    </div>
-                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
-                        <div class="section-label" style="margin-bottom:6px;">Proyección fin de mes (discrecional)</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--accent-blue);" id="fin-projection">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="fin-projection-vs">—</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fila 4: Resumen KPIs -->
-        <div class="card" style="margin-bottom:0;">
-            <div class="card-header">
-                <div class="card-title"><span class="dot dot-purple"></span>Resumen</div>
-            </div>
-            <div class="card-body">
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
-                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;">
-                        <div class="section-label" style="margin-bottom:6px;">Gastos ayer</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--accent-red);" id="fin-yesterday">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);" id="fin-yesterday-count">—</div>
-                    </div>
-                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;">
-                        <div class="section-label" style="margin-bottom:6px;">Última semana</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--accent-blue);" id="fin-weekly">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);" id="fin-weekly-count">—</div>
-                    </div>
-                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;">
-                        <div class="section-label" style="margin-bottom:6px;">Mes actual</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--accent-orange);" id="fin-current-month">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);" id="fin-current-month-name">—</div>
-                    </div>
-                    <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px;">
-                        <div class="section-label" style="margin-bottom:6px;">Mes anterior</div>
-                        <div style="font-size:28px;font-weight:700;color:var(--text-secondary);" id="fin-prev-month">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);" id="fin-prev-month-name">—</div>
                     </div>
                 </div>
             </div>
@@ -702,7 +719,7 @@
 
     </div>
 
-    <!-- ── CALENDARIO SEMANAL ── -->
+        <!-- ── CALENDARIO SEMANAL ── -->
     <div>
         <div class="section-label">Calendario Semanal</div>
         <div class="card">
@@ -1033,49 +1050,90 @@ async function loadFinancialPanel() {
         // ── Fila 1 ──
         document.getElementById('fin-month-name').textContent  = mp.month_name;
         document.getElementById('fin-fixed').textContent       = fmtEur(mp.fixed_expenses);
-        document.getElementById('fin-discr').textContent       = fmtEur(mp.discretionary_expenses);
-        document.getElementById('fin-daily-avg').textContent   = mp.daily_average.toFixed(2);
+        if (document.getElementById('fin-discr-goal-top'))
+            document.getElementById('fin-discr-goal-top').textContent = fmtEur(mp.discretionary_goal);
 
-        // ── Fila 2 ──
-        const goal   = mp.monthly_goal || 3000;
-        const total  = mp.expenses_accumulated;
-        const margin = goal - total;
-        const pct    = Math.min((total / goal) * 100, 100);
-        document.getElementById('fin-total').textContent   = fmtEur(total);
-        document.getElementById('fin-margin').textContent  = fmtEur(margin);
-        document.getElementById('fin-bar').style.width     = pct.toFixed(1) + '%';
-        document.getElementById('fin-bar-pct').textContent = pct.toFixed(1) + '% del objetivo';
+        // ── Barra tricolor ──
+        const goal      = mp.monthly_goal || 3000;
+        const fixed     = mp.fixed_expenses || 0;
+        const discr     = mp.discretionary_expenses || 0;
+        const total     = fixed + discr;
+        const remaining = Math.max(goal - total, 0);
+        const fixedPct  = Math.min((fixed / goal) * 100, 100);
+        const discrPct2 = Math.min((discr / goal) * 100, 100 - fixedPct);
 
-        // ── Fila 3: header ──
+        document.getElementById('fin-bar-fixed').style.width         = fixedPct.toFixed(1) + '%';
+        document.getElementById('fin-bar-discr').style.width         = discrPct2.toFixed(1) + '%';
+        document.getElementById('fin-bar-fixed-label').textContent   = fixedPct > 6 ? fmtEur(fixed) : '';
+        document.getElementById('fin-bar-discr-label').textContent   = discrPct2 > 4 ? fmtEur(discr) : '';
+        document.getElementById('fin-bar-remaining-label').textContent = fmtEur(remaining);
+
+        // ── Header RITMO DE GASTO ──
         document.getElementById('fin-month-name2').textContent = mp.month_name;
         document.getElementById('fin-days-header').textContent =
             `${mp.days_elapsed} de ${mp.days_in_month} días — ${mp.progress_pct}% del mes`;
 
         // 4 KPIs
-        document.getElementById('fin-days-elapsed').textContent = mp.days_elapsed;
-        document.getElementById('fin-days-of').textContent      = `de ${mp.days_in_month} días`;
-        document.getElementById('fin-total2').textContent       = fmtEur(total);
-        document.getElementById('fin-fixed2').textContent       = `Fijos este mes: ${fmtEur(mp.fixed_expenses)}`;
+        document.getElementById('fin-days-elapsed').textContent  = mp.days_elapsed;
+        document.getElementById('fin-days-of').textContent       = `de ${mp.days_in_month} días`;
+        const dailyBudget = Math.floor((mp.discretionary_goal || 1900) / (mp.days_in_month || 30));
+        if (document.getElementById('fin-daily-budget'))
+            document.getElementById('fin-daily-budget').textContent = `Puedo gastar/día: ${dailyBudget} €`;
+        if (document.getElementById('fin-daily-budget2'))
+            document.getElementById('fin-daily-budget2').textContent = `${dailyBudget} €`;
+        if (document.getElementById('fin-days-elapsed2'))
+            document.getElementById('fin-days-elapsed2').textContent = mp.days_elapsed;
+        if (document.getElementById('fin-days-remaining'))
+            document.getElementById('fin-days-remaining').textContent = mp.days_remaining;
+
+        // Posicionar tarjetas en el centro de su zona proporcional
+        const _ePct = (mp.days_elapsed / mp.days_in_month) * 100;
+        const _eMid = (_ePct / 2).toFixed(1) + '%';
+        const _rMid = (_ePct + (100 - _ePct) / 2).toFixed(1) + '%';
+        const _cardEl  = document.getElementById('fin-card-elapsed');
+        const _cardRem = document.getElementById('fin-card-remaining');
+        if (_cardEl)  _cardEl.style.left  = _eMid;
+        if (_cardRem) _cardRem.style.left = _rMid;
+
+        document.getElementById('fin-total2').textContent       = fmtEur(remaining);
+        document.getElementById('fin-fixed2').textContent       = `Margen del mes (objetivo ${fmtEur(goal)})`;
         document.getElementById('fin-discr2').textContent       = fmtEur(mp.discretionary_expenses);
         document.getElementById('fin-daily2').textContent       = `Media: ${mp.daily_average.toFixed(2)} €/día`;
         document.getElementById('fin-goal-discr').textContent   = fmtEur(mp.discretionary_goal);
         document.getElementById('fin-target-today').textContent = `Hoy deberías llevar: ${fmtEur(mp.proportional_target)}`;
 
+        // Labels de días
+        const elapsedPct      = (mp.days_elapsed / mp.days_in_month) * 100;
+        const elapsedMidPct   = elapsedPct / 2;
+        const remainingMidPct = elapsedPct + (100 - elapsedPct) / 2;
+        const labelElapsed   = document.getElementById('fin-label-elapsed');
+        const labelRemaining = document.getElementById('fin-label-remaining');
+        if (labelElapsed) {
+            labelElapsed.textContent = mp.days_elapsed + ' días';
+            labelElapsed.style.left  = elapsedMidPct.toFixed(1) + '%';
+        }
+        if (labelRemaining) {
+            labelRemaining.textContent = mp.days_remaining + ' días';
+            labelRemaining.style.left  = remainingMidPct.toFixed(1) + '%';
+        }
+
         // Barra de días con ticks
-        document.getElementById('fin-day-center').textContent =
-            `Día ${mp.days_elapsed} / ${mp.days_in_month}`;
         const ticksEl = document.getElementById('fin-days-ticks');
         let ticksHtml = '';
         for (let i = 1; i <= mp.days_in_month; i++) {
-            const isPast    = i <= mp.days_elapsed;
-            const isToday   = i === mp.days_elapsed;
+            const isPast      = i <= mp.days_elapsed;
+            const isToday     = i === mp.days_elapsed;
             const isMilestone = (i % 5 === 0 || i === 1 || i === mp.days_in_month);
             const h = isToday ? 28 : isMilestone ? 20 : 14;
             const color = isPast
                 ? (isToday ? 'var(--accent-blue)' : 'rgba(37,99,235,0.7)')
                 : 'var(--border)';
-            ticksHtml += `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">`;
-            ticksHtml += `<div style="width:100%;max-width:6px;height:${h}px;background:${color};border-radius:2px;"></div>`;
+            const todayAttr = isToday ? ' id="fin-today-tick"' : '';
+            ticksHtml += `<div${todayAttr} style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">`;
+            ticksHtml += `<div style="height:18px;display:flex;align-items:flex-end;justify-content:center;">`;
+            if (isToday) ticksHtml += `<span style="font-size:14px;color:var(--accent-orange);line-height:1;">&#9660;</span>`;
+            ticksHtml += `</div>`;
+            ticksHtml += `<div style="width:3px;height:${h}px;background:${color};border-radius:2px;"></div>`;
             if (isMilestone) {
                 ticksHtml += `<div style="font-size:9px;color:var(--text-muted);margin-top:2px;">${i}</div>`;
             } else {
@@ -1085,39 +1143,38 @@ async function loadFinancialPanel() {
         }
         ticksEl.innerHTML = ticksHtml;
 
-        // Barra discrecional
-        const discrPct   = Math.min((mp.discretionary_expenses / goal) * 100, 100);
-        const targetPct  = Math.min((mp.proportional_target / goal) * 100, 100);
-        document.getElementById('fin-discr-label').textContent =
-            `Discrecional vs objetivo (${fmtEur(mp.discretionary_goal)})`;
-        document.getElementById('fin-discr-bar').style.width  = discrPct.toFixed(1) + '%';
-        document.getElementById('fin-target-marker').style.left = targetPct.toFixed(1) + '%';
-        document.getElementById('fin-target-label').textContent =
-            `objetivo hoy (${fmtEur(mp.proportional_target)})`;
+        // Barras Ideal vs Real
+        const discrGoal = mp.discretionary_goal || 1;
+        const idealVal  = mp.proportional_target || 0;
+        const realVal   = mp.discretionary_expenses || 0;
+        const dayPct    = Math.min((mp.days_elapsed / mp.days_in_month) * 100, 100);
+        const realPct   = Math.min((realVal / discrGoal) * 100, 100);
 
-        // Desviación
-        const devEl  = document.getElementById('fin-deviation');
-        const devPct = document.getElementById('fin-deviation-pct');
-        devEl.textContent  = (mp.deviation >= 0 ? '+' : '') + fmtEur(mp.deviation);
-        devEl.style.color  = mp.deviation <= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-        devPct.textContent = `${mp.deviation_pct > 0 ? '+' : ''}${mp.deviation_pct}% sobre el objetivo discrecional proporcional al día de hoy`;
+        document.getElementById('fin-ideal-bar').style.width = dayPct.toFixed(1) + '%';
+        const idealValEl = document.getElementById('fin-ideal-value');
+        idealValEl.textContent  = fmtEur(idealVal);
+        idealValEl.style.left   = 'calc(' + dayPct.toFixed(1) + '% + 8px)';
+        idealValEl.style.transform = 'translateY(-50%)';
+        idealValEl.style.marginLeft = '0';
 
-        // Proyección
-        const projEl  = document.getElementById('fin-projection');
-        const projVs  = document.getElementById('fin-projection-vs');
-        projEl.textContent = fmtEur(mp.projected_discr);
-        const vsGoal = mp.projected_discr - mp.discretionary_goal;
-        projVs.textContent = `${vsGoal >= 0 ? '+' : ''}${fmtEur(vsGoal)} vs objetivo discrecional (${fmtEur(mp.discretionary_goal)})`;
+        const realBarEl = document.getElementById('fin-real-bar');
+        if (realBarEl) realBarEl.style.width = realPct.toFixed(1) + '%';
+        const realValEl = document.getElementById('fin-real-value');
+        realValEl.textContent  = fmtEur(realVal);
+        realValEl.style.left   = 'calc(' + realPct.toFixed(1) + '% + 8px)';
+        realValEl.style.transform = 'translateY(-50%)';
 
-        // ── Fila 4: Resumen ──
-        document.getElementById('fin-yesterday').textContent       = fmtEur(d.yesterday?.total);
-        document.getElementById('fin-yesterday-count').textContent = `${d.yesterday?.count ?? 0} transacciones`;
-        document.getElementById('fin-weekly').textContent          = fmtEur(d.weekly?.expenses);
-        document.getElementById('fin-weekly-count').textContent    = `${d.weekly?.transactions_count ?? 0} transacciones`;
-        document.getElementById('fin-current-month').textContent   = fmtEur(d.current_month?.expenses);
-        document.getElementById('fin-current-month-name').textContent = mp.month_name;
-        document.getElementById('fin-prev-month').textContent      = fmtEur(d.previous_month?.expenses);
-        document.getElementById('fin-prev-month-name').textContent = 'Mes anterior';
+        // Ahorro / Déficit
+        const devEl    = document.getElementById('fin-deviation');
+        const devPct   = document.getElementById('fin-deviation-pct');
+        const devTitle = document.getElementById('fin-deviation-title');
+        const savingVal = -(mp.deviation || 0);
+        const isAhorro  = savingVal >= 0;
+        if (devTitle) devTitle.textContent = isAhorro ? 'AHORRO' : 'DÉFICIT';
+        devEl.textContent = (isAhorro ? '+' : '') + fmtEur(savingVal);
+        devEl.style.color = isAhorro ? 'var(--accent-green)' : 'var(--accent-red)';
+        const savingPct = (-(mp.deviation_pct || 0)).toFixed(1);
+        devPct.textContent = `${isAhorro ? '+' : ''}${savingPct}% respecto al objetivo proporcional de hoy`;
 
     } catch (err) {
         console.error('Financial panel error:', err);
