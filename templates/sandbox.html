@@ -1296,12 +1296,9 @@ function renderDiscrCategories(items) {
             <div style="display:flex;flex-direction:column;">`;
         for (const item of data.items) {
             html += `
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:3px 8px;">
-                    <div>
-                        <span style="font-size:13px;color:var(--text-primary);">${item.description || '—'}</span>
-                        <span style="font-size:11px;color:var(--text-muted);margin-left:8px;">${item.date || ''}</span>
-                    </div>
-                    <span style="font-size:13px;font-weight:600;color:var(--text-primary);">${fmtEur(item.amount)}</span>
+                <div style="padding:2px 8px;font-size:13px;color:var(--text-primary);">
+                    ${item.description || '—'} <span style="font-weight:600;">${fmtEur(item.amount)}</span>
+                    <span style="font-size:11px;color:var(--text-muted);margin-left:6px;">${item.date || ''}</span>
                 </div>`;
         }
         html += `
