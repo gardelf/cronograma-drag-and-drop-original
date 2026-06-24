@@ -560,7 +560,10 @@
                     <div style="padding:0 24px;border-right:1px solid var(--border);">
                         <div class="section-label" style="margin-bottom:8px;">Gastos fijos</div>
                         <div style="font-size:28px;font-weight:700;color:var(--accent-blue);line-height:1;" id="fin-fixed">—</div>
-                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">gastos recurrentes del mes</div>
+                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+                            gastos recurrentes del mes
+                            <button id="fin-fixed-toggle" onclick="toggleFixedDetail()" style="margin-left:8px;font-size:11px;color:var(--accent-blue);background:none;border:none;cursor:pointer;padding:0;font-weight:600;">&#9660; ver detalle</button>
+                        </div>
                     </div>
 
                     <!-- Objetivo discrecional -->
@@ -607,6 +610,22 @@
                 <span id="fin-discr" style="display:none;"></span>
                 <span id="fin-daily-avg" style="display:none;"></span>
 
+            </div>
+        </div>
+
+        <!-- Panel desplegable: Gastos fijos por categoría -->
+        <div id="fin-fixed-detail" style="display:none;margin-bottom:16px;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="dot dot-blue"></span>
+                        Gastos recurrentes del mes
+                    </div>
+                    <button onclick="toggleFixedDetail()" style="font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:4px 8px;">&#10005; cerrar</button>
+                </div>
+                <div class="card-body">
+                    <div id="fin-fixed-categories">Cargando...</div>
+                </div>
             </div>
         </div>
 
@@ -1176,9 +1195,68 @@ async function loadFinancialPanel() {
         const savingPct = (-(mp.deviation_pct || 0)).toFixed(1);
         devPct.textContent = `${isAhorro ? '+' : ''}${savingPct}% respecto al objetivo proporcional de hoy`;
 
+        // Guardar fixed_items para el desplegable
+        window._fixedItems = mp.fixed_items || [];
+        renderFixedCategories(window._fixedItems);
+
     } catch (err) {
         console.error('Financial panel error:', err);
     }
+}
+
+// ── GASTOS FIJOS DESPLEGABLE ─────────────────────────────────────────────────────────────────────────────────
+function toggleFixedDetail() {
+    const panel  = document.getElementById('fin-fixed-detail');
+    const btn    = document.getElementById('fin-fixed-toggle');
+    const isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : 'block';
+    if (btn) btn.innerHTML = isOpen ? '&#9660; ver detalle' : '&#9650; ocultar';
+}
+
+function renderFixedCategories(items) {
+    const container = document.getElementById('fin-fixed-categories');
+    if (!container) return;
+    if (!items || items.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">No hay gastos recurrentes este mes.</p>';
+        return;
+    }
+
+    // Agrupar por categoría
+    const groups = {};
+    for (const item of items) {
+        const cat = item.category || 'Sin categoría';
+        if (!groups[cat]) groups[cat] = { total: 0, items: [] };
+        groups[cat].total += item.amount;
+        groups[cat].items.push(item);
+    }
+
+    // Ordenar grupos de mayor a menor total
+    const sortedGroups = Object.entries(groups).sort((a, b) => b[1].total - a[1].total);
+
+    let html = '<div style="display:flex;flex-direction:column;gap:16px;">';
+    for (const [cat, data] of sortedGroups) {
+        // Ordenar items dentro del grupo de mayor a menor
+        data.items.sort((a, b) => b.amount - a.amount);
+        html += `
+        <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">
+                <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent-blue);">${cat}</span>
+                <span style="font-size:13px;font-weight:700;color:var(--accent-blue);">${fmtEur(data.total)}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">`;
+        for (const item of data.items) {
+            html += `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-secondary);border-radius:6px;">
+                    <span style="font-size:13px;color:var(--text-primary);">${item.title || item.description || '—'}</span>
+                    <span style="font-size:13px;font-weight:600;color:var(--text-primary);">${fmtEur(item.amount)}</span>
+                </div>`;
+        }
+        html += `
+            </div>
+        </div>`;
+    }
+    html += '</div>';
+    container.innerHTML = html;
 }
 
 // ── LOAD ALL ───────────────────────────────────────────────────────────────
