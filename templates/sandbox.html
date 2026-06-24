@@ -627,18 +627,13 @@
         </div>
 
         <!-- Panel desplegable: Gastos fijos por categoría -->
-        <div id="fin-fixed-detail" style="display:none;margin-bottom:16px;">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="dot dot-blue"></span>
-                        Gastos recurrentes del mes
-                    </div>
-                    <button onclick="toggleFixedDetail()" style="font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:4px 8px;">&#10005; cerrar</button>
+        <div id="fin-fixed-detail" style="display:none;margin-bottom:16px;text-align:center;">
+            <div style="display:inline-block;text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;min-width:220px;max-width:480px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <span style="font-size:12px;font-weight:700;color:var(--accent-blue);">GASTOS RECURRENTES</span>
+                    <button onclick="toggleFixedDetail()" style="font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:0 0 0 12px;">&#10005;</button>
                 </div>
-                <div class="card-body">
-                    <div id="fin-fixed-categories">Cargando...</div>
-                </div>
+                <div id="fin-fixed-categories">Cargando...</div>
             </div>
         </div>
 
@@ -1324,22 +1319,21 @@ function renderFixedCategories(items) {
     // Ordenar grupos de mayor a menor total
     const sortedGroups = Object.entries(groups).sort((a, b) => b[1].total - a[1].total);
 
-    let html = '<div style="display:flex;flex-direction:column;gap:16px;">';
+    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
     for (const [cat, data] of sortedGroups) {
         // Ordenar items dentro del grupo de mayor a menor
         data.items.sort((a, b) => b.amount - a.amount);
         html += `
         <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border);">
                 <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent-blue);">${cat}</span>
                 <span style="font-size:13px;font-weight:700;color:var(--accent-blue);">${fmtEur(data.total)}</span>
             </div>
-            <div style="display:flex;flex-direction:column;gap:6px;">`;
+            <div style="display:flex;flex-direction:column;">`;
         for (const item of data.items) {
             html += `
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-secondary);border-radius:6px;">
-                    <span style="font-size:13px;color:var(--text-primary);">${item.title || item.description || '—'}</span>
-                    <span style="font-size:13px;font-weight:600;color:var(--text-primary);">${fmtEur(item.amount)}</span>
+                <div style="padding:2px 8px;font-size:13px;color:var(--text-primary);">
+                    ${item.title || item.description || '—'} <span style="font-weight:600;">${fmtEur(item.amount)}</span>
                 </div>`;
         }
         html += `
