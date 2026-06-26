@@ -812,10 +812,22 @@
                         <!-- Barra REAL: ancho = % gasto real sobre objetivo discrecional -->
                         <div>
                             <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--accent-cyan);margin-bottom:3px;">Real</div>
-                            <div style="position:relative;height:16px;background:var(--bg-secondary);border-radius:7px;border:1px solid var(--border);">
+                            <!-- Barra normal (sin exceso) -->
+                            <div id="fin-real-wrap" style="position:relative;height:16px;background:var(--bg-secondary);border-radius:7px;border:1px solid var(--border);">
                                 <div id="fin-real-bar" style="height:100%;border-radius:7px;background:linear-gradient(90deg,#06b6d4,#7c3aed);transition:width 0.6s ease;"></div>
                                 <span id="fin-real-value" style="position:absolute;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--accent-cyan);white-space:nowrap;margin-left:8px;">—</span>
                             </div>
+                            <!-- Barra con exceso (visible cuando gasto real > objetivo discrecional) -->
+                            <div id="fin-real-over-wrap" style="display:none;position:relative;height:16px;border-radius:7px;border:2px solid #dc2626;overflow:hidden;">
+                                <!-- Segmento normal (azul/morado) -->
+                                <div id="fin-real-bar-ok" style="position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#06b6d4,#7c3aed);transition:width 0.6s ease;"></div>
+                                <!-- Segmento exceso (rojo) -->
+                                <div id="fin-real-bar-over" style="position:absolute;top:0;height:100%;background:#dc2626;transition:width 0.6s ease,left 0.6s ease;"></div>
+                                <!-- Valor total encima -->
+                                <span id="fin-real-over-value" style="position:absolute;top:50%;right:6px;transform:translateY(-50%);font-size:11px;font-weight:700;color:#fff;white-space:nowrap;z-index:2;">—</span>
+                            </div>
+                            <!-- Etiqueta de exceso -->
+                            <div id="fin-real-over-label" style="display:none;font-size:11px;color:#dc2626;font-weight:700;margin-top:4px;"></div>
                         </div>
 
                     </div><!-- fin-unified-track -->
@@ -1308,12 +1320,36 @@ async function loadFinancialPanel() {
         idealValEl.style.transform = 'translateY(-50%)';
         idealValEl.style.marginLeft = '0';
 
-        const realBarEl = document.getElementById('fin-real-bar');
-        if (realBarEl) realBarEl.style.width = realPct.toFixed(1) + '%';
-        const realValEl = document.getElementById('fin-real-value');
-        realValEl.textContent  = fmtEur(realVal);
-        realValEl.style.left   = 'calc(' + realPct.toFixed(1) + '% + 8px)';
-        realValEl.style.transform = 'translateY(-50%)';
+        const realWrap     = document.getElementById('fin-real-wrap');
+        const realOverWrap = document.getElementById('fin-real-over-wrap');
+        const realOverLabel= document.getElementById('fin-real-over-label');
+        const isRealOver   = realVal > discrGoal;
+
+        if (!isRealOver) {
+            // ─ Sin exceso: barra normal ─
+            realWrap.style.display     = '';
+            realOverWrap.style.display = 'none';
+            realOverLabel.style.display= 'none';
+            const realBarEl = document.getElementById('fin-real-bar');
+            if (realBarEl) realBarEl.style.width = realPct.toFixed(1) + '%';
+            const realValEl = document.getElementById('fin-real-value');
+            realValEl.textContent = fmtEur(realVal);
+            realValEl.style.left  = 'calc(' + realPct.toFixed(1) + '% + 8px)';
+            realValEl.style.transform = 'translateY(-50%)';
+        } else {
+            // ─ Con exceso: barra con segmento rojo ─
+            realWrap.style.display     = 'none';
+            realOverWrap.style.display = 'block';
+            realOverLabel.style.display= 'block';
+            const over        = realVal - discrGoal;
+            const okPct       = (discrGoal / realVal) * 100;
+            const overPct     = (over / realVal) * 100;
+            document.getElementById('fin-real-bar-ok').style.width  = okPct.toFixed(1) + '%';
+            document.getElementById('fin-real-bar-over').style.width = overPct.toFixed(1) + '%';
+            document.getElementById('fin-real-bar-over').style.left  = okPct.toFixed(1) + '%';
+            document.getElementById('fin-real-over-value').textContent = fmtEur(realVal);
+            realOverLabel.textContent = '+' + fmtEur(over) + ' sobre el objetivo discrecional';
+        }
 
         // Ahorro / Déficit
         const devEl    = document.getElementById('fin-deviation');
