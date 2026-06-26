@@ -1329,9 +1329,9 @@ async function loadFinancialPanel() {
             realValEl.style.transform = 'translateY(-50%)';
             realOverWrap.style.display = 'none';
         } else {
-            // Con exceso: barra principal al 100%, barra exceso independiente debajo
+            // Con exceso: barra principal al 100% con importe real, barra roja con exceso debajo
             if (realBarEl) realBarEl.style.width = '100%';
-            realValEl.textContent = fmtEur(discrGoal);
+            realValEl.textContent = fmtEur(realVal);
             realValEl.style.left  = 'calc(100% + 8px)';
             realValEl.style.transform = 'translateY(-50%)';
             const over    = realVal - discrGoal;
