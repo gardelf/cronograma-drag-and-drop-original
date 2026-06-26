@@ -342,6 +342,7 @@
         .fin-top-grid .fin-num-lg { font-size: 36px; font-weight: 800; line-height: 1; }
 
         @media (max-width: 640px) {
+            /* ─ Panel financiero superior ─ */
             .fin-top-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
@@ -355,6 +356,53 @@
             .fin-top-grid .fin-num    { font-size: 18px; }
             .fin-bar-legend { flex-wrap: wrap; gap: 6px !important; justify-content: center; }
             .fin-bar-legend span { font-size: 10px !important; }
+
+            /* ─ Ritmo de gasto: 4 KPIs → 2x2 ─ */
+            .fin-kpi-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+                margin-bottom: 16px !important;
+            }
+            .fin-kpi-grid > div {
+                padding: 12px !important;
+            }
+            .fin-kpi-num-lg { font-size: 24px !important; }
+            .fin-kpi-num    { font-size: 18px !important; }
+
+            /* ─ Etiquetas flotantes: apiladas en columna ─ */
+            .fin-days-row {
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+                margin-bottom: 16px !important;
+                position: static !important;
+            }
+            .fin-days-row > div {
+                position: static !important;
+                transform: none !important;
+                width: 100% !important;
+            }
+            #fin-card-elapsed {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            /* ─ Ahorro/Déficit: número más pequeño ─ */
+            #fin-deviation { font-size: 20px !important; }
+
+            /* ─ BOE stats: 2 columnas en móvil ─ */
+            .boe-stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+            }
+
+            /* ─ Header: ocultar fecha en móvil si no cabe ─ */
+            .site-header { gap: 8px; }
+            #header-date { font-size: 11px; }
+
+            /* ─ Card body: menos padding ─ */
+            .card-body { padding: 14px !important; }
+            .card-header { padding: 12px 14px !important; }
         }
 
         /* ── BOE WIDGET ── */
@@ -691,16 +739,16 @@
             </div>
             <div class="card-body">
                 <!-- 4 KPIs -->
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+                <div class="fin-kpi-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
                         <div class="section-label" style="margin-bottom:6px;">Días transcurridos</div>
-                        <div style="font-size:36px;font-weight:800;color:var(--accent-blue);" id="fin-days-elapsed">—</div>
+                        <div class="fin-kpi-num-lg" style="font-size:36px;font-weight:800;color:var(--accent-blue);" id="fin-days-elapsed">—</div>
                         <div style="font-size:12px;color:var(--text-muted);" id="fin-days-of">—</div>
                         <div style="font-size:12px;color:var(--accent-green);font-weight:600;margin-top:6px;" id="fin-daily-budget">—</div>
                     </div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
                         <div class="section-label" style="margin-bottom:6px;">Gasto discrecional</div>
-                        <div style="font-size:24px;font-weight:700;color:var(--accent-orange);" id="fin-discr2">—</div>
+                        <div class="fin-kpi-num" style="font-size:24px;font-weight:700;color:var(--accent-orange);" id="fin-discr2">—</div>
                         <div style="font-size:12px;color:var(--text-muted);">
                             <span id="fin-daily2">—</span>
                             <button id="fin-discr-toggle" onclick="toggleDiscrDetail()" style="margin-left:8px;font-size:11px;color:var(--accent-orange);background:none;border:none;cursor:pointer;padding:0;font-weight:600;">&#9660; ver detalle</button>
@@ -708,18 +756,18 @@
                     </div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
                         <div class="section-label" style="margin-bottom:6px;">Por gastar</div>
-                        <div style="font-size:24px;font-weight:700;color:var(--accent-green);" id="fin-total2">—</div>
+                        <div class="fin-kpi-num" style="font-size:24px;font-weight:700;color:var(--accent-green);" id="fin-total2">—</div>
                         <div style="font-size:12px;color:var(--text-muted);" id="fin-fixed2">—</div>
                     </div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
                         <div class="section-label" style="margin-bottom:6px;">Objetivo discrecional</div>
-                        <div style="font-size:24px;font-weight:700;color:var(--accent-green);" id="fin-goal-discr">—</div>
+                        <div class="fin-kpi-num" style="font-size:24px;font-weight:700;color:var(--accent-green);" id="fin-goal-discr">—</div>
                         <div style="font-size:12px;color:var(--text-muted);" id="fin-target-today">—</div>
                     </div>
                 </div>
 
                 <!-- Días transcurridos / restantes: centrados en su zona proporcional -->
-                <div id="fin-days-row" style="position:relative;height:70px;margin-bottom:10px;">
+                <div id="fin-days-row" class="fin-days-row" style="position:relative;height:70px;margin-bottom:10px;">
                     <div id="fin-card-elapsed" style="position:absolute;transform:translateX(-50%);display:flex;gap:8px;align-items:stretch;">
                         <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:8px;padding:8px 16px;text-align:center;">
                             <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--accent-blue);margin-bottom:2px;">Días transcurridos</div>
