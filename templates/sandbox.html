@@ -1392,9 +1392,12 @@ async function loadDiscrCategories() {
         const res  = await fetch('/panel-gastos/mes-detalle');
         const json = await res.json();
         if (!json.success) throw new Error('API error');
-        // Excluir gastos fijos (recurrentes) comparando con fixed_items
-        const fixedTitles = new Set((window._fixedItems || []).map(i => (i.title || i.description || '').toLowerCase()));
-        const discr = json.transactions.filter(t => !fixedTitles.has((t.description || '').toLowerCase()));
+        // Excluir gastos fijos (recurrentes) — coincidencia parcial para cubrir variaciones de descripción
+        const fixedTitles = (window._fixedItems || []).map(i => (i.title || i.description || '').toLowerCase().trim());
+        const discr = json.transactions.filter(t => {
+            const desc = (t.description || '').toLowerCase().trim();
+            return !fixedTitles.some(ft => desc.includes(ft) || ft.includes(desc));
+        });
         renderDiscrCategories(discr);
     } catch (err) {
         container.innerHTML = '<p style="color:var(--accent-red);font-size:13px;">Error cargando datos.</p>';
