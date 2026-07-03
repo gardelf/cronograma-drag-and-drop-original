@@ -334,7 +334,7 @@
         /* ── PANEL FINANCIERO RESPONSIVE ── */
         .fin-top-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 0;
             margin-bottom: 24px;
         }
@@ -345,7 +345,7 @@
             /* ─ Panel financiero superior ─ */
             .fin-top-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 12px;
+                gap: 12px 8px;
                 margin-bottom: 16px;
             }
             .fin-top-grid > div {
@@ -641,11 +641,21 @@
                     </div>
 
                     <!-- Objetivo discrecional -->
-                    <div style="padding:0 0 0 24px;">
+                    <div style="padding:0 24px;border-right:1px solid var(--border);">
                         <div class="section-label" style="margin-bottom:8px;">Objetivo discrecional</div>
                         <div class="fin-num" style="color:var(--accent-orange);" id="fin-discr-goal-top">—</div>
                         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
                             margen para gastos del día a día
+                        </div>
+                    </div>
+
+                    <!-- Gastos extraordinarios -->
+                    <div style="padding:0 0 0 24px;">
+                        <div class="section-label" style="margin-bottom:8px;">Gastos extraordinarios</div>
+                        <div class="fin-num" style="color:#9333ea;" id="fin-extraordinary-top">—</div>
+                        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+                            gastos puntuales del mes
+                            <button id="fin-extraordinary-toggle" onclick="toggleExtraordinaryDetail()" style="margin-left:8px;font-size:11px;color:#9333ea;background:none;border:none;cursor:pointer;padding:0;font-weight:600;">&#9660; ver detalle</button>
                         </div>
                     </div>
 
@@ -725,6 +735,17 @@
                     <button onclick="toggleFixedDetail()" style="font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:0 0 0 12px;">&#10005;</button>
                 </div>
                 <div id="fin-fixed-categories">Cargando...</div>
+            </div>
+        </div>
+
+        <!-- Panel desplegable extraordinarios -->
+        <div id="fin-extraordinary-detail" style="display:none;margin-bottom:16px;text-align:center;">
+            <div style="display:inline-block;text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;min-width:220px;max-width:480px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <span style="font-size:12px;font-weight:700;color:#9333ea;">GASTOS EXTRAORDINARIOS</span>
+                    <button onclick="toggleExtraordinaryDetail()" style="font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:0 0 0 12px;">&#10005;</button>
+                </div>
+                <div id="fin-extraordinary-categories">Cargando...</div>
             </div>
         </div>
 
@@ -1185,6 +1206,10 @@ async function loadFinancialPanel() {
         document.getElementById('fin-fixed').textContent       = fmtEur(mp.fixed_expenses);
         if (document.getElementById('fin-discr-goal-top'))
             document.getElementById('fin-discr-goal-top').textContent = fmtEur(mp.discretionary_goal);
+        if (document.getElementById('fin-extraordinary-top'))
+            document.getElementById('fin-extraordinary-top').textContent = fmtEur(mp.extraordinary_expenses || 0);
+        // Guardar extraordinary_items globalmente para el desplegable
+        window._extraordinaryItems = mp.extraordinary_items || [];
 
         // ── Barra tricolor ──
         const goal      = mp.monthly_goal || 3000;
@@ -1482,6 +1507,63 @@ function renderFixedCategories(items) {
             html += `
                 <div style="padding:2px 8px;font-size:13px;color:var(--text-primary);">
                     ${item.title || item.description || '—'} <span style="font-weight:600;">${fmtEur(item.amount)}</span>
+                </div>`;
+        }
+        html += `
+            </div>
+        </div>`;
+    }
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ── GASTOS EXTRAORDINARIOS DESPLEGABLE ─────────────────────────────────────
+function toggleExtraordinaryDetail() {
+    const panel  = document.getElementById('fin-extraordinary-detail');
+    const btn    = document.getElementById('fin-extraordinary-toggle');
+    const isOpen = panel.style.display !== 'none';
+    if (!isOpen) {
+        panel.style.display = 'block';
+        if (btn) btn.innerHTML = '&#9650; ocultar';
+        renderExtraordinaryCategories(window._extraordinaryItems || []);
+    } else {
+        panel.style.display = 'none';
+        if (btn) btn.innerHTML = '&#9660; ver detalle';
+    }
+}
+
+function renderExtraordinaryCategories(items) {
+    const container = document.getElementById('fin-extraordinary-categories');
+    if (!container) return;
+    if (!items || items.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">No hay gastos extraordinarios este mes.</p>';
+        return;
+    }
+    // Agrupar por categoría
+    const groups = {};
+    for (const item of items) {
+        const cat = item.category || 'Sin categoría';
+        if (!groups[cat]) groups[cat] = { total: 0, items: [] };
+        groups[cat].total += item.amount;
+        groups[cat].items.push(item);
+    }
+    // Ordenar grupos de mayor a menor total
+    const sortedGroups = Object.entries(groups).sort((a, b) => b[1].total - a[1].total);
+    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+    for (const [cat, data] of sortedGroups) {
+        data.items.sort((a, b) => b.amount - a.amount);
+        html += `
+        <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border);">
+                <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#9333ea;">${cat}</span>
+                <span style="font-size:13px;font-weight:700;color:#9333ea;">${fmtEur(data.total)}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;">`;
+        for (const item of data.items) {
+            html += `
+                <div style="padding:2px 8px;font-size:13px;color:var(--text-primary);">
+                    ${item.description || item.title || '—'} <span style="font-weight:600;">${fmtEur(item.amount)}</span>
+                    <span style="font-size:11px;color:var(--text-muted);margin-left:6px;">${item.date || ''}</span>
                 </div>`;
         }
         html += `

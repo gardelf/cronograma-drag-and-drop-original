@@ -1507,8 +1507,13 @@ def panel_gastos_data():
         fixed_expenses = recurring_data.get('total', 0.0)
         fixed_items = recurring_data.get('items', [])
 
-        # Discretionary = total - fixed (what the user actually controls)
-        discretionary_expenses = max(monthly_expenses - fixed_expenses, 0)
+        # Extraordinary expenses for current month (tag 'Extraordinario')
+        extraordinary_data = client.get_extraordinary_expenses_current_month(now.year, now.month)
+        extraordinary_expenses_current = extraordinary_data.get('total', 0.0)
+        extraordinary_items_current = extraordinary_data.get('items', [])
+
+        # Discretionary = total - fixed - extraordinary (pure day-to-day spending)
+        discretionary_expenses = max(monthly_expenses - fixed_expenses - extraordinary_expenses_current, 0)
         discretionary_goal = max(monthly_goal - fixed_expenses, 0)
 
         daily_average_total = monthly_expenses / days_elapsed if days_elapsed > 0 else 0
@@ -1531,6 +1536,8 @@ def panel_gastos_data():
             'expenses_accumulated': round(monthly_expenses, 2),
             'fixed_expenses': round(fixed_expenses, 2),
             'fixed_items': fixed_items,
+            'extraordinary_expenses': round(extraordinary_expenses_current, 2),
+            'extraordinary_items': extraordinary_items_current,
             'discretionary_expenses': round(discretionary_expenses, 2),
             # Averages
             'daily_average': round(daily_average_discr, 2),

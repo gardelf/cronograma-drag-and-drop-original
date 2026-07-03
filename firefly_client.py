@@ -540,3 +540,41 @@ class FireflyClient:
             import traceback
             traceback.print_exc()
             return {'items': [], 'total': 0.0}
+
+    def get_extraordinary_expenses_current_month(self, year, month):
+        """Get extraordinary expenses (tag 'Extraordinario') for the given month"""
+        try:
+            import calendar
+            start_date = datetime(year, month, 1)
+            last_day = calendar.monthrange(year, month)[1]
+            end_date = datetime(year, month, last_day)
+            params = {
+                'start': start_date.strftime('%Y-%m-%d'),
+                'end': end_date.strftime('%Y-%m-%d')
+            }
+            data = self._make_request('transactions', params=params)
+            if not data or 'data' not in data:
+                return {'total': 0.0, 'items': []}
+            items = []
+            total = 0.0
+            for transaction in data['data']:
+                attrs = transaction.get('attributes', {})
+                transactions = attrs.get('transactions', [])
+                for trans in transactions:
+                    if trans.get('type') == 'withdrawal':
+                        tags = trans.get('tags', [])
+                        has_extraordinary = any(tag.lower() == 'extraordinario' for tag in tags)
+                        if has_extraordinary:
+                            amount = abs(float(trans.get('amount', 0)))
+                            total += amount
+                            items.append({
+                                'description': trans.get('description', ''),
+                                'amount': round(amount, 2),
+                                'category': trans.get('category_name', ''),
+                                'date': (trans.get('date', '') or '')[:10],
+                            })
+            items.sort(key=lambda x: x['amount'], reverse=True)
+            return {'total': round(total, 2), 'items': items}
+        except Exception as e:
+            print(f"\u274c Error getting extraordinary expenses current month: {e}")
+            return {'total': 0.0, 'items': []}
