@@ -5,6 +5,7 @@ import re
 import requests
 from datetime import datetime
 import os
+import unicodedata
 
 
 # Mapa de números en texto a dígitos
@@ -20,6 +21,119 @@ NUMEROS_TEXTO = {
     'seiscientos': 600, 'setecientos': 700, 'ochocientos': 800,
     'novecientos': 900, 'mil': 1000
 }
+
+UNIDADES_TEXTO = {
+    'cero': 0, 'un': 1, 'uno': 1, 'una': 1, 'dos': 2, 'tres': 3,
+    'cuatro': 4, 'cinco': 5, 'seis': 6, 'siete': 7, 'ocho': 8,
+    'nueve': 9,
+}
+
+NUMEROS_ESPECIALES_TEXTO = {
+    'diez': 10, 'once': 11, 'doce': 12, 'trece': 13, 'catorce': 14,
+    'quince': 15, 'dieciseis': 16, 'diecisiete': 17, 'dieciocho': 18,
+    'diecinueve': 19, 'veinte': 20, 'veintiun': 21, 'veintiuno': 21,
+    'veintiuna': 21, 'veintidos': 22, 'veintitres': 23, 'veinticuatro': 24,
+    'veinticinco': 25, 'veintiseis': 26, 'veintisiete': 27,
+    'veintiocho': 28, 'veintinueve': 29,
+}
+
+DECENAS_TEXTO = {
+    'treinta': 30, 'cuarenta': 40, 'cincuenta': 50, 'sesenta': 60,
+    'setenta': 70, 'ochenta': 80, 'noventa': 90,
+}
+
+CENTENAS_TEXTO = {
+    'cien': 100, 'ciento': 100, 'doscientos': 200, 'doscientas': 200,
+    'trescientos': 300, 'trescientas': 300, 'cuatrocientos': 400,
+    'cuatrocientas': 400, 'quinientos': 500, 'quinientas': 500,
+    'seiscientos': 600, 'seiscientas': 600, 'setecientos': 700,
+    'setecientas': 700, 'ochocientos': 800, 'ochocientas': 800,
+    'novecientos': 900, 'novecientas': 900,
+}
+
+
+def _normalizar_numero_texto(palabra):
+    """Normaliza una palabra para comparar números dictados por voz."""
+    return ''.join(
+        caracter for caracter in unicodedata.normalize('NFD', palabra.lower())
+        if unicodedata.category(caracter) != 'Mn'
+    )
+
+
+def _extraer_entero_escrito(tokens, inicio=0):
+    """Convierte un número español al inicio de tokens y devuelve (valor, usados)."""
+    total = 0
+    grupo = 0
+    indice = inicio
+    encontro_numero = False
+    espera_unidad = False
+
+    while indice < len(tokens):
+        palabra = _normalizar_numero_texto(tokens[indice])
+
+        if palabra in CENTENAS_TEXTO:
+            grupo += CENTENAS_TEXTO[palabra]
+            encontro_numero = True
+            espera_unidad = False
+        elif palabra in DECENAS_TEXTO:
+            grupo += DECENAS_TEXTO[palabra]
+            encontro_numero = True
+            espera_unidad = True
+        elif palabra in NUMEROS_ESPECIALES_TEXTO:
+            grupo += NUMEROS_ESPECIALES_TEXTO[palabra]
+            encontro_numero = True
+            espera_unidad = False
+        elif palabra in UNIDADES_TEXTO:
+            grupo += UNIDADES_TEXTO[palabra]
+            encontro_numero = True
+            espera_unidad = False
+        elif palabra == 'y' and encontro_numero and espera_unidad:
+            indice += 1
+            continue
+        elif palabra == 'mil' and encontro_numero:
+            total += max(grupo, 1) * 1000
+            grupo = 0
+            espera_unidad = False
+        else:
+            break
+
+        indice += 1
+
+    if not encontro_numero:
+        return None, 0
+    return total + grupo, indice - inicio
+
+
+def extraer_importe_escrito(texto):
+    """Extrae un importe escrito al principio y devuelve (monto, descripción)."""
+    tokens = texto.strip().split()
+    entero, usados = _extraer_entero_escrito(tokens)
+    if entero is None:
+        return None, None
+
+    indice = usados
+    tiene_moneda = False
+    if indice < len(tokens) and _normalizar_numero_texto(tokens[indice]) in ('euro', 'euros'):
+        tiene_moneda = True
+        indice += 1
+
+    monto = float(entero)
+    if indice < len(tokens) and _normalizar_numero_texto(tokens[indice]) in ('con', 'coma'):
+        decimal, usados_decimal = _extraer_entero_escrito(tokens, indice + 1)
+        if decimal is not None and 0 <= decimal < 100:
+            monto += decimal / (10 if decimal < 10 else 100)
+            indice += usados_decimal + 1
+    elif tiene_moneda:
+        # Siri puede transcribir "dos euros cincuenta café" sin decir "con".
+        decimal, usados_decimal = _extraer_entero_escrito(tokens, indice)
+        if decimal is not None and 0 < decimal < 100:
+            monto += decimal / (10 if decimal < 10 else 100)
+            indice += usados_decimal
+
+    descripcion = ' '.join(tokens[indice:]).strip()
+    if not descripcion:
+        return None, None
+    return monto, descripcion
 
 # Categorías conocidas para gastos (basadas en Firefly III)
 CATEGORIAS_CONOCIDAS = {
@@ -405,6 +519,11 @@ def extraer_monto_descripcion_regex(texto):
     if match:
         monto = float(match.group(1))
         descripcion = match.group(2).strip()
+        return monto, descripcion, fecha, categoria_manual, tags
+
+    # Siri suele transcribir importes pequeños como palabras ("cinco euros café").
+    monto, descripcion = extraer_importe_escrito(texto)
+    if monto is not None and descripcion is not None:
         return monto, descripcion, fecha, categoria_manual, tags
     
     return None, None, None, None, []
