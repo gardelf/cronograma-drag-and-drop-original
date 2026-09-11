@@ -413,13 +413,19 @@ def extraer_categoria_manual(texto):
 
 def extraer_datos_con_ia(texto):
     """Usa ChatGPT para extraer monto, descripción, fecha, categoría y tags del texto"""
-    # Primero extraer tags (extraordinario) del texto
-    tags, texto_sin_tags = extraer_tags_del_texto(texto)
+    # Resolver primero los formatos habituales de forma local. Además de ser más
+    # rápido, garantiza que los números dictados ("cinco euros café") funcionen
+    # aunque OpenAI no esté configurado o su petición agote el tiempo de espera.
+    resultado_local = extraer_monto_descripcion_regex(texto)
+    if resultado_local[0] is not None and resultado_local[1] is not None:
+        return resultado_local
+
+    # Conservar los tags para las frases no reconocidas que sí requieran IA.
+    tags, _ = extraer_tags_del_texto(texto)
     openai_api_key = os.getenv('OPENAI_API_KEY', '')
     
     if not openai_api_key:
-        # Si no hay API key, usar método tradicional
-        return extraer_monto_descripcion_regex(texto)
+        return resultado_local
     
     try:
         from datetime import datetime
@@ -489,8 +495,8 @@ Si no se menciona categoría, usa null."""
     except Exception as e:
         print(f"Error en IA para extracción: {e}")
     
-    # Si falla IA, usar método tradicional
-    return extraer_monto_descripcion_regex(texto)
+    # Si falla IA, devolver el resultado ya calculado por el método tradicional.
+    return resultado_local
 
 
 def extraer_monto_descripcion_regex(texto):

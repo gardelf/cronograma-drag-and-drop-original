@@ -31,6 +31,14 @@ class ExpenseAmountExtractionTests(unittest.TestCase):
     def test_formato_numerico_existente(self):
         self.assertEqual(self.extraer('5,50 café'), (5.5, 'café'))
 
+    @patch('expense_utils.requests.post')
+    def test_importe_escrito_no_depende_de_openai(self, post_mock):
+        with patch.dict(os.environ, {'OPENAI_API_KEY': 'clave-de-prueba'}):
+            monto, descripcion, _, _, _ = extraer_monto_descripcion('cinco euros café')
+
+        self.assertEqual((monto, descripcion), (5.0, 'café'))
+        post_mock.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()
