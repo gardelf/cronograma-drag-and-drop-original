@@ -1580,7 +1580,8 @@ def panel_gastos_data():
 def panel_patrimonio_data():
     """Current-month recurring transfers from Patrimonio to Caixa Propiedades."""
     try:
-        now = datetime.now()
+        from zoneinfo import ZoneInfo
+        now = datetime.now(ZoneInfo('Europe/Madrid'))
         data = FireflyClient().get_recurring_transfers_for_month(
             now.year,
             now.month,
