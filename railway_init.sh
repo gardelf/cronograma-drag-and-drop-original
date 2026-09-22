@@ -118,8 +118,8 @@ html = html.replace(
     'Sin transacciones registradas para este mes.'
 )
 html = html.replace(
-    'const dailyBudget = Math.floor((mp.discretionary_goal || 1900) / (mp.days_in_month || 30));',
-    'const dailyBudget = Math.floor(remaining / Math.max(mp.days_remaining || 1, 1));'
+    'const dailyBudget = Math.floor(remaining / Math.max(mp.days_remaining || 1, 1));',
+    'const dailyBudget = Math.floor((mp.discretionary_goal || 1900) / (mp.days_in_month || 30));'
 )
 html = html.replace(
     "const label = item.description || item.title || 'Transferencia programada';\n                html += `<div style=\"display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);\">\n                    <div>\n                        <div style=\"font-size:13px;font-weight:600;color:var(--text-primary);\">${label}</div>\n                        <div style=\"font-size:11px;color:var(--text-muted);margin-top:2px;\">${item.frequency || 'recurrente'}</div>",
