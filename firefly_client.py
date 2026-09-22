@@ -482,6 +482,10 @@ class FireflyClient:
 
             items = []
             total = 0.0
+            expected_source_id = '1'
+            expected_destination_id = '2'
+            expected_source_name = 'Fernando Garrido'
+            expected_destination_name = 'Cash'
 
             for rec in data['data']:
                 attrs = rec.get('attributes', {})
@@ -493,6 +497,21 @@ class FireflyClient:
 
                 for tx in txs:
                     if tx.get('type', '') not in ('withdrawal', ''):
+                        continue
+                    source_id = str(tx.get('source_id') or '')
+                    destination_id = str(tx.get('destination_id') or '')
+                    source_name = tx.get('source_name') or ''
+                    destination_name = tx.get('destination_name') or ''
+                    if source_id:
+                        if source_id != expected_source_id:
+                            continue
+                    elif source_name and source_name != expected_source_name:
+                        continue
+
+                    if destination_id:
+                        if destination_id != expected_destination_id:
+                            continue
+                    elif destination_name and destination_name != expected_destination_name:
                         continue
                     amt = abs(float(tx.get('amount', 0) or 0))
                     if amt == 0:
@@ -527,6 +546,10 @@ class FireflyClient:
                                 'frequency': freq,
                                 'moment': moment,
                                 'tags': tx.get('tags', []),
+                                'source_id': tx.get('source_id'),
+                                'source_name': source_name,
+                                'destination_id': tx.get('destination_id'),
+                                'destination_name': destination_name,
                             }
                             items.append(item)
                             total += amt
@@ -615,6 +638,61 @@ class FireflyClient:
         except Exception as e:
             print(f"Error getting recurring account transfers: {e}")
             return empty_result
+
+    def get_account_route_transactions_for_month(self, year, month, source_account_id, destination_account_id):
+        """Return real transactions for one exact account route and month."""
+        try:
+            import calendar
+
+            start_date = datetime(year, month, 1)
+            last_day = calendar.monthrange(year, month)[1]
+            end_date = datetime(year, month, last_day)
+            expected_source = str(source_account_id)
+            expected_destination = str(destination_account_id)
+
+            data = self._make_request('transactions', params={
+                'start': start_date.strftime('%Y-%m-%d'),
+                'end': end_date.strftime('%Y-%m-%d'),
+            })
+            if not data or 'data' not in data:
+                return {'items': [], 'total': 0.0}
+
+            items = []
+            total = 0.0
+            for transaction in data['data']:
+                attrs = transaction.get('attributes', {})
+                group_id = transaction.get('id')
+                for trans in attrs.get('transactions', []):
+                    source_id = trans.get('source_id')
+                    destination_id = trans.get('destination_id')
+                    if str(source_id or '') != expected_source:
+                        continue
+                    if str(destination_id or '') != expected_destination:
+                        continue
+
+                    amount = abs(float(trans.get('amount', 0) or 0))
+                    if amount == 0:
+                        continue
+
+                    items.append({
+                        'id': trans.get('transaction_journal_id') or trans.get('id') or group_id,
+                        'description': trans.get('description', ''),
+                        'amount': round(amount, 2),
+                        'date': (trans.get('date', '') or '')[:10],
+                        'type': trans.get('type', ''),
+                        'category': trans.get('category_name') or '',
+                        'source_id': source_id,
+                        'source_name': trans.get('source_name', ''),
+                        'destination_id': destination_id,
+                        'destination_name': trans.get('destination_name', ''),
+                    })
+                    total += amount
+
+            items.sort(key=lambda item: (item.get('date') or '', item.get('description') or ''), reverse=True)
+            return {'items': items, 'total': round(total, 2)}
+        except Exception as e:
+            print(f"Error getting account route transactions: {e}")
+            return {'items': [], 'total': 0.0}
 
     def get_extraordinary_expenses_current_month(self, year, month):
         """Get extraordinary expenses (tag 'Extraordinario') for the given month"""
