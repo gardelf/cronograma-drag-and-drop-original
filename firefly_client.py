@@ -482,10 +482,6 @@ class FireflyClient:
 
             items = []
             total = 0.0
-            expected_source_id = '1'
-            expected_destination_id = '2'
-            expected_source_name = 'Fernando Garrido'
-            expected_destination_name = 'Cash'
 
             for rec in data['data']:
                 attrs = rec.get('attributes', {})
@@ -497,21 +493,6 @@ class FireflyClient:
 
                 for tx in txs:
                     if tx.get('type', '') not in ('withdrawal', ''):
-                        continue
-                    source_id = str(tx.get('source_id') or '')
-                    destination_id = str(tx.get('destination_id') or '')
-                    source_name = tx.get('source_name') or ''
-                    destination_name = tx.get('destination_name') or ''
-                    if source_id:
-                        if source_id != expected_source_id:
-                            continue
-                    elif source_name and source_name != expected_source_name:
-                        continue
-
-                    if destination_id:
-                        if destination_id != expected_destination_id:
-                            continue
-                    elif destination_name and destination_name != expected_destination_name:
                         continue
                     amt = abs(float(tx.get('amount', 0) or 0))
                     if amt == 0:
@@ -546,10 +527,6 @@ class FireflyClient:
                                 'frequency': freq,
                                 'moment': moment,
                                 'tags': tx.get('tags', []),
-                                'source_id': tx.get('source_id'),
-                                'source_name': source_name,
-                                'destination_id': tx.get('destination_id'),
-                                'destination_name': destination_name,
                             }
                             items.append(item)
                             total += amt
