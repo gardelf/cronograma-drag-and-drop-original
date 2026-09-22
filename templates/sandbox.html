@@ -318,15 +318,7 @@
             border-left-color: var(--accent-green);
         }
 
-        /* ── TWO-COL GRID ── */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
         @media (max-width: 900px) {
-            .two-col { grid-template-columns: 1fr; }
             .main { padding: 16px; }
             .site-header { padding: 12px 16px; }
         }
@@ -391,11 +383,6 @@
             /* ─ Ahorro/Déficit: número más pequeño ─ */
             #fin-deviation { font-size: 20px !important; }
 
-            /* ─ BOE stats: 2 columnas en móvil ─ */
-            .boe-stats-grid {
-                grid-template-columns: 1fr 1fr !important;
-            }
-
             /* ─ Header: ocultar fecha en móvil si no cabe ─ */
             .site-header { gap: 8px; }
             #header-date { font-size: 11px; }
@@ -404,154 +391,6 @@
             .card-body { padding: 14px !important; }
             .card-header { padding: 12px 14px !important; }
         }
-
-        /* ── BOE WIDGET ── */
-        .boe-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        .boe-stat {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px 12px;
-            text-align: center;
-        }
-
-        .boe-stat-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .boe-stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            line-height: 1;
-        }
-
-        .boe-stat-value.small {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .boe-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #06b6d4 0%, #7c3aed 100%);
-            color: #fff;
-            border: none;
-            padding: 9px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            box-shadow: 0 2px 8px rgba(124,58,237,0.25);
-        }
-
-        .btn-primary:hover { opacity: 0.88; }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            padding: 9px 16px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-        }
-
-        .boe-message {
-            margin-top: 12px;
-            padding: 10px 14px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            color: var(--text-secondary);
-            display: none;
-        }
-
-        /* ── IDEALISTA ── */
-        .property-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 18px;
-            margin-bottom: 12px;
-        }
-
-        .property-card:last-child { margin-bottom: 0; }
-
-        .property-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .property-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .metric {
-            text-align: center;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 12px 8px;
-        }
-
-        .metric-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            line-height: 1;
-        }
-
-        .metric-delta {
-            font-size: 11px;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .metric-delta.up   { color: var(--accent-green); }
-        .metric-delta.down { color: var(--accent-red); }
-        .metric-delta.flat { color: var(--text-muted); }
 
         /* ── LOADING ── */
         .loading-state {
@@ -599,7 +438,7 @@
         <div class="header-icon">🗂️</div>
         <div>
             <div class="header-title">Panel Sandbox</div>
-            <div class="header-subtitle">Calendario · BOE · Idealista</div>
+            <div class="header-subtitle">Panel financiero · Calendario</div>
         </div>
     </div>
     <div class="header-meta">
@@ -895,71 +734,6 @@
         </div>
     </div>
 
-    <!-- ── BOE + IDEALISTA ── -->
-    <div class="two-col">
-
-        <!-- BOE SUBASTAS -->
-        <div>
-            <div class="section-label">BOE Subastas</div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="dot dot-orange"></span>
-                        Rivas Vaciamadrid
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="boe-stats-grid">
-                        <div class="boe-stat">
-                            <div class="boe-stat-label">Total</div>
-                            <div class="boe-stat-value" id="boeTotalSubastas">—</div>
-                        </div>
-                        <div class="boe-stat">
-                            <div class="boe-stat-label">Nuevas hoy</div>
-                            <div class="boe-stat-value" id="boeNuevasHoy">—</div>
-                        </div>
-                        <div class="boe-stat">
-                            <div class="boe-stat-label">Última ejec.</div>
-                            <div class="boe-stat-value small" id="boeUltimaEjecucion">—</div>
-                        </div>
-                        <div class="boe-stat">
-                            <div class="boe-stat-label">Estado</div>
-                            <div class="boe-stat-value" id="boeEstado">⏳</div>
-                        </div>
-                    </div>
-                    <div class="boe-actions">
-                        <button class="btn-primary" onclick="boeExecuteScraper()" id="boe-run-btn">🚀 Ejecutar</button>
-                        <button class="btn-secondary" onclick="boeLoadData()">🔄 Actualizar</button>
-                    </div>
-                    <div class="boe-message" id="boeMessage"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- IDEALISTA -->
-        <div>
-            <div class="section-label">Estadísticas Idealista</div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="dot dot-green"></span>
-                        Plazas de garaje
-                    </div>
-                    <div id="idealista-updated" style="font-size:11px;color:var(--text-muted);">—</div>
-                </div>
-                <div class="card-body">
-                    <div id="idealista-container">
-                        <div class="loading-state">
-                            <div class="spinner"></div>
-                            Cargando datos...
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
 </div>
 
 <div class="footer">
@@ -1070,120 +844,6 @@ async function loadWeeklyCalendar() {
         container.innerHTML = `<div class="loading-state" style="color:var(--accent-red);">
             ❌ Error al cargar el calendario: ${err.message}
         </div>`;
-    }
-}
-
-// ── BOE ────────────────────────────────────────────────────────────────────
-const BOE_API_URL = 'https://boe-subastas-scraper-production.up.railway.app';
-
-async function boeLoadData() {
-    try {
-        const [statsRes, runsRes] = await Promise.all([
-            fetch(`${BOE_API_URL}/api/stats`),
-            fetch(`${BOE_API_URL}/api/runs`)
-        ]);
-        if (statsRes.ok) {
-            const stats = await statsRes.json();
-            document.getElementById('boeTotalSubastas').textContent = stats.data?.total_subastas ?? '—';
-            document.getElementById('boeNuevasHoy').textContent     = stats.data?.nuevas_hoy ?? '—';
-        }
-        if (runsRes.ok) {
-            const runs = await runsRes.json();
-            if (runs.data && runs.data.length > 0) {
-                const last = runs.data[0];
-                const t = new Date(last.end_time).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-                document.getElementById('boeUltimaEjecucion').textContent = t;
-                document.getElementById('boeEstado').textContent = last.status === 'success' ? '✅' : '❌';
-            }
-        }
-    } catch (e) {
-        console.error('BOE error:', e);
-    }
-}
-
-async function boeExecuteScraper() {
-    const btn = document.getElementById('boe-run-btn');
-    const msg = document.getElementById('boeMessage');
-    btn.disabled = true;
-    btn.textContent = '⏳ Ejecutando...';
-    msg.style.display = 'block';
-    msg.textContent = '⏳ Scraper en ejecución...';
-    try {
-        const res    = await fetch(`${BOE_API_URL}/api/scrape`);
-        const result = await res.json();
-        if (result.success) {
-            msg.textContent = '✅ Ejecutado correctamente';
-            setTimeout(() => boeLoadData(), 3000);
-        } else {
-            msg.textContent = '❌ Error: ' + result.error;
-        }
-    } catch (e) {
-        msg.textContent = '❌ Error de conexión';
-    } finally {
-        btn.disabled = false;
-        btn.textContent = '🚀 Ejecutar';
-        setTimeout(() => { msg.style.display = 'none'; }, 5000);
-    }
-}
-
-// ── IDEALISTA ──────────────────────────────────────────────────────────────
-async function loadIdealista() {
-    const container = document.getElementById('idealista-container');
-    try {
-        const res  = await fetch('/idealista-data');
-        const data = await res.json();
-
-        if (!data || !data.properties || data.properties.length === 0) {
-            container.innerHTML = '<div class="loading-state" style="color:var(--text-muted);">Sin datos disponibles</div>';
-            return;
-        }
-
-        if (data.last_updated) {
-            const d = new Date(data.last_updated);
-            document.getElementById('idealista-updated').textContent =
-                d.toLocaleDateString('es-ES', {day:'2-digit', month:'short'}) + ' ' +
-                d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-        }
-
-        let html = '';
-        data.properties.forEach(p => {
-            const curr = p.current  || {};
-            const prev = p.previous || {};
-
-            function delta(cur, prv) {
-                const d = (cur || 0) - (prv || 0);
-                if (d > 0) return `<div class="metric-delta up">▲ +${d}</div>`;
-                if (d < 0) return `<div class="metric-delta down">▼ ${d}</div>`;
-                return `<div class="metric-delta flat">→ 0</div>`;
-            }
-
-            html += `<div class="property-card">
-                <div class="property-title">🏠 ${p.address || 'Propiedad'}</div>
-                <div class="property-metrics">
-                    <div class="metric">
-                        <div class="metric-label">👁 Visitas</div>
-                        <div class="metric-value">${curr.visits ?? '—'}</div>
-                        ${delta(curr.visits, prev.visits)}
-                    </div>
-                    <div class="metric">
-                        <div class="metric-label">❤️ Favoritos</div>
-                        <div class="metric-value">${curr.favorites ?? '—'}</div>
-                        ${delta(curr.favorites, prev.favorites)}
-                    </div>
-                    <div class="metric">
-                        <div class="metric-label">💬 Mensajes</div>
-                        <div class="metric-value">${curr.contacts ?? '—'}</div>
-                        ${delta(curr.contacts, prev.contacts)}
-                    </div>
-                </div>
-            </div>`;
-        });
-
-        container.innerHTML = html;
-
-    } catch (e) {
-        console.error('Idealista error:', e);
-        container.innerHTML = `<div class="loading-state" style="color:var(--accent-red);">❌ Error al cargar datos</div>`;
     }
 }
 
@@ -1580,15 +1240,10 @@ async function loadAll() {
     icon.classList.add('spin');
     await Promise.all([
         loadFinancialPanel(),
-        loadWeeklyCalendar(),
-        boeLoadData(),
-        loadIdealista()
+        loadWeeklyCalendar()
     ]);
     icon.classList.remove('spin');
 }
-
-// Auto-refresh BOE cada 2 min
-setInterval(boeLoadData, 120000);
 
 // Carga inicial
 loadAll();
