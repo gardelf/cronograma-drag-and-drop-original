@@ -1576,6 +1576,34 @@ def panel_gastos_data():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/panel-patrimonio/data', methods=['GET'])
+def panel_patrimonio_data():
+    """Current-month recurring transfers from Patrimonio to Caixa Propiedades."""
+    try:
+        now = datetime.now()
+        data = FireflyClient().get_recurring_transfers_for_month(
+            now.year,
+            now.month,
+            source_account_id=6,
+            destination_account_id=7,
+        )
+        return jsonify({
+            'success': True,
+            'data': {
+                'year': now.year,
+                'month': now.month,
+                'total': data.get('total', 0.0),
+                'items': data.get('items', []),
+                'source': {'id': 6, 'name': 'Patrimonio'},
+                'destination': {'id': 7, 'name': 'Caixa Propiedades'},
+                'last_updated': now.strftime('%Y-%m-%d %H:%M:%S'),
+            }
+        })
+    except Exception as e:
+        # This endpoint is isolated: a Firefly failure cannot break the other panels.
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     print("\n" + "=" * 80)
     print("🚀 Starting Cronograma Web Server")
@@ -1702,4 +1730,3 @@ def save_cronograma_changes():
     except Exception as e:
         print(f"Error saving cronograma: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
-

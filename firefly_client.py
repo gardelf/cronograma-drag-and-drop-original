@@ -541,6 +541,81 @@ class FireflyClient:
             traceback.print_exc()
             return {'items': [], 'total': 0.0}
 
+    def get_recurring_transfers_for_month(self, year, month, source_account_id, destination_account_id):
+        """Return active recurring transfers for one exact account route and month.
+
+        This is intentionally independent from the financial-panel calculations.
+        As with ``get_recurring_fixed_for_month``, each recurrence is counted once
+        when its schedule applies to the requested calendar month.
+        """
+        empty_result = {'items': [], 'total': 0.0}
+
+        try:
+            data = self._make_request('recurrences')
+            if not data or 'data' not in data:
+                return empty_result
+
+            expected_source = str(source_account_id)
+            expected_destination = str(destination_account_id)
+            items = []
+            total = 0.0
+
+            for rec in data['data']:
+                attrs = rec.get('attributes', {})
+                if not attrs.get('active', False):
+                    continue
+
+                applicable_repetition = None
+                for rep in attrs.get('repetitions', []):
+                    frequency = rep.get('type', '')
+                    moment = rep.get('moment', '') or ''
+                    fires_this_month = frequency in ('monthly', 'weekly', 'ndom')
+
+                    if frequency in ('yearly', 'half-year', 'quarterly'):
+                        try:
+                            fires_this_month = datetime.strptime(moment[:10], '%Y-%m-%d').month == month
+                        except (TypeError, ValueError):
+                            fires_this_month = False
+
+                    if fires_this_month:
+                        applicable_repetition = rep
+                        break
+
+                if not applicable_repetition:
+                    continue
+
+                for tx in attrs.get('transactions', []):
+                    if tx.get('type', '') != 'transfer':
+                        continue
+                    if str(tx.get('source_id', '')) != expected_source:
+                        continue
+                    if str(tx.get('destination_id', '')) != expected_destination:
+                        continue
+
+                    amount = abs(float(tx.get('amount', 0) or 0))
+                    if amount == 0:
+                        continue
+
+                    items.append({
+                        'title': attrs.get('title', ''),
+                        'description': tx.get('description', ''),
+                        'amount': round(amount, 2),
+                        'frequency': applicable_repetition.get('type', ''),
+                        'moment': applicable_repetition.get('moment', '') or '',
+                        'source_id': tx.get('source_id'),
+                        'source_name': tx.get('source_name', ''),
+                        'destination_id': tx.get('destination_id'),
+                        'destination_name': tx.get('destination_name', ''),
+                    })
+                    total += amount
+
+            items.sort(key=lambda item: -item['amount'])
+            return {'items': items, 'total': round(total, 2)}
+
+        except Exception as e:
+            print(f"Error getting recurring account transfers: {e}")
+            return empty_result
+
     def get_extraordinary_expenses_current_month(self, year, month):
         """Get extraordinary expenses (tag 'Extraordinario') for the given month"""
         try:
