@@ -9,10 +9,10 @@ if [ -f ".env" ]; then
     rm -f .env
 fi
 
-# Apply production patch for Patrimonio panel before starting the app.
-# The panel must show real current-month Firefly transactions from account 6 to account 7,
-# not configured recurrences/automations.
-echo "🏠 Aplicando parche panel Patrimonio → Caixa Propiedades..."
+# Apply production patch for Patrimonio panel and fixed expenses before starting the app.
+# Patrimonio panel must show real current-month Firefly transactions from account 6 to account 7,
+# not configured recurrences/automations. Fixed expenses must only include Fernando Garrido → Cash.
+echo "🏠 Aplicando parches Firefly para panel financiero..."
 python3.11 - <<'PY'
 from pathlib import Path
 
@@ -80,7 +80,22 @@ if 'def get_account_route_transactions_for_month' not in firefly_text:
 '''
     marker = '    def get_extraordinary_expenses_current_month(self, year, month):\n'
     firefly_text = firefly_text.replace(marker, method + '\n' + marker)
-    firefly.write_text(firefly_text, encoding='utf-8')
+
+if "expected_source_name = 'Fernando Garrido'" not in firefly_text:
+    firefly_text = firefly_text.replace(
+        "            items = []\n            total = 0.0\n\n            for rec in data['data']:",
+        "            items = []\n            total = 0.0\n            expected_source_id = '1'\n            expected_destination_id = '2'\n            expected_source_name = 'Fernando Garrido'\n            expected_destination_name = 'Cash'\n\n            for rec in data['data']:"
+    )
+    firefly_text = firefly_text.replace(
+        "                for tx in txs:\n                    if tx.get('type', '') not in ('withdrawal', ''):\n                        continue\n                    amt = abs(float(tx.get('amount', 0) or 0))",
+        "                for tx in txs:\n                    if tx.get('type', '') not in ('withdrawal', ''):\n                        continue\n                    source_id = str(tx.get('source_id') or '')\n                    destination_id = str(tx.get('destination_id') or '')\n                    source_name = tx.get('source_name') or ''\n                    destination_name = tx.get('destination_name') or ''\n                    if source_id and source_id != expected_source_id:\n                        continue\n                    if destination_id and destination_id != expected_destination_id:\n                        continue\n                    if not source_id and source_name != expected_source_name:\n                        continue\n                    if not destination_id and destination_name != expected_destination_name:\n                        continue\n                    amt = abs(float(tx.get('amount', 0) or 0))"
+    )
+    firefly_text = firefly_text.replace(
+        "                                'tags': tx.get('tags', []),\n                            }",
+        "                                'tags': tx.get('tags', []),\n                                'source_id': tx.get('source_id'),\n                                'source_name': source_name,\n                                'destination_id': tx.get('destination_id'),\n                                'destination_name': destination_name,\n                            }"
+    )
+
+firefly.write_text(firefly_text, encoding='utf-8')
 
 web_text = web_server.read_text(encoding='utf-8')
 web_text = web_text.replace(
