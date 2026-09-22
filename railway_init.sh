@@ -11,8 +11,8 @@ fi
 
 # Apply production patch for Patrimonio panel before starting the app.
 # Patrimonio panel must show real current-month Firefly transactions from account 6 to account 7,
-# not configured recurrences/automations.
-echo "🏠 Aplicando parches Firefly para panel patrimonio..."
+# not configured recurrences/automations. The financial panel must exclude those property movements.
+echo "🏠 Aplicando parches Firefly para separar patrimonio y gastos personales..."
 python3.11 - <<'PY'
 from pathlib import Path
 
@@ -91,6 +91,14 @@ web_text = web_text.replace(
 web_text = web_text.replace(
     'data = FireflyClient().get_recurring_transfers_for_month(',
     'data = FireflyClient().get_account_route_transactions_for_month('
+)
+web_text = web_text.replace(
+    "                    if trans.get('type') == 'withdrawal':\n                        transactions.append({",
+    "                    if trans.get('type') == 'withdrawal':\n                        source_id = str(trans.get('source_id') or '')\n                        destination_id = str(trans.get('destination_id') or '')\n                        if source_id == '6' and destination_id == '7':\n                            continue\n                        transactions.append({"
+)
+web_text = web_text.replace(
+    "        monthly_expenses = current_month.get('expenses', 0)\n        monthly_goal = 3000.0",
+    "        property_data = client.get_account_route_transactions_for_month(now.year, now.month, 6, 7)\n        property_expenses = property_data.get('total', 0.0)\n        monthly_expenses = max(current_month.get('expenses', 0) - property_expenses, 0)\n        monthly_goal = 3000.0"
 )
 web_server.write_text(web_text, encoding='utf-8')
 
