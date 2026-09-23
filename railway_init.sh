@@ -16,6 +16,7 @@ fi
 echo "🏠 Aplicando parches Firefly para separar patrimonio y gastos personales..."
 python3.11 - <<'PY'
 from pathlib import Path
+import re
 
 firefly = Path('firefly_client.py')
 web_server = Path('web_server.py')
@@ -180,8 +181,8 @@ web_text = web_text.replace(
     "        client = FireflyClient()\n        data = client.get_account_route_transactions_for_month(\n            now.year,\n            now.month,\n            source_account_id=6,\n            destination_account_id=7,\n        )\n        annual = client.get_account_route_recurring_annual_total(6, 7)"
 )
 web_text = web_text.replace(
-    "            'items': data.get('items', []),\n        })",
-    "            'items': data.get('items', []),\n            'annual_total': annual.get('total', 0.0),\n            'annual_items': annual.get('items', []),\n        })"
+    "                'items': data.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},",
+    "                'items': data.get('items', []),\n                'annual_total': annual.get('total', 0.0),\n                'annual_items': annual.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},"
 )
 web_text = web_text.replace(
     "                    if trans.get('type') == 'withdrawal':\n                        transactions.append({",
@@ -206,9 +207,26 @@ html = html.replace(
     'const dailyBudget = Math.floor(remaining / Math.max(mp.days_remaining || 1, 1));',
     'const dailyBudget = Math.floor((mp.discretionary_goal || 1900) / (mp.days_in_month || 30));'
 )
-html = html.replace(
-    "<div style=\"display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:${items.length ? '18px' : '0'};\">\n            <div>\n                <div class=\"section-label\" style=\"margin-bottom:6px;\">Total del mes vigente</div>\n                <div style=\"font-size:32px;font-weight:800;color:var(--accent-blue);\">${fmtEur(data.total || 0)}</div>\n            </div>\n            <div style=\"font-size:12px;color:var(--text-muted);text-align:right;line-height:1.35;\">\n                Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7\n            </div>\n        </div>",
-    "<div style=\"display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:${items.length ? '18px' : '0'};\">\n            <div style=\"flex:1;\">\n                <div class=\"section-label\" style=\"margin-bottom:6px;\">Total del mes vigente</div>\n                <div style=\"font-size:32px;font-weight:800;color:var(--accent-blue);\">${fmtEur(data.total || 0)}</div>\n            </div>\n            <div style=\"flex:1;text-align:center;\">\n                <div class=\"section-label\" style=\"margin-bottom:6px;\">Total anual estimado</div>\n                <div style=\"font-size:28px;font-weight:800;color:var(--accent-green);\">${fmtEur(data.annual_total || 0)}</div>\n            </div>\n            <div style=\"flex:1;font-size:12px;color:var(--text-muted);text-align:right;line-height:1.35;\">\n                Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7\n            </div>\n        </div>"
+property_header = '''let html = `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:${items.length ? '18px' : '0'};">
+                <div style="flex:1;">
+                    <div class="section-label" style="margin-bottom:6px;">Total del mes vigente</div>
+                    <div style="font-size:32px;font-weight:800;color:var(--accent-blue);">${fmtEur(data.total || 0)}</div>
+                </div>
+                <div style="flex:1;text-align:center;">
+                    <div class="section-label" style="margin-bottom:6px;">Total anual estimado</div>
+                    <div style="font-size:28px;font-weight:800;color:var(--accent-green);">${fmtEur(data.annual_total || 0)}</div>
+                </div>
+                <div style="flex:1;font-size:12px;color:var(--text-muted);text-align:right;line-height:1.35;">
+                    Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7
+                </div>
+            </div>`;'''
+html = re.sub(
+    r"let html = `\s*<div style=\"display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:\$\{items\.length \? '18px' : '0'\};\">.*?</div>`;",
+    property_header,
+    html,
+    count=1,
+    flags=re.S
 )
 html = html.replace(
     "const label = item.description || item.title || 'Transferencia programada';\n                html += `<div style=\"display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);\">\n                    <div>\n                        <div style=\"font-size:13px;font-weight:600;color:var(--text-primary);\">${label}</div>\n                        <div style=\"font-size:11px;color:var(--text-muted);margin-top:2px;\">${item.frequency || 'recurrente'}</div>",
