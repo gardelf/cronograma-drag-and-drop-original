@@ -182,7 +182,7 @@ web_text = web_text.replace(
 )
 web_text = web_text.replace(
     "                'items': data.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},",
-    "                'items': data.get('items', []),\n                'annual_total': annual.get('total', 0.0),\n                'annual_items': annual.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},"
+    "                'items': data.get('items', []),\n                'annual_total': annual.get('total', 0.0),\n                'annual_monthly_average': round(annual.get('total', 0.0) / 12, 2),\n                'annual_items': annual.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},"
 )
 web_text = web_text.replace(
     "                    if trans.get('type') == 'withdrawal':\n                        transactions.append({",
@@ -212,6 +212,10 @@ property_header = '''let html = `
                 <div style="flex:1;">
                     <div class="section-label" style="margin-bottom:6px;">Total del mes vigente</div>
                     <div style="font-size:32px;font-weight:800;color:var(--accent-blue);">${fmtEur(data.total || 0)}</div>
+                </div>
+                <div style="flex:1;text-align:center;">
+                    <div class="section-label" style="margin-bottom:6px;">Media mensual anualizada</div>
+                    <div style="font-size:28px;font-weight:800;color:var(--accent-purple);">${fmtEur(data.annual_monthly_average || ((data.annual_total || 0) / 12))}</div>
                 </div>
                 <div style="flex:1;text-align:center;">
                     <div class="section-label" style="margin-bottom:6px;">Total anual estimado</div>
