@@ -12,7 +12,8 @@ fi
 # Apply production patch for Patrimonio panel before starting the app.
 # Patrimonio panel must show real current-month Firefly transactions from account 6 to account 7,
 # not configured recurrences/automations. The financial panel must exclude those property movements.
-# It also shows the annual projected property cost, calculated from active Firefly recurrences on route 6 -> 7.
+# It also calculates the annual projected property cost from active Firefly recurrences on route 6 -> 7,
+# but the header only displays the current month and annualized monthly average.
 echo "🏠 Aplicando parches Firefly para separar patrimonio y gastos personales..."
 python3.11 - <<'PY'
 from pathlib import Path
@@ -189,10 +190,6 @@ property_header = '''let html = `
                 <div style="flex:1;min-width:0;text-align:center;">
                     <div class="section-label" style="margin-bottom:6px;">Media mensual anualizada</div>
                     <div style="font-size:clamp(18px, 4.5vw, 24px);font-weight:800;color:var(--accent-purple);line-height:1.05;white-space:nowrap;">${fmtEur(data.annual_monthly_average || ((data.annual_total || 0) / 12))}</div>
-                </div>
-                <div style="flex:1;min-width:0;text-align:center;">
-                    <div class="section-label" style="margin-bottom:6px;">Total anual estimado</div>
-                    <div style="font-size:clamp(18px, 4.5vw, 24px);font-weight:800;color:var(--accent-green);line-height:1.05;white-space:nowrap;">${fmtEur(data.annual_total || 0)}</div>
                 </div>
                 <div style="flex:0 1 150px;font-size:11px;color:var(--text-muted);text-align:right;line-height:1.3;">
                     Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7
