@@ -168,74 +168,38 @@ if 'def get_account_route_recurring_annual_total' not in firefly_text:
 firefly.write_text(firefly_text, encoding='utf-8')
 
 web_text = web_server.read_text(encoding='utf-8')
-web_text = web_text.replace(
-    '"""Current-month recurring transfers from Patrimonio to Caixa Propiedades."""',
-    '"""Current-month real transactions from Patrimonio to Caixa Propiedades."""'
-)
-web_text = web_text.replace(
-    'data = FireflyClient().get_recurring_transfers_for_month(',
-    'data = FireflyClient().get_account_route_transactions_for_month('
-)
-web_text = web_text.replace(
-    "        data = FireflyClient().get_account_route_transactions_for_month(\n            now.year,\n            now.month,\n            source_account_id=6,\n            destination_account_id=7,\n        )",
-    "        client = FireflyClient()\n        data = client.get_account_route_transactions_for_month(\n            now.year,\n            now.month,\n            source_account_id=6,\n            destination_account_id=7,\n        )\n        annual = client.get_account_route_recurring_annual_total(6, 7)"
-)
-web_text = web_text.replace(
-    "                'items': data.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},",
-    "                'items': data.get('items', []),\n                'annual_total': annual.get('total', 0.0),\n                'annual_monthly_average': round(annual.get('total', 0.0) / 12, 2),\n                'annual_items': annual.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},"
-)
-web_text = web_text.replace(
-    "                    if trans.get('type') == 'withdrawal':\n                        transactions.append({",
-    "                    if trans.get('type') == 'withdrawal':\n                        source_id = str(trans.get('source_id') or '')\n                        destination_id = str(trans.get('destination_id') or '')\n                        if source_id == '6' and destination_id == '7':\n                            continue\n                        transactions.append({"
-)
-web_text = web_text.replace(
-    "        monthly_expenses = current_month.get('expenses', 0)\n        monthly_goal = 3000.0",
-    "        property_data = client.get_account_route_transactions_for_month(now.year, now.month, 6, 7)\n        property_expenses = property_data.get('total', 0.0)\n        monthly_expenses = max(current_month.get('expenses', 0) - property_expenses, 0)\n        monthly_goal = 3000.0"
-)
+web_text = web_text.replace('"""Current-month recurring transfers from Patrimonio to Caixa Propiedades."""','"""Current-month real transactions from Patrimonio to Caixa Propiedades."""')
+web_text = web_text.replace('data = FireflyClient().get_recurring_transfers_for_month(','data = FireflyClient().get_account_route_transactions_for_month(')
+web_text = web_text.replace("        data = FireflyClient().get_account_route_transactions_for_month(\n            now.year,\n            now.month,\n            source_account_id=6,\n            destination_account_id=7,\n        )","        client = FireflyClient()\n        data = client.get_account_route_transactions_for_month(\n            now.year,\n            now.month,\n            source_account_id=6,\n            destination_account_id=7,\n        )\n        annual = client.get_account_route_recurring_annual_total(6, 7)")
+web_text = web_text.replace("                'items': data.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},","                'items': data.get('items', []),\n                'annual_total': annual.get('total', 0.0),\n                'annual_monthly_average': round(annual.get('total', 0.0) / 12, 2),\n                'annual_items': annual.get('items', []),\n                'source': {'id': 6, 'name': 'Patrimonio'},")
+web_text = web_text.replace("                    if trans.get('type') == 'withdrawal':\n                        transactions.append({","                    if trans.get('type') == 'withdrawal':\n                        source_id = str(trans.get('source_id') or '')\n                        destination_id = str(trans.get('destination_id') or '')\n                        if source_id == '6' and destination_id == '7':\n                            continue\n                        transactions.append({")
+web_text = web_text.replace("        monthly_expenses = current_month.get('expenses', 0)\n        monthly_goal = 3000.0","        property_data = client.get_account_route_transactions_for_month(now.year, now.month, 6, 7)\n        property_expenses = property_data.get('total', 0.0)\n        monthly_expenses = max(current_month.get('expenses', 0) - property_expenses, 0)\n        monthly_goal = 3000.0")
 web_server.write_text(web_text, encoding='utf-8')
 
 html = sandbox.read_text(encoding='utf-8')
-html = html.replace(
-    'Automatizaciones activas de Firefly<br>Cuenta 6 → Cuenta 7',
-    'Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7'
-)
-html = html.replace(
-    'Sin movimientos programados para este mes.',
-    'Sin transacciones registradas para este mes.'
-)
-html = html.replace(
-    'const dailyBudget = Math.floor(remaining / Math.max(mp.days_remaining || 1, 1));',
-    'const dailyBudget = Math.floor((mp.discretionary_goal || 1900) / (mp.days_in_month || 30));'
-)
+html = html.replace('Automatizaciones activas de Firefly<br>Cuenta 6 → Cuenta 7','Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7')
+html = html.replace('Sin movimientos programados para este mes.','Sin transacciones registradas para este mes.')
+html = html.replace('const dailyBudget = Math.floor(remaining / Math.max(mp.days_remaining || 1, 1));','const dailyBudget = Math.floor((mp.discretionary_goal || 1900) / (mp.days_in_month || 30));')
 property_header = '''let html = `
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:${items.length ? '18px' : '0'};">
-                <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:${items.length ? '18px' : '0'};">
+                <div style="flex:1;min-width:0;">
                     <div class="section-label" style="margin-bottom:6px;">Total del mes vigente</div>
-                    <div style="font-size:32px;font-weight:800;color:var(--accent-blue);">${fmtEur(data.total || 0)}</div>
+                    <div style="font-size:clamp(20px, 5vw, 26px);font-weight:800;color:var(--accent-blue);line-height:1.05;white-space:nowrap;">${fmtEur(data.total || 0)}</div>
                 </div>
-                <div style="flex:1;text-align:center;">
+                <div style="flex:1;min-width:0;text-align:center;">
                     <div class="section-label" style="margin-bottom:6px;">Media mensual anualizada</div>
-                    <div style="font-size:28px;font-weight:800;color:var(--accent-purple);">${fmtEur(data.annual_monthly_average || ((data.annual_total || 0) / 12))}</div>
+                    <div style="font-size:clamp(18px, 4.5vw, 24px);font-weight:800;color:var(--accent-purple);line-height:1.05;white-space:nowrap;">${fmtEur(data.annual_monthly_average || ((data.annual_total || 0) / 12))}</div>
                 </div>
-                <div style="flex:1;text-align:center;">
+                <div style="flex:1;min-width:0;text-align:center;">
                     <div class="section-label" style="margin-bottom:6px;">Total anual estimado</div>
-                    <div style="font-size:28px;font-weight:800;color:var(--accent-green);">${fmtEur(data.annual_total || 0)}</div>
+                    <div style="font-size:clamp(18px, 4.5vw, 24px);font-weight:800;color:var(--accent-green);line-height:1.05;white-space:nowrap;">${fmtEur(data.annual_total || 0)}</div>
                 </div>
-                <div style="flex:1;font-size:12px;color:var(--text-muted);text-align:right;line-height:1.35;">
+                <div style="flex:0 1 150px;font-size:11px;color:var(--text-muted);text-align:right;line-height:1.3;">
                     Transacciones registradas en Firefly<br>Cuenta 6 → Cuenta 7
                 </div>
             </div>`;'''
-html = re.sub(
-    r"let html = `\s*<div style=\"display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:\$\{items\.length \? '18px' : '0'\};\">.*?</div>`;",
-    property_header,
-    html,
-    count=1,
-    flags=re.S
-)
-html = html.replace(
-    "const label = item.description || item.title || 'Transferencia programada';\n                html += `<div style=\"display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);\">\n                    <div>\n                        <div style=\"font-size:13px;font-weight:600;color:var(--text-primary);\">${label}</div>\n                        <div style=\"font-size:11px;color:var(--text-muted);margin-top:2px;\">${item.frequency || 'recurrente'}</div>",
-    "const label = item.description || item.title || 'Transacción registrada';\n                const detail = [item.date, item.category].filter(Boolean).join(' · ') || 'registrada';\n                html += `<div style=\"display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);\">\n                    <div>\n                        <div style=\"font-size:13px;font-weight:600;color:var(--text-primary);\">${label}</div>\n                        <div style=\"font-size:11px;color:var(--text-muted);margin-top:2px;\">${detail}</div>"
-)
+html = re.sub(r"let html = `\s*<div style=\"display:flex;justify-content:space-between;align-items:center;gap:[^\"]*;margin-bottom:\$\{items\.length \? '18px' : '0'\};\">.*?</div>`;", property_header, html, count=1, flags=re.S)
+html = html.replace("const label = item.description || item.title || 'Transferencia programada';\n                html += `<div style=\"display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);\">\n                    <div>\n                        <div style=\"font-size:13px;font-weight:600;color:var(--text-primary);\">${label}</div>\n                        <div style=\"font-size:11px;color:var(--text-muted);margin-top:2px;\">${item.frequency || 'recurrente'}</div>","const label = item.description || item.title || 'Transacción registrada';\n                const detail = [item.date, item.category].filter(Boolean).join(' · ') || 'registrada';\n                html += `<div style=\"display:flex;justify-content:space-between;gap:16px;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);\">\n                    <div>\n                        <div style=\"font-size:13px;font-weight:600;color:var(--text-primary);\">${label}</div>\n                        <div style=\"font-size:11px;color:var(--text-muted);margin-top:2px;\">${detail}</div>")
 sandbox.write_text(html, encoding='utf-8')
 PY
 
