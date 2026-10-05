@@ -1,1 +1,1 @@
-web: bash railway_init.sh
+web: bash railway_init_patched.sh
