@@ -5,6 +5,7 @@ Imports the original Flask app and overrides the financial panel endpoints so
 the discretionary total and its category breakdown use the same transaction set.
 """
 from datetime import datetime, timedelta
+from difflib import SequenceMatcher
 
 from flask import jsonify
 
@@ -24,14 +25,31 @@ def _month_range(year, month):
     return start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")
 
 
+def _normalize_text(value):
+    return "".join(ch for ch in (value or "").lower() if ch.isalnum())
+
+
+def _is_close_text(left, right):
+    if not left or not right:
+        return False
+    if left in right or right in left:
+        return True
+    if min(len(left), len(right)) < 5:
+        return False
+    return SequenceMatcher(None, left, right).ratio() >= 0.78
+
+
 def _matches_fixed_item(trans, fixed_items):
-    description = (trans.get("description") or "").lower().strip()
+    description = _normalize_text(trans.get("description"))
     if not description:
         return False
+
     for item in fixed_items or []:
-        fixed_text = (item.get("title") or item.get("description") or "").lower().strip()
-        if fixed_text and (description in fixed_text or fixed_text in description):
-            return True
+        candidates = [item.get("title"), item.get("description")]
+        for candidate in candidates:
+            fixed_text = _normalize_text(candidate)
+            if _is_close_text(description, fixed_text):
+                return True
     return False
 
 
