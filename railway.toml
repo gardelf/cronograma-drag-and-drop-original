@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "bash railway_init.sh"
+startCommand = "bash railway_init_patched.sh"
 
 # Cron job para generar cronograma del día siguiente a las 19:00 (hora de Madrid, GMT+1)
 # Railway usa UTC, así que 19:00 GMT+1 = 18:00 UTC
