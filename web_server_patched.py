@@ -141,7 +141,7 @@ def panel_gastos_data_patched():
         property_data = client.get_account_route_transactions_for_month(now.year, now.month, 6, 7)
         property_expenses = property_data.get("total", 0.0)
         monthly_expenses = max(current_month.get("expenses", 0) - property_expenses, 0)
-        monthly_goal = 3000.0
+        monthly_goal = 2600.0
 
         recurring_data = client.get_recurring_fixed_for_month(now.year, now.month)
         fixed_expenses = recurring_data.get("total", 0.0)
