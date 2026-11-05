@@ -566,6 +566,16 @@
             </div>
         </div>
 
+        <div id="fin-discr-days-detail" style="display:none;margin-bottom:16px;">
+            <div class="card"><div class="card-body">
+                <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:12px;">
+                    <span class="section-label">Gasto discrecional por día</span>
+                    <button onclick="toggleDiscrDaysDetail()" aria-label="Cerrar detalle por día" style="background:none;border:none;cursor:pointer;color:var(--text-muted);">✕</button>
+                </div>
+                <div id="fin-discr-days"></div>
+            </div></div>
+        </div>
+
         <!-- Panel desplegable: Gastos fijos por categoría -->
         <div id="fin-fixed-detail" style="display:none;margin-bottom:16px;text-align:center;">
             <div style="display:inline-block;text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;min-width:220px;max-width:480px;">
@@ -612,6 +622,7 @@
                         <div style="font-size:12px;color:var(--text-muted);">
                             <span id="fin-daily2">—</span>
                             <button id="fin-discr-toggle" onclick="toggleDiscrDetail()" style="margin-left:8px;font-size:11px;color:var(--accent-orange);background:none;border:none;cursor:pointer;padding:0;font-weight:600;">&#9660; ver detalle</button>
+                            <button aria-expanded="false" aria-controls="fin-discr-days-detail" id="fin-discr-days-toggle" onclick="toggleDiscrDaysDetail()" style="margin-left:8px;font-size:11px;color:var(--accent-orange);background:none;border:none;cursor:pointer;padding:0;font-weight:600;">&#9660; ver detalle 2</button>
                         </div>
                     </div>
                     <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;">
@@ -1096,6 +1107,16 @@ async function loadDiscrCategories() {
     if (!container) return;
     container.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">Cargando...</p>';
     try {
+        const discr = await fetchDiscrDetailItems();
+        renderDiscrCategories(discr);
+    } catch (err) {
+        container.innerHTML = '<p style="color:var(--accent-red);font-size:13px;">Error cargando datos.</p>';
+        console.error(err);
+    }
+}
+
+
+async function fetchDiscrDetailItems() {
         const res  = await fetch('/panel-gastos/mes-detalle');
         const json = await res.json();
         if (!json.success) throw new Error('API error');
@@ -1105,10 +1126,69 @@ async function loadDiscrCategories() {
             const desc = (t.description || '').toLowerCase().trim();
             return !fixedTitles.some(ft => desc.includes(ft) || ft.includes(desc));
         });
-        renderDiscrCategories(discr);
-    } catch (err) {
-        container.innerHTML = '<p style="color:var(--accent-red);font-size:13px;">Error cargando datos.</p>';
-        console.error(err);
+
+    return discr;
+}
+
+function toggleDiscrDaysDetail() {
+    const panel = document.getElementById('fin-discr-days-detail');
+    const button = document.getElementById('fin-discr-days-toggle');
+    const open = panel.style.display === 'none';
+    panel.style.display = open ? 'block' : 'none';
+    button.textContent = open ? '▲ ocultar detalle 2' : '▼ ver detalle 2';
+    button.setAttribute('aria-expanded', String(open));
+    if (open) loadDiscrDays();
+}
+
+async function loadDiscrDays() {
+    const container = document.getElementById('fin-discr-days');
+    container.textContent = 'Cargando…';
+    try {
+        const items = await fetchDiscrDetailItems();
+        const groups = new Map();
+        for (const item of items) {
+            const date = (item.date || '').slice(0, 10);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+            if (!groups.has(date)) groups.set(date, []);
+            groups.get(date).push(item);
+        }
+        container.replaceChildren();
+        if (!groups.size) {
+            container.textContent = 'No hay gastos discrecionales este mes.';
+            return;
+        }
+        const formatDay = new Intl.DateTimeFormat('es-ES', {
+            weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC'
+        });
+        for (const [date, entries] of [...groups.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+            const section = document.createElement('section');
+            section.style.cssText = 'margin-bottom:16px;padding:12px;border:1px solid var(--border);border-radius:8px;';
+            const heading = document.createElement('div');
+            heading.style.cssText = 'display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-weight:700;color:var(--accent-orange);margin-bottom:8px;';
+            const label = document.createElement('span');
+            const day = formatDay.format(new Date(date + 'T12:00:00Z'));
+            label.textContent = day.charAt(0).toUpperCase() + day.slice(1);
+            const total = document.createElement('span');
+            total.textContent = fmtEur(entries.reduce((sum, item) => sum + Math.round(Number(item.amount) * 100), 0) / 100);
+            heading.append(label, total);
+            section.append(heading);
+            for (const item of entries) {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-size:13px;';
+                const concept = document.createElement('span');
+                concept.style.cssText = 'min-width:0;overflow-wrap:anywhere;';
+                concept.textContent = item.description || '—';
+                const amount = document.createElement('span');
+                amount.style.whiteSpace = 'nowrap';
+                amount.textContent = fmtEur(item.amount);
+                row.append(concept, amount);
+                section.append(row);
+            }
+            container.append(section);
+        }
+    } catch (error) {
+        container.textContent = 'No se pudo cargar el detalle por día. Cierra y vuelve a abrir para reintentar.';
+        console.error(error);
     }
 }
 
