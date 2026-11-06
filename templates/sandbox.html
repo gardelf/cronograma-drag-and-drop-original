@@ -465,7 +465,7 @@
                     <!-- Objetivo -->
                     <div style="padding:0 24px 0 0;border-right:1px solid var(--border);">
                         <div class="section-label" style="margin-bottom:8px;">Objetivo del mes</div>
-                        <div class="fin-num-lg" style="color:var(--accent-green);">2.600 <span style="font-size:0.6em;">€</span></div>
+                        <div class="fin-num-lg" style="color:var(--accent-green);">3.000 <span style="font-size:0.6em;">€</span></div>
                         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">límite mensual — <span id="fin-month-name">—</span></div>
                     </div>
 
@@ -500,7 +500,7 @@
 
                 </div>
 
-                <!-- Barra tricolor 0€ → 2600€ -->
+                <!-- Barra tricolor 0€ → 3000€ -->
                 <div style="margin-bottom:8px;">
                     <!-- Barra normal (sin exceso) -->
                     <div id="fin-bar-wrap" style="position:relative;height:22px;background:var(--bg-secondary);border-radius:8px;border:1px solid var(--border);overflow:hidden;display:flex;">
@@ -540,7 +540,7 @@
                             <span style="font-size:11px;color:var(--text-muted);">&#9632; Por gastar</span>
                             <span id="fin-bar-over-legend" style="font-size:11px;color:#dc2626;display:none;">&#9632; Exceso</span>
                         </div>
-                        <span style="font-size:11px;color:var(--text-muted);">2.600 €</span>
+                        <span style="font-size:11px;color:var(--text-muted);">3.000 €</span>
                     </div>
                 </div>
 
@@ -905,7 +905,7 @@ async function loadFinancialPanel() {
         window._extraordinaryItems = mp.extraordinary_items || [];
 
         // ── Barra tricolor ──
-        const goal      = mp.monthly_goal || 2600;
+        const goal      = mp.monthly_goal || 3000;
         const fixed     = mp.fixed_expenses || 0;
         const discr     = mp.discretionary_expenses || 0;
         const total     = fixed + discr;
