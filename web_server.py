@@ -1500,7 +1500,7 @@ def panel_gastos_data():
         days_in_month = calendar.monthrange(now.year, now.month)[1]
         days_elapsed = now.day
         monthly_expenses = current_month.get('expenses', 0)
-        monthly_goal = 2600.0
+        monthly_goal = 3000.0
 
         # Recurring fixed expenses for this specific month (dynamic, no proration)
         recurring_data = client.get_recurring_fixed_for_month(now.year, now.month)
