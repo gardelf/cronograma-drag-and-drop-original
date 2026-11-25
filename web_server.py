@@ -1735,4 +1735,3 @@ def save_cronograma_changes():
     except Exception as e:
         print(f"Error saving cronograma: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
-
