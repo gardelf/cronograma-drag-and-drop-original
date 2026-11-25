@@ -1605,6 +1605,10 @@ def panel_patrimonio_data():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+if os.environ.get('NIVEL2_ENABLED') == '1':
+    from nivel2.web import register as register_nivel2
+    register_nivel2(app)
+
 if __name__ == '__main__':
     print("\n" + "=" * 80)
     print("🚀 Starting Cronograma Web Server")
