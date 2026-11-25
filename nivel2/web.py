@@ -45,7 +45,7 @@ def index(): return render_template('nivel2.html')
 @bp.get('/api/matrix')
 def matrix():
     with connect() as c,c.cursor() as q:
-        q.execute('SELECT * FROM n2_values ORDER BY code'); values=q.fetchall()
+        q.execute("SELECT * FROM n2_values ORDER BY CASE code WHEN 'experiencial' THEN 1 WHEN 'hedonismo' THEN 2 WHEN 'creativo' THEN 3 WHEN 'responsabilidad' THEN 4 ELSE 5 END"); values=q.fetchall()
         q.execute('SELECT * FROM n2_units ORDER BY id'); units=q.fetchall()
         q.execute('SELECT * FROM n2_components ORDER BY id'); components=q.fetchall()
     for unit in units: unit['components']=[x for x in components if x['unit_id']==unit['id']]
