@@ -53,7 +53,7 @@ def propose(tx, units, rule=None):
         return {'status':'pending','confidence':0,'reason':'Sin evidencia suficiente' if not matches else 'Varias unidades posibles; confirma el reparto','allocations':[]}
     uid=matches[0]; unit=ids[uid]
     confidence=.65
-    if unit.get('standard_cost') is not None and money(tx['amount'])==money(unit['standard_cost']): confidence+=.05
+    if tx.get('currency')=='EUR' and unit.get('standard_cost') is not None and money(tx['amount'])==money(unit['standard_cost']): confidence+=.05
     if normalized(tx.get('financial_category')) in ('salud','ocio','casa'): confidence+=.02
     # UGE satisfaction/time are references, never transaction observations.
     return {'status':'proposed','confidence':confidence,'reason':'Coincidencia orientativa de descripción/destinatario; no demuestra actividad ni compañía','allocations':[{'unit_id':uid,'amount':str(tx['amount']),'obligation':'desconocido'}]}
