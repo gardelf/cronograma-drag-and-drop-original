@@ -1,1 +1,0 @@
-{"build":{"builder":"DOCKERFILE","dockerfilePath":"nivel2/Dockerfile"},"deploy":{"startCommand":"sh -c \"python -c 'from nivel2.db import migrate; migrate()' && gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 60 nivel2.standalone:app\"","restartPolicyType":"ON_FAILURE","restartPolicyMaxRetries":5}}
