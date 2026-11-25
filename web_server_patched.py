@@ -212,7 +212,13 @@ app.view_functions["panel_gastos_mes_detalle"] = panel_gastos_mes_detalle_patche
 app.view_functions["panel_gastos_data"] = panel_gastos_data_patched
 
 
+import os as _n2_os
+if _n2_os.environ.get("NIVEL2_ENABLED") == "1":
+    from nivel2.web import register as _register_nivel2
+    _register_nivel2(app)
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
