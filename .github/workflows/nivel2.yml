@@ -1,0 +1,31 @@
+name: Nivel 2 tests
+on:
+  push:
+    branches: [feature/nivel2-gastar-con-sentido]
+  pull_request:
+    paths: ['nivel2/**', 'tests/nivel2/**', 'web_server.py', 'web_server_patched.py', '.github/workflows/nivel2.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test-only
+          POSTGRES_DB: nivel2_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NIVEL2_DATABASE_URL: postgresql://postgres:test-only@localhost:5432/nivel2_test
+      NIVEL2_TEST_DATABASE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r nivel2/requirements.txt pytest
+      - run: python -m compileall -q nivel2 web_server.py web_server_patched.py
+      - run: python -m pytest tests/nivel2 -q
